@@ -6,14 +6,14 @@
  * @flow
  */
 
-import React, { Component }  from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
-  Image, 
-  Text
+  Image,
+  Text,
 } from 'react-native';
 
 import {
@@ -24,66 +24,25 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-   
   }
-  componentDidMount() {
-   
-}
-componentWillMount() {
-    
-}
-componentWillUnmount() {
-    
-}
-render(){
-   return (
-    <View>
-      
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-         
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>首行</Text>
-              <Text style={styles.sectionDescription}>
-                编辑 <Text style={styles.highlight}>App.js</Text> 
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>第二行</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>第三行</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>第四行</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </View>
-  )
-
-}
- 
+  componentDidMount() {}
+  componentWillMount() {}
+  componentWillUnmount() {}
+  render() {
+    return (
+      <View>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>第四行</Text>
+          <Text style={styles.sectionDescription}>
+            你好
+          </Text>
+        </View>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
