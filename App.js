@@ -15,73 +15,34 @@ import {
   Image,
   Text,
 } from 'react-native';
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
+import Test from './app/test/test1';
+import Logo from './app/pages/login';
+// import {
+//   Header,
+//   LearnMoreLinks,
+//   Colors,
+//   DebugInstructions,
+//   ReloadInstructions,
+// } from 'react-native/Libraries/NewAppScreen';
+// import Route from './src/config'
+// import {Provider} from 'react-redux';
+// import configureStore from './app/store';
+// const store = configureStore();
 class App extends Component {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {}
-  componentWillMount() {}
-  componentWillUnmount() {}
+
   render() {
     return (
+      // <Provider store={store}>
+      //   <Route />
+      // </Provider>
       <View>
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>第四行</Text>
-          <Text style={styles.sectionDescription}>
-            你好
-          </Text>
-        </View>
+        {/* <Test> </Test> */}
+        <Logo></Logo>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
-
 export default App;
