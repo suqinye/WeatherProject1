@@ -29,7 +29,7 @@ export default class Button extends Component{
     
       _renderContent() {
         return(
-          <TouchableOpacity style={styles.content} onPress={this.props.onPressSubmit}>
+          <TouchableOpacity style={styles.content} >
             
             <Text style={styles.text}>{this.props.title}</Text>
             

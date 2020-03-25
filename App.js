@@ -25,18 +25,22 @@ import {
 
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
-import Home from './app/pages/login';
-import Detail from './app/pages/applicationAccount';
+import Login from './app/pages/login';
+import ApplicationAccount from './app/pages/applicationAccount';
+import WeatherHome from './app/pages/Weather/weatherHome';
 
 const StackNavigation = createStackNavigator({
-    Home:{
-        screen:Home,
-        navigationOptions:{
-            title:"首页"
-        }
+    Login:{
+        screen:Login
+        // navigationOptions:{
+        //     title:"首页"
+        // }
     },
-    Detail:{
-        screen: Detail,
+    WeatherHome:{
+      screen:WeatherHome
+    },
+    ApplicationAccount:{
+        screen: ApplicationAccount,
         navigationOptions:{
             title:"详情页"
         }
@@ -45,20 +49,3 @@ const StackNavigation = createStackNavigator({
 
 export default createAppContainer(StackNavigation);
 
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-//   }
-
-//   render() {
-    
-//       return (
-//         <AppRouter/>
-//       );
-//       // <View>
-        
-//       //   <Login></Login>
-//       // </View>
-//   }
-// }
-// export default App;

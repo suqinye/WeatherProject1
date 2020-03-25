@@ -1,17 +1,19 @@
 //xx天气预报首页
 import React, {Component} from 'react';
 import { View, Text, TextInput, StyleSheet, Image, PixelRatio,ImageBackground,Dimensions } from 'react-native';
+import { Button } from '../../components/Button';
 
 
 
 let _this= null;
 
-export default class weatherHome extends Component{
+export default class WeatherHome extends Component{
     constructor(props){
         super(props);
         this.state = {
            
-            beanData: null
+            beanData: null,
+            content:''
         }
     }
     componentWillMount() {
@@ -25,13 +27,19 @@ export default class weatherHome extends Component{
     componentDidMount() {
        
     }
-
+    goBack = () => {
+       // this.props.navigation.goback();
+        this.props.navigation.push('Login')
+      };
     render(){
-        let {beanData, needGuide} = this.state;
+        
+        const {params} = this.props.navigation.state;
+        let content=params.content;
         return(
 
             <View>
-                <Text>欢迎进入xx天气</Text>
+                <Text onPress={this.goBack}>{content}****</Text>
+                {/* <Button onPress={this.goBack}>你好！欢迎进入xx天气</Button> */}
 
             </View>
            

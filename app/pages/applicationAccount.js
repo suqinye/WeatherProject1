@@ -20,7 +20,7 @@ export default class AppAccount extends Component{
         let content=params.content;
         return (
           <View style={styles.container}>
-            <Text>{content}</Text>
+            <Text>{content}++++++++</Text>
             <Text onPress={this.goBack}>点击返回</Text>
           </View>
         );
