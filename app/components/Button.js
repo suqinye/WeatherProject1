@@ -1,12 +1,13 @@
 
 
-import React, {Component, PropTypes} from 'react';
-import { Text, View, StyleSheet, Platform, TouchableHighlight, TouchableNativeFeedback } from 'react-native';
+import React, {Component} from 'react';
+import { Text, View, StyleSheet, Platform, TouchableOpacity,TouchableNativeFeedback,TouchableHighlight} from 'react-native';
 
 
 export default class Button extends Component{
     constructor(props){
-        super(props);
+      super(props);
+       
     }
     render() {
         if (Platform.OS === 'android') {
@@ -28,9 +29,11 @@ export default class Button extends Component{
     
       _renderContent() {
         return(
-          <View style={styles.content}>
-              <Text style={styles.text}>{this.props.text}</Text>
-          </View>
+          <TouchableOpacity style={styles.content} onPress={this.props.onPressSubmit}>
+            
+            <Text style={styles.text}>{this.props.title}</Text>
+            
+          </TouchableOpacity>
         );
       }
     
@@ -40,13 +43,13 @@ export default class Button extends Component{
     const styles = StyleSheet.create({
         text: {
           color: 'white',
-          fontSize: 13,
+          fontSize: 14,
         },
         content: {
           height: 45,
           backgroundColor: '#046ada',
           alignItems:'center',
           justifyContent:'center',
-          borderRadius: 3
+          borderRadius: 20
         },
       });

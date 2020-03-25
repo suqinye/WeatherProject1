@@ -14,35 +14,51 @@ import {
   View,
   Image,
   Text,
+  AppRegistry,
+  Navigator
 } from 'react-native';
-import Test from './app/test/test1';
-import Logo from './app/pages/login';
-// import {
-//   Header,
-//   LearnMoreLinks,
-//   Colors,
-//   DebugInstructions,
-//   ReloadInstructions,
-// } from 'react-native/Libraries/NewAppScreen';
-// import Route from './src/config'
-// import {Provider} from 'react-redux';
-// import configureStore from './app/store';
-// const store = configureStore();
-class App extends Component {
-  constructor(props) {
-    super(props);
-  }
+// import { NavigationContainer } from 'react-navigation';
+// import { createStackNavigator } from 'react-navigation';
+// import { StackNavigator } from 'react-navigation';
+// import Test from './app/test/test1';
+// import { AppRouter } from './app/navigator/AppRouter';
 
-  render() {
-    return (
-      // <Provider store={store}>
-      //   <Route />
-      // </Provider>
-      <View>
-        {/* <Test> </Test> */}
-        <Logo></Logo>
-      </View>
-    );
-  }
-}
-export default App;
+import {createStackNavigator} from 'react-navigation-stack';
+import {createAppContainer} from 'react-navigation';
+import Home from './app/pages/login';
+import Detail from './app/pages/applicationAccount';
+
+const StackNavigation = createStackNavigator({
+    Home:{
+        screen:Home,
+        navigationOptions:{
+            title:"首页"
+        }
+    },
+    Detail:{
+        screen: Detail,
+        navigationOptions:{
+            title:"详情页"
+        }
+    }
+})
+
+export default createAppContainer(StackNavigation);
+
+// class App extends Component {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+    
+//       return (
+//         <AppRouter/>
+//       );
+//       // <View>
+        
+//       //   <Login></Login>
+//       // </View>
+//   }
+// }
+// export default App;
