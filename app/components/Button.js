@@ -1,8 +1,15 @@
 
 
 import React, {Component} from 'react';
-import { Text, View, StyleSheet, Platform, TouchableOpacity,TouchableNativeFeedback,TouchableHighlight} from 'react-native';
-
+import { Text, 
+  View, 
+  StyleSheet,
+  BVLinearGrdient,
+   Platform, 
+   TouchableOpacity,
+   TouchableNativeFeedback,
+   TouchableHighlight} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class Button extends Component{
     constructor(props){
@@ -29,11 +36,11 @@ export default class Button extends Component{
     
       _renderContent() {
         return(
-          <TouchableOpacity style={styles.content} >
-            
-            <Text style={styles.text}>{this.props.title}</Text>
-            
+          <LinearGradient start={{x:0,y:4}}  end={{x:1.2,y:1.5}} colors={[ '#cc99dd', '#99ccff','#77ccff']} locations={[0, 0.6, 0.8]} style={styles.linearGradient}>
+          <TouchableOpacity style={styles.content} >            
+            <Text style={styles.text}>{this.props.title}</Text>            
           </TouchableOpacity>
+          </LinearGradient>
         );
       }
     
@@ -44,12 +51,19 @@ export default class Button extends Component{
         text: {
           color: 'white',
           fontSize: 14,
+          backgroundColor: 'transparent'
         },
         content: {
-          height: 45,
-          backgroundColor: '#046ada',
+          height: 45, 
           alignItems:'center',
           justifyContent:'center',
-          borderRadius: 20
+         
         },
+        linearGradient:{
+          // height: 45, 
+          // alignItems:'center',
+          // justifyContent:'center',
+           borderRadius: 20
+          
+        }
       });

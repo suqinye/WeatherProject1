@@ -1,8 +1,10 @@
 //xx天气预报首页
 import React, {Component} from 'react';
-import { View, Text, TextInput, StyleSheet, Image, PixelRatio,ImageBackground,Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, PixelRatio,ImageBackground,Dimensions,TouchableOpacity } from 'react-native';
 import { Button } from '../../components/Button';
-
+import Login from '../login';
+import AddCity from '../managementCity/addCity';
+let {height,width} =  Dimensions.get('window');
 
 
 let _this= null;
@@ -13,8 +15,9 @@ export default class WeatherHome extends Component{
         this.state = {
            
             beanData: null,
-            content:''
+            cityName:'昭平县'
         }
+        _this = this;
     }
     componentWillMount() {
       
@@ -29,19 +32,36 @@ export default class WeatherHome extends Component{
     }
     goBack = () => {
        // this.props.navigation.goback();
-        this.props.navigation.push('Login')
+        this.props.navigation.push('Login');       
       };
+    addCity(){
+        this.props.navigation.push('AddCity');
+       
+      }
     render(){
         
-        const {params} = this.props.navigation.state;
-        let content=params.content;
+        // const {params} = this.props.navigation.state;
+        let cityName=this.state.cityName;
+        // if(params!=undefined){
+            
+        // }
+        
         return(
+            <ImageBackground source={require('../../image/icon_weatherHome.jpg')} style={{ flex: 1,width: width, height: height}}>
+                <View style={{marginTop:10,height:20,flex:1,justifyContent:'center',flexDirection:'row',alignItems:'center'}}>
+                    <TouchableOpacity onPress={()=>this.addCity()}>
+                        <Image source={require('../../image/icon_add.png')} style={{width:16,height:16}} ></Image>
+                    </TouchableOpacity>
+                    <View><Text onPress={this.goBack} style={{marginLeft:10,fontSize:15,color:'#ccc'}}>{cityName}</Text></View>
 
-            <View>
-                <Text onPress={this.goBack}>{content}****</Text>
-                {/* <Button onPress={this.goBack}>你好！欢迎进入xx天气</Button> */}
+                </View>
+                <View style={{height:height-20}}>
 
-            </View>
+                </View>
+
+            </ImageBackground>
+
+            
            
         )
 

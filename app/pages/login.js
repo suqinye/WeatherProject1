@@ -35,7 +35,7 @@ export default class Login extends Component{
         //  NetUitl.postJson(url,formData,(responseText) => {
         //   alert(responseText);
         //   this.onLoginSuccess();
-    // })
+    // }) 
 
         
        //{content:'当前是Page2'}为传递的参数
@@ -84,14 +84,16 @@ export default class Login extends Component{
     //   };
     handleCheck=()=>{
         let {userName,password}=this.state;
-        if(userName == ''){
-            alert("账号不能为空！");
+        // if(userName == ''){
+        //     alert("账号不能为空！");
+           
+        // }else if(password == ''){
+        //     alert("密码不能为空!");
+        // }else{
+        //     this.onLoginSuccess();
+        // }
+        this.onLoginSuccess();
 
-        }else if(password == ''){
-            alert("密码不能为空!");
-        }else{
-            this.onLoginSuccess();
-        }
     }
     render (){
         let {height,width} =  Dimensions.get('window');
@@ -107,7 +109,7 @@ export default class Login extends Component{
                         ref=" textAccVale"
                         autoFocus={true}
                         placeholder="请输入手机号"
-                        placeholderTextColor="#c4c4c4"
+                        placeholderTextColor="#fff"
                         onChangeText={(text) => this.setState({userName:text})}
                         >
 
@@ -117,7 +119,7 @@ export default class Login extends Component{
                         <TextInput
                         ref=" textPssVal"
                         placeholder="请输入密码"
-                        placeholderTextColor="#c4c4c4"
+                        placeholderTextColor="#fff"
                         secureTextEntry={true}
                         onChangeText={(password) => this.setState({password})}
                         >
