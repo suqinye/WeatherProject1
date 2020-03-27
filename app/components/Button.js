@@ -37,7 +37,7 @@ export default class Button extends Component{
       _renderContent() {
         return(
           <LinearGradient start={{x:0,y:4}}  end={{x:1.2,y:1.5}} colors={[ '#cc99dd', '#99ccff','#77ccff']} locations={[0, 0.6, 0.8]} style={styles.linearGradient}>
-          <TouchableOpacity style={styles.content} >            
+          <TouchableOpacity style={styles.content} onPress={this.props.onPressLogin} >            
             <Text style={styles.text}>{this.props.title}</Text>            
           </TouchableOpacity>
           </LinearGradient>

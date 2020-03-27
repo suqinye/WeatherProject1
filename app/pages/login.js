@@ -12,8 +12,10 @@ import {
      ToolbarAndroid,
      AppRegistry,
      TouchableOpacity } from 'react-native';
+import Toast, {DURATION} from 'react-native-easy-toast';
 import { StackNavigator } from 'react-navigation';
 import Button from '../components/Button';
+import Loading from '../components/Loading';
 // import AppAccount from './applicationAccount';
 let _this= null;
 export default class Login extends Component{
@@ -25,16 +27,15 @@ export default class Login extends Component{
         };
         _this = this;
     }
-    // 登录，跳转到首页
-    onLoginSuccess=()=>{
+    // 登录，跳转到天气首页
+    goToWeatherHomePage=()=>{
         // let formData =new FormData();
         // formData.append("userName",_this.state.userName);       
         // formData.append("password",_this.state.password) ;
         // let url = "http://localhost:8080/AwesomeProject";
-        //https://github.com/facebook/react-native
         //  NetUitl.postJson(url,formData,(responseText) => {
         //   alert(responseText);
-        //   this.onLoginSuccess();
+        //   this.goToWeatherHomePage();
     // }) 
 
         
@@ -42,41 +43,15 @@ export default class Login extends Component{
        this.props.navigation.push('WeatherHome',{content:'当前是WeatherHome页面'});
     }
 //跳转到注册账号页面
-    goTOapplicationAccountPage=()=>{
-
-        // return(
-        //     <View style={{margin:30,width:'80%',height:'100%'}}>
-        //             <Text style={{fontSize:18,color:'#000'}}>账号密码登录</Text>
-        //             <View style={{height:48,justifyContent:'center',marginTop:100,borderBottomWidth:1,borderColor:'#c4c4c4'}}>
-        //                 <TextInput
-        //                 placeholder="手机号"
-        //                 placeholderTextColor="#c4c4c4"
-        //                 onChangeText={(userName) => this.setState({userName})}
-        //                 >
-
-        //                 </TextInput>
-        //             </View>
-        //             <View style={{height:48,justifyContent:'center',borderBottomWidth:1,borderColor:'#c4c4c4'}}>
-        //                 <TextInput
-        //                 placeholder="密码"
-        //                 placeholderTextColor="#c4c4c4"
-        //                 secureTextEntry={true}
-        //                 onChangeText={(password) => this.setState({password:password})}
-        //                 >
-
-        //                 </TextInput>
-        //             </View>
-        //             <View style={{marginTop:30}}>
-        //                 <Button title="登录" onPressSubmit={this.onLoginSuccess.bind(this)} />
-        //             </View>
-        //         </View>
-            
-        // )
+    goTOapplicationAccountPage(){
+        
+        this.props.navigation.push('AppAccount');
+       
 
     }
-    //忘记密码
+    //跳转到忘记密码
     goToForgetpasswordPage=()=>{
-        
+        this.props.navigation.push('ForgetPassword');
 
     }
     // static navigationOptions = {
@@ -84,15 +59,15 @@ export default class Login extends Component{
     //   };
     handleCheck=()=>{
         let {userName,password}=this.state;
-        // if(userName == ''){
-        //     alert("账号不能为空！");
-           
-        // }else if(password == ''){
-        //     alert("密码不能为空!");
-        // }else{
-        //     this.onLoginSuccess();
-        // }
-        this.onLoginSuccess();
+        if(userName == ''){
+            this.refs.toast.show("账号不能为空！",1000);         
+        }
+        else if(password == ''){
+            this.refs.toast.show("密码不能为空!",500);
+        }else{
+            _this.goToWeatherHomePage();
+        }
+        
 
     }
     render (){
@@ -103,23 +78,24 @@ export default class Login extends Component{
             <ImageBackground source={require('../image/icon_weather.jpg')} style={{ flex: 1,alignItems:'center',flexDirection:'column',width: width, height: height}}>
 
                 <View style={{margin:30,width:'80%',height:'100%'}}>
-                    <Text style={{marginTop:100,fontSize:18,color:'#000'}}>欢迎进入XX天气</Text>
-                    <View style={{height:48,justifyContent:'center',marginTop:50,borderBottomWidth:1,borderColor:'#c4c4c4'}}>
+                    <Text style={{marginTop:100,fontSize:20,color:'#555'}}>欢迎来到冷暖天气</Text>
+                    <Text style={{marginTop:10,fontSize:14,color:'#888'}}>每天好心情</Text>
+                    <View style={{height:48,justifyContent:'center',marginTop:30,borderBottomWidth:1,borderColor:'#ddd'}}>
                         <TextInput
                         ref=" textAccVale"
                         autoFocus={true}
                         placeholder="请输入手机号"
-                        placeholderTextColor="#fff"
+                        placeholderTextColor="#ddd"
                         onChangeText={(text) => this.setState({userName:text})}
                         >
 
                         </TextInput>
                     </View>
-                    <View style={{height:48,justifyContent:'center',borderBottomWidth:1,borderColor:'#c4c4c4'}}>
+                    <View style={{height:48,justifyContent:'center',borderBottomWidth:1,borderColor:'#ddd'}}>
                         <TextInput
                         ref=" textPssVal"
                         placeholder="请输入密码"
-                        placeholderTextColor="#fff"
+                        placeholderTextColor="#ddd"
                         secureTextEntry={true}
                         onChangeText={(password) => this.setState({password})}
                         >
@@ -127,7 +103,7 @@ export default class Login extends Component{
                         </TextInput>
                     </View>                   
                     <View style={{marginTop:30}}>
-                        <Button title="登录"  onPress={this.handleCheck}/>
+                        <Button title="登录" onPressLogin={()=>this.handleCheck()}/>
                     </View>
                     <View style={{marginTop:70,flex:1,flexDirection:'row',justifyContent:'space-between',fontSize:15}}>
                         <View>
@@ -138,6 +114,8 @@ export default class Login extends Component{
                         </View>
                    </View>
                 </View>
+                <Toast ref="toast"/>
+                <Loading ref="loading" />
             </ImageBackground>
         )
     }

@@ -28,8 +28,9 @@ import {
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
 import Login from './app/pages/login';
-import ApplicationAccount from './app/pages/applicationAccount';
+import AppAccount from './app/pages/applicationAccount';
 import WeatherHome from './app/pages/Weather/weatherHome';
+import ForgetPassword from './app/pages/forgetPassword';
 import AddCity from './app/pages/managementCity/addCity';
 import CityHome from './app/pages/managementCity/cityHome';
 
@@ -47,9 +48,15 @@ const StackNavigation = createStackNavigator({
       header:null
     }   
   },
-  ApplicationAccount: {
-    screen: ApplicationAccount,
+  AppAccount: {
+    screen: AppAccount,
     navigationOptions: {
+      header:null
+    }
+  },
+  ForgetPassword:{
+    screen:ForgetPassword,
+    navigationOptions:{
       header:null
     }
   },
