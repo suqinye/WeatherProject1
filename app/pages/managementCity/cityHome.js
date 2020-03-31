@@ -18,6 +18,11 @@ let listArr = [
   {location: '上海', tmp: '26'}
 ];
 export default class CityHome extends Component {
+  static navigationOptions = {
+    header:null,
+    tabBarVisible:false,
+    gesturesEnabled: false,
+};
   constructor(props) {
     super(props);
     // const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -30,8 +35,13 @@ export default class CityHome extends Component {
   goToAddCity() {
     this.props.navigation.push('AddCity');
   }
+  goBack = () => {
+    // this.props.navigation.goback();
+    this.props.navigation.push('WeatherHome');
+  };
 
   renderItemRow(item, index) {
+    let aaa =this.props.navigation.getParam('aa')
     return (
       <View
         style={{
@@ -69,14 +79,14 @@ export default class CityHome extends Component {
         source={require('../../image/icon_weatherHome.jpg')}
         style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}>
         {/*可以使用 ListView */}
-        <View style={{flexDirection: 'row', alignItems: 'center', margin: 8}}>
+        <TouchableOpacity onPress={this.goBack}  style={{flexDirection: 'row', alignItems: 'center', margin: 8}}>
           <Image
             source={require('../../image/icon_left_back.png')}
             style={{width: 18, height: 18, color: '#fff'}}></Image>
           <Text style={{textAlign: 'center', fontSize: 18, color: '#fff'}}>
             城市管理
           </Text>
-        </View>
+        </TouchableOpacity>
 
         <FlatList
           ref="flatlist"
