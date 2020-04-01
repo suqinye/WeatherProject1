@@ -26,7 +26,7 @@ export default class LeftBack extends Component {
                 style={{ flexDirection: 'row', alignItems: 'center', margin: 8 }}>
                 <Image
                     source={require('../image/icon_left_back.png')}
-                    style={{ width: 18, height: 18, color: '#fff',margin:8 }}></Image>
+                    style={{ width: 18, height: 18,margin:8 }}></Image>
                 <Text style={{ textAlign: 'center', fontSize: 18, color: '#fff' }}>{this.props.title}</Text>
             </TouchableOpacity>
         );

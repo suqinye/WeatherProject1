@@ -15,8 +15,8 @@ import {
 import {Button} from '../../components/Button';
 import Loading from '../../components/Loading';
 import Login from '../login';
-import AddCity from '../managementCity/addCity';
-import fetchWeather from '../../API/API';
+import AddCity from '../City/addCity';
+import Fetch from '../../API/Fetch';
 //底部导航栏的图片
 let icon_selectNav1 = require('../../image/icon_selectNav1.png');//
 let icon_noSelectNav1 = require('../../image/icon_noSelectNav1.png');//
@@ -40,6 +40,7 @@ export default class WeatherHome extends Component {
       requestLocation: true,
       cityList: [],
       location: '昭平县',
+      result:''
     };
     _this = this;
   }
@@ -47,12 +48,49 @@ export default class WeatherHome extends Component {
 
   componentWillUnmount() {}
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getWeatherData();
+
+  }
   //获取天气数据
   getWeatherData() {
-    if (this.refs.loading) {
-      this.refs.loading.show();
-    }
+     let url = 'http://apis.juhe.cn/simpleWeather/query';//实时
+     let params= 'city=%E5%8C%97%E4%BA%AC&key=dcf70f81a9ec418d203dab88719049ad';
+     url =url+params;
+    // let url = 'https://api.heweather.net/s6/weather/forecast?location=beijing&key=627bb177b1af4abd94de23a35b711f32';//预报3-10天
+    //hourly逐小时 lifestyle 生活指数
+    // if (this.refs.loading) {
+    //   this.refs.loading.show();
+    // }
+
+    // Fetch.request(url,
+    //   ()=>{
+    //     console.log('请求发送中...')
+    // },
+    // (responseData)=>{
+    //   console.log('json*********************************')
+    //   console.log(responseData);
+
+    //    // this.requestSuccess(responseData);
+    // },
+    // (error)=>{
+    //    // this.requestError(error);
+    // })
+    fetch(url).then((response) => {
+      if (response.ok) {
+          return response.json();
+      }
+  }).then((weatherData) => {
+    this.setState({
+      result:JSON.stringify(weatherData)
+  })
+    console.log('json*********************************');
+      console.log(JSON.stringify(weatherData));
+      // this.onSuccess(weatherData);
+  }).catch((error) => {
+      // this.onFailure(error);
+  });
+      
   }
 
   goBack = () => {

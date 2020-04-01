@@ -82,7 +82,7 @@ export default class CityHome extends Component {
         <TouchableOpacity onPress={this.goBack}  style={{flexDirection: 'row', alignItems: 'center', margin: 8}}>
           <Image
             source={require('../../image/icon_left_back.png')}
-            style={{width: 18, height: 18, color: '#fff'}}></Image>
+            style={{width: 18, height: 18}}></Image>
           <Text style={{textAlign: 'center', fontSize: 18, color: '#fff'}}>
             城市管理
           </Text>
