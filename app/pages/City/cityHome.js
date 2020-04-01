@@ -15,6 +15,12 @@ let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 
 let listArr = [
   {location: '北京', tmp: '23'},
+  {location: '上海', tmp: '26'},
+  {location: '天津', tmp: '23'},
+  {location: '重庆', tmp: '26'},
+  {location: '南宁', tmp: '23'},
+  {location: '广州', tmp: '26'},
+  {location: '北京', tmp: '23'},
   {location: '上海', tmp: '26'}
 ];
 export default class CityHome extends Component {
@@ -39,40 +45,34 @@ export default class CityHome extends Component {
     // this.props.navigation.goback();
     this.props.navigation.push('WeatherHome');
   };
-
-  renderItemRow(item, index) {
-    let aaa =this.props.navigation.getParam('aa')
-    return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          width: SCREEN_WIDTH,
-        }}>
-        <TouchableOpacity style={{width: 100, height: 100, margin: 10}}>
-          <ImageBackground
-            source={require('../../image/icon_bgCity.jpg')}
-            style={{width: 100, height: 100}}>
-            <View style={{flex:1,textAlign:'center'}}>
-              <Text style={{textAlign:'center',marginTop:5}} >{item.location}</Text>
-              <Text style={{textAlign:'center'}}>{item.tmp}℃</Text>
-            </View>
-          </ImageBackground>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.goToAddCity()}
-          style={{width: 100, height: 100, margin: 10}}>              
+  goWearthDetail (item) {
+    this.props.navigation.push('WeatherHome',{city:item});
+    
+  }
+  renderCityItem() {
+    let aaa =this.props.navigation.getParam('aa');
+    //listArr
+    return (      
+      listArr.map((item,index)=>{
+        return(
+          <TouchableOpacity style={{margin:10}} >           
             <ImageBackground
-            source={require('../../image/icon_bgCity.jpg')}
-            style={{width: 100, height: 100,flexDirection:1,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-           <Image source={require('../../image/icon_add.png')}  style={{width:20,height:20}}></Image>
-          </ImageBackground>
+              source={require('../../image/icon_bgCity.jpg')}
+              style={{width: 100, height: 100}}>
+                <View>
+                <Text style={{textAlign:'center',marginTop:5}} >{item.location}</Text>
+                <Text style={{textAlign:'center'}}>{item.tmp}℃</Text>
+              </View>
+            
+            </ImageBackground>
+            
         </TouchableOpacity>
-      </View>
+        )
+      })
     );
   }
-
+    
+  
   render() {
     return (
       <ImageBackground
@@ -87,13 +87,30 @@ export default class CityHome extends Component {
             城市管理
           </Text>
         </TouchableOpacity>
+        <ScrollView style={{height:SCREEN_HEIGHT,width:SCREEN_WIDTH}}>
+          <View style={{flex:1,flexDirection:'row',flexWrap:'wrap'}}>
+            {this.renderCityItem()}
+            <TouchableOpacity
+            onPress={() => this.goToAddCity()}
+            style={{width: 100, height: 100, margin: 10}}>              
+              <ImageBackground
+              source={require('../../image/icon_bgCity.jpg')}
+              style={{width: 100, height: 100,flexDirection:1,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                <Image source={require('../../image/icon_add.png')}  style={{width:20,height:20}}></Image>
+              </ImageBackground>
+            </TouchableOpacity>
+          </View>
+          
+        </ScrollView>
 
-        <FlatList
+        {/* <FlatList
           ref="flatlist"
           data={this.state.listArray}
+          style={{width:SCREEN_WIDTH,height:SCREEN_HEIGHT,marginTop:10,flex:1}}
           keyExtractor={(item, index) => index.toString()} //不重复的key
           renderItem={({item, index}) => this.renderItemRow(item, index)}
-        />
+          ListFooterComponent ={this.renderFooter}
+        /> */}
       </ImageBackground>
     );
   }

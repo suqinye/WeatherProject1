@@ -83,7 +83,9 @@ topNavigation (){
         MinePage:{screen:MinePage, navigationOptions: {header:null } },//我的页面
         Login:{screen:Login, navigationOptions: {header:null }},//登录页面
         ForgetPassword:{screen:ForgetPassword, navigationOptions: {header:null }},//忘记密码页面
-        AppAccount:{screen:AppAccount, navigationOptions: {header:null }}//注册账号页面
+        AppAccount:{screen:AppAccount, navigationOptions: {header:null }},//注册账号页面
+        SettingPage:{screen:SettingPage, navigationOptions: {header:null }}//设置页面
+
       },
       {
         navigationOptions:{

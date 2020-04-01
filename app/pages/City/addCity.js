@@ -20,7 +20,7 @@ import NetUtil from '../../util/NetUtil';
 import LeftBack from '../../components/LeftBack';
 import mainStyles from './style';
 import SearchInput from './searchCityInput';
-import cityData from './cities';
+import cityData from './cities.json';
 let SCREEN_WIDTH = Dimensions.get('window').width; //宽
 let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 
@@ -41,6 +41,8 @@ let defaultHotCityArray = [
     
     
 ];
+let all_Cities_List = cityData.result;
+
 
 export default class AddCity extends Component {
     constructor(props){
@@ -50,7 +52,8 @@ export default class AddCity extends Component {
           searchList: [],
           isChecking:false,
            isediting:false,
-           citiesList:'',
+           showSearchResult: false,
+           allCitiesList:all_Cities_List,
           hotCityArray:defaultHotCityArray
 
         }
@@ -93,11 +96,33 @@ export default class AddCity extends Component {
       )
   }
   onChangeText(text) {
-    this.setState({
-        searchTitle: text,
-        searchList: []
+    if(text==''){
+      this.setState({
+        showSearchResult: false
     })
+    }else{
+       // 在这里过滤数据结果
+       let dataList = this.filterCityData(text);
+       this.setState({
+        searchTitle: text,
+        showSearchResult: true,
+        searchList: dataList
+    })
+    }
+    
   }
+  filterCityData(text) {
+    let rst = [];
+    for (let i = 0; i < all_Cities_List.length; i++) {
+      let item = all_Cities_List[i];
+      if (item.city.includes(text)) {
+        rst.push(item);
+      }
+    }
+    return rst;
+  }
+
+
   deleHandle() {
     this.setState({
         searchTitle: "",
@@ -120,90 +145,116 @@ export default class AddCity extends Component {
     searchTitle = searchTitle.trim()
     this.clearStaff()
     this.getStaffList(searchTitle)
- }
- clearStaff() {
-  this.setState({
-      searchList: []
-  });
-}
-whenEndEdit() {
-  if (this.state.searchList.length == 0) {
-      this.checkStaff();
   }
-}
-getStaffList(number) {
+  clearStaff() {
+    this.setState({
+        searchList: []
+    });
+  }
+  whenEndEdit() {
+    if (this.state.searchList.length == 0) {
+        this.checkStaff();
+    }
+  }
+  getStaffList(value) {
 
-  let url ='http://apis.juhe.cn/simpleWeather/cityList?key=dcf70f81a9ec418d203dab88719049ad';  
-  this.setState({isChecking: true});  
-     fetch(url)
-     .then(response=>response.json())
-     .then(result=>{
-       this.setState({
-        searchList:JSON.stringify(result),
-        isChecking:false
-       })
-     })
-     .catch(error=>{//捕获异常
-      this.setState({
-        searchList:JSON.stringify(error)
+    // let url ='http://apis.juhe.cn/simpleWeather/cityList?key=dcf70f81a9ec418d203dab88719049ad';
+    let url = 'https://github.com/suqinye/WeatherProject1/blob/dev/app/pages/City/cities.json';  
+    this.setState({isChecking: true});  
+      fetch(url)
+      .then(response=>response.json())
+      .then(result=>{
+        this.setState({
+          searchList:JSON.stringify(result),
+          isChecking:false
+        })
       })
-    })
+      .catch(error=>{//捕获异常
+        this.setState({
+          searchList:JSON.stringify(error)
+        })
+      })
+        
       
-     
 
-}
-getCitiesListData(){
-   let url ='http://apis.juhe.cn/simpleWeather/cityList?key=dcf70f81a9ec418d203dab88719049ad';    
-  console.log("点击了事件");
+  }
+  getCitiesListData(){
+    //  let url ='http://apis.juhe.cn/simpleWeather/cityList?key=dcf70f81a9ec418d203dab88719049ad';   
+    let url = 'https://github.com/suqinye/WeatherProject1/blob/dev/app/pages/City/cities.json';
+    console.log("点击了事件");
 
- NetUtil.get(url)
-            .then(result => {
-              let aa = JSON.stringify(result);
-                _this.setState({
-                  hotCityArray: aa.result
-                },()=>{console.log(this.state.hotCityArray);})
-            })
-            .catch(error => {
-                _this.setState({
-                  hotCityArray: JSON.stringify(error)
-                })
-            })
-  // fetch(url, {
-  //     //请求方式，GET或POST
-  //     method: 'GET',
-  //     headers: {
-  //         'Accept': 'application/json',
-  //         'Content-Type': 'application/json',
-  //     }
-  // //请求参数，如果有的话，可以这样方式定义,注意需要服务端支持json入参，如果不支持的话，可以尝试下面的方式
-  //   //body: JSON.stringify({
-  //   //   firstParam: 'value1',
-  //   //   secondParam: 'value1',
-  //   // }),
+  //  NetUtil.get(url)
+  //             .then(result => {
+  //               let aa = JSON.stringify(result);
+  //                 _this.setState({
+  //                   hotCityArray: aa.result
+  //                 },()=>{console.log(this.state.hotCityArray);})
+  //             })
+  //             .catch(error => {
+  //                 _this.setState({
+  //                   hotCityArray: JSON.stringify(error)
+  //                 })
+  //             })
+    // fetch(url, {
+    //     //请求方式，GET或POST
+    //     method: 'GET',
+    //     headers: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json',
+    //     }
+    // //请求参数，如果有的话，可以这样方式定义,注意需要服务端支持json入参，如果不支持的话，可以尝试下面的方式
+    //   //body: JSON.stringify({
+    //   //   firstParam: 'value1',
+    //   //   secondParam: 'value1',
+    //   // }),
 
-  //   //如果服务端不支持json入参，请使用这种拼接方式
-  //   //body: 'key1=value1&key2=value2'
-  // }).then((response) => response.json()).then(
-  //     (responseJson) => {
-  //       this.setState({
-  //         hotCityArray:responseJson.result
-  //       },()=>{console.log(this.state.hotCityArray);})
-          
-  //     })
-  
+    //   //如果服务端不支持json入参，请使用这种拼接方式
+    //   //body: 'key1=value1&key2=value2'
+    // }).then((response) => response.json()).then(
+    //     (responseJson) => {
+    //       this.setState({
+    //         hotCityArray:responseJson.result
+    //       },()=>{console.log(this.state.hotCityArray);})
+            
+    //     })
+    fetch(url).then((response) => {
+      if (response.ok) {
+          return response.json();
+      }
+  }).then((weatherData) => {
+      this.onSuccess(weatherData);
+  }).catch((error) => {
+      this.onFailure(error);
+  });
+    
 
-}
+  }
 
-    hotCitiesList =() =>{
-     
+  onSuccess(weatherData){
+    const aa = weatherData.result;
+    
+    this.setState({
+       
+      hotCityArray:aa
+    });
+    // let dataList = [];
+    // for (let i = 0; i < aa.length; i++) {
+    //     dataList.push(aa);
+    // }
+   
+
+  }
+  onFailure = (error) => {
+
+  };
+
+    hotCitiesList (){
+     let {hotCityArray} =this.state;
+     console.log(hotCityArray);
      return(
-      defaultHotCityArray.map((item,index)=>{
+      hotCityArray.map((item,index)=>{
         return (
-          // <View style={{margin:10}}>          
-           
-            
-            
-          // </View>
+        
           <View  key={index} style={{width:75,height:25,margin:10,borderRadius:20,borderWidth:1,borderColor:'#ddd',alignItems:'center'}}>
             <Text style={{color:'#eee',fontSize:15}}>{item.city}</Text>
           </View>

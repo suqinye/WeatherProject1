@@ -26,15 +26,17 @@ let defaultHotCityArray = [
     {cityCode: "110000", cityName: "北京市"},
     {cityCode: "440100", cityName: "广州市"},
 ];
-
+let _this = null;
 export default class SearchCityInput extends Component {
     constructor(props){
         super(props);
         this.state={
            aa:0,
-           isediting:false
+           isediting:false,
+           value:''
 
         }
+        _this=this;
     }
 
     goBack = () => {
@@ -49,6 +51,8 @@ export default class SearchCityInput extends Component {
       
     
     }
+
+
     render(){
 
         return (
@@ -66,7 +70,10 @@ export default class SearchCityInput extends Component {
                             keyboardType={this.props.keyboardType}
                             underlineColorAndroid='transparent'
                             onChangeText={(text) => {
-                                 this.props.onChangeText(text);
+                               _this.setState({
+                                 value:text
+                               }, _this.props.onChangeText(text))
+                                
                             }}
                             onFocus={() => {
                                 this.setState({
