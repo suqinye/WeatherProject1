@@ -48,10 +48,9 @@ export default class App extends Component{
       selectedTab:'WeatherHome'
     }
     navigation = this.props.navigation;
-
   }
 
-
+  
 topNavigation (){
    let topTabs = createBottomTabNavigator({
     Home:createStackNavigator(
@@ -59,22 +58,30 @@ topNavigation (){
         WeatherHome:{screen:WeatherHome,
               navigationOptions: {
                 header:null
-              } },
-        CityHome: {  screen:CityHome}, //城市管理页 
-        AddCity:{screen:AddCity,navigationOptions:{header:null}}
+              } 
+            },
+         CityHome: {  screen:CityHome}, //城市管理页 
+         AddCity:{screen:AddCity,navigationOptions:{header:null}}
       },
       {
         navigationOptions:{
           headerTitle:'天气',
           tabBarLabel: '天气',
           header:null,
+          tabBarVisible:({navigation,screenProps}) => {
+            let tabBarVisible = true;
+            if (navigation.state.index > 0) {
+              tabBarVisible = false;
+            }
+            return tabBarVisible
+            
+          },
           tabBarIcon: ({ focused, tintColor }) => (
             <Image
               source={focused ?icon_selectNav1 :icon_noSelectNav1}
               style={{ width: 26, height: 26, tintColor: tintColor }}
             />
           )
-
         }
       }
       ),
@@ -85,7 +92,6 @@ topNavigation (){
         ForgetPassword:{screen:ForgetPassword, navigationOptions: {header:null }},//忘记密码页面
         AppAccount:{screen:AppAccount, navigationOptions: {header:null }},//注册账号页面
         SettingPage:{screen:SettingPage, navigationOptions: {header:null }}//设置页面
-
       },
       {
         navigationOptions:{
@@ -98,14 +104,10 @@ topNavigation (){
               style={{ width: 26, height: 26, tintColor: tintColor }}
             />
           )
-
         }
       }
-      )     
- 
-
-
-   },
+      )  
+   },  
    {
     //7.整个底部条的属性
     tabBarOptions: {
@@ -134,11 +136,18 @@ topNavigation (){
     lazy: true,
     backBehavior: 'none',
  })
+ topTabs.navigationOptions = ({ navigation,screenProps }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+  return {
+    tabBarVisible,
+  };
+};
   //9.组合成一个最终展示界面
   return createAppContainer(topTabs)
 }
-
-
 render(){
   let Page = this.topNavigation()
   return(
@@ -147,8 +156,8 @@ render(){
 }
 }
 
-
-// const StackNavigation = createStackNavigator({
+//createBottomTabNavigator  createStackNavigator
+// const StackNavigation = createBottomTabNavigator({
 //   WeatherHome: {
 //     screen: WeatherHome,//主页
 //     navigationOptions: {

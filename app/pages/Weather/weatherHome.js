@@ -15,8 +15,15 @@ import {
 import {Button} from '../../components/Button';
 import Loading from '../../components/Loading';
 import { Item } from 'native-base';
+import Moment from 'moment';
+import weatherData from './weatherData.json';
+import WeatherIcon from '../../components/Icon';
+import Position from '../City/position';
 // import Fetch from '../../API/Fetch';
-
+let weatherJson = weatherData.result;
+let actualityData =weatherJson.sk;	//当前实况天气
+let todayData = weatherJson.today;
+let futureData = weatherJson.future;
 let {height, width} = Dimensions.get('window');
 
 let _this = null;
@@ -33,8 +40,9 @@ export default class WeatherHome extends Component {
       // 正在定位中
       requestLocation: true,
       cityList: [],
-      location: '昭平县',
-      result:''
+      location: '北京市',
+      result:weatherData.result,//当前城市天气数据      
+     // futureData:''//近五天天气情况
     };
     _this = this;
   }
@@ -43,15 +51,16 @@ export default class WeatherHome extends Component {
   componentWillUnmount() {}
 
   componentDidMount() {
-     this.getWeatherData();
+    
+    // this.getWeatherData();
 
   }
-  //获取天气数据
+  //获取当前城市天气数据
    getWeatherData() {
   //    let url = 'http://apis.juhe.cn/simpleWeather/query';//实时
   //    let params= 'city=%E5%8C%97%E4%BA%AC&key=dcf70f81a9ec418d203dab88719049ad';
-  let url = 'https://api.heweather.net/s6/weather/hourly';
-  let params = '?location=beijing&key=627bb177b1af4abd94de23a35b711f32';
+  let url = 'http://apis.juhe.cn/simpleWeather/query';
+  let params = '?city=%E5%8C%97%E4%BA%AC&key=dcf70f81a9ec418d203dab88719049ad';
      url =url+params;
     // let url = 'https://api.heweather.net/s6/weather/forecast?location=beijing&key=627bb177b1af4abd94de23a35b711f32';//预报3-10天
     //hourly逐小时 lifestyle 生活指数
@@ -86,16 +95,45 @@ export default class WeatherHome extends Component {
       
   }
   onSuccess(weatherData){
-    const aa = weatherData[0].basic;    
+    const aa = weatherData.result;    
     this.setState({
        
       result:aa
     });
     
     console.log('json*********************************');
-      console.log(result);
-   
+      console.log(aa);
+      console.log('weatherData*********************************');
+      console.log(weatherData);
+      
 
+  }
+
+  renderCurrentWeather(){
+
+    return(
+      <View
+      style={{
+        flex: 1,
+        height: height,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <View style={{height:170}}></View>
+      <View style={{width:width,flex:1,alignItems:'center'}}>
+        <View>
+          <Text style={{color: '#fff', fontSize: 40}}>{actualityData.temp}℃</Text>
+        </View>
+        <View>
+          <Text style={{color: '#fff', fontSize: 18}}>{todayData.temperature}</Text>
+        </View>
+
+        <View style={{marginTop: 10}}>
+          <Text style={{color: '#fff'}}>{todayData.weather} {actualityData.wind_direction} {actualityData.wind_strength!=undefined?actualityData.wind_strength:null}</Text>
+        </View>
+      </View>
+    </View>
+    )
   }
   //逐小时
   renderHourly(){
@@ -103,7 +141,7 @@ export default class WeatherHome extends Component {
     return(
       cc.map((item,index)=>{
         return(
-          <View style={{margin:10}}>
+          <View key={index} style={{margin:10}}>
             <Text style={{color:'#fff'}}>{item.hour}</Text>
             <Image source={require('../../image/icon_rain.png')} style={{width:25,height:25}}></Image>
             <Text style={{color:'#fff'}}>{item.tmp}</Text>
@@ -117,16 +155,28 @@ export default class WeatherHome extends Component {
   renderForecast(){
     
     let bb = [{'date':"4月1日昨天",'tmp':'17℃/12℃'},{'date':"4月2日今天",'tmp':'18℃/14℃'},{'date':"4月3日星期五",'tmp':'16℃/10℃'},{'date':"4月4日星期六",'tmp':'17℃/12℃'},]
+    
     return(
-      bb.map((item,index)=>{
+      futureData.map((item,index)=>{
+        let date = Moment(item.date).format('MM月DD日');
+        // let today = Moment(todayData.date_y,'YYYYMMDD').format('YYYYMMDD');
+        
         return(
-          <View style={{flex:1,flexDirection:'row',justifyContent:'space-around',width:width,marginTop:20,marginBottom:20}}>
-              <View style={{width:100}}>
-                <Text style={{color:'#fff'}}>{item.date}</Text>        
+          <View  key={index} style={{flex:1,flexDirection:'row',justifyContent:'space-around',width:width,marginTop:20,marginBottom:20}}>
+              <View style={{width:110}}>
+                {index==0?<Text style={{color:'#fff'}}>{date}今天</Text> :
+               index==1?
+               <Text style={{color:'#fff'}}>{date}明天</Text>:
+                <Text style={{color:'#fff'}}>{date}{item.week}</Text> }
+                       
               </View>
-              <View ><Image source={require('../../image/icon_rain.png')} style={{width:25,height:25}}></Image></View>
+              <View >
+                {/* <Image source={require('../../image/icon_rain.png')} style={{width:25,height:25}}></Image> */}
+                <WeatherIcon wid={futureData.weather_id} style={{width:25,height:25}}></WeatherIcon>
+                <Text>{futureData.weather}</Text>
+              </View>
               <View>
-              <Text style={{color:'#fff'}}>{item.tmp}</Text>       
+              <Text style={{color:'#fff'}}>{item.temperature}</Text>       
               </View>
             </View>
         )
@@ -134,17 +184,38 @@ export default class WeatherHome extends Component {
     )
   }
   renderLifestyle(){
-    let aa =[{"a":"3,7","b":"尾号限行"},{"a":"3,7","b":"尾号限行"},{"a":"3,7","b":"尾号限行"},{"a":"3,7","b":"尾号限行"},{"a":"不太适宜","b":"运动"},{"a":"3,7","b":"尾号限行"},{"a":"三月初九","b":"万年历"},{"a":"不太适宜","b":"运动"}];
-
+    
     return (
-      aa.map((item,i)=>{
-        return(          
-            <View style={{margin:10}}>
-              <Text style={{color:'#fff',textAlign:'center'}}>{item.a}</Text>
-              <Text style={{color:'#fff',textAlign:'center'}}>{item.b}</Text>
-            </View>          
-        );
-      })
+     
+               
+      <View style={{borderTopWidth:1,borderColor:'#ccc',marginTop:20,flexDirection:'row',flex:1,justifyContent:'space-around',flexWrap:'wrap'}}>
+        <View style={{margin:10}}>
+          <Text style={{color:'#fff',textAlign:'center',padding:10}}>穿衣指数</Text>
+          <Text style={{color:'#fff',textAlign:'center',opacity:0.5}}>{todayData.dressing_index||null}</Text>
+        </View>
+      <View style={{margin:10}}>
+        <Text style={{color:'#fff',textAlign:'center',padding:10}}>紫外线强度</Text>
+        <Text style={{color:'#fff',textAlign:'center',opacity:0.5}}>{todayData.uv_index||null}</Text>
+      </View>
+      <View style={{margin:10}}>
+        <Text style={{color:'#fff',textAlign:'center',padding:10}}>洗车指数</Text>
+        <Text style={{color:'#fff',textAlign:'center',opacity:0.5}}>{todayData.wash_index||null}</Text>
+      </View>
+      <View style={{margin:10}}>
+        <Text style={{color:'#fff',textAlign:'center',padding:10}}>旅游指数</Text>
+        <Text style={{color:'#fff',textAlign:'center',opacity:0.5}}>{todayData.travel_index||null}</Text>
+      </View>
+      <View style={{margin:10}}>
+        <Text style={{color:'#fff',textAlign:'center',padding:10}}>晨练指数</Text>
+        <Text style={{color:'#fff',textAlign:'center',opacity:0.5}}>{todayData.exercise_index||null}</Text>
+      </View>
+      <View style={{margin:10}}>
+        <Text style={{color:'#fff',textAlign:'center',padding:10}}>干燥指数</Text>
+        <Text style={{color:'#fff',textAlign:'center',opacity:0.5}}>{todayData.drying_index||null}</Text>
+      </View>
+      </View>          
+        
+     
     )
   }
 
@@ -155,7 +226,8 @@ export default class WeatherHome extends Component {
   
   render() {
      const {params} = this.props.navigation.state;
-    let location = this.state.location;
+    let {location,result}= this.state;
+    let todyData = result.future[0];
     //  if(params.city!=undefined){
     //    location = city ;
 
@@ -177,45 +249,25 @@ export default class WeatherHome extends Component {
           }}>
           <TouchableOpacity
             onPress={() => this.goCityMagementPage()}
-            style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+            style={{flex: 1,marginLeft: 10, flexDirection: 'row', justifyContent: 'center'}}>
             <Image
               source={require('../../image/icon_add.png')}
-              style={{width: 16, height: 16, top: 3}}></Image>
-            <Text style={{marginLeft: 10, fontSize: 16, color: '#fff'}}>
+              style={{width: 15, height: 15, top: 3,right:10}}></Image>
+            {/* <Text style={{marginLeft: 10, fontSize: 16, color: '#fff'}}>
               {location}
-            </Text>
+            </Text> */}
+            <Position></Position>
           </TouchableOpacity>
         </View>
         <View>
-          <ScrollView style={{height:height,marginTop:0}}>
-            <View
-              style={{
-                flex: 1,
-                height: height,
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-              }}>
-              <View style={{height:180}}></View>
-              <View>
-                <View>
-                  <Text style={{color: '#fff', fontSize: 40}}>10℃</Text>
-                </View>
-                <View>
-                  <Text style={{color: '#fff', fontSize: 18}}>13℃/9℃</Text>
-                </View>
-
-                <View style={{marginTop: 10}}>
-                  <Text style={{color: '#fff'}}>小雨 西风2级 </Text>
-                </View>
-              </View>
-            </View>
+          <ScrollView style={{marginBottom:50}}>
+            {/* 当前天气 */}
+           {this.renderCurrentWeather()}
             <View
               style={{
                 flex: 1,
                 height:height-50,
                 // marginTop: 40,
-                
-                
               }}>
               <View style={{width:width,flex:1}}>
                 <View style={{width:width,justifyContent:'center',borderTopWidth:1,borderColor:'#ccc'}}>
@@ -231,7 +283,7 @@ export default class WeatherHome extends Component {
                 </View>
                 <View style={{marginTop:20}}>
                   <Text style={{color:'#fff'}}>生活指数</Text>
-                  <View style={{borderTopWidth:1,borderColor:'#ccc',marginTop:20,flexDirection:'row',flex:1,justifyContent:'space-around',flexWrap:'wrap'}}>
+                  <View >
                     {this.renderLifestyle()}
                   </View>
                   
