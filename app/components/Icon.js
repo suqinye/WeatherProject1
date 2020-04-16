@@ -40,9 +40,9 @@ import {
       // }
       aa(){
         let aa =weatherTypesJson.result;
-        let source = require('../image/weatherTypesImg/wid_sunny00.png');
+        let source = require('../image/weatherTypesImg/wid_cloudy01.png');
         return(
-            <Image source={source}></Image>
+            <Image resizeMode='contain' style={{width:22,height:22}} source={source}></Image>
 
         )
       }

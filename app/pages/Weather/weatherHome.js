@@ -19,7 +19,6 @@ import Moment from 'moment';
 import weatherData from './weatherData.json';
 import WeatherIcon from '../../components/Icon';
 import Position from '../City/position';
-// import Fetch from '../../API/Fetch';
 let weatherJson = weatherData.result;
 let actualityData =weatherJson.sk;	//当前实况天气
 let todayData = weatherJson.today;
@@ -29,9 +28,7 @@ let {height, width} = Dimensions.get('window');
 let _this = null;
 
 export default class WeatherHome extends Component {
-//   static navigationOptions = {
-//     header:null
-// };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -46,12 +43,13 @@ export default class WeatherHome extends Component {
     };
     _this = this;
   }
-  componentWillMount() {}
+ 
 
   componentWillUnmount() {}
 
   componentDidMount() {
-    
+   
+   
     // this.getWeatherData();
 
   }
@@ -108,7 +106,7 @@ export default class WeatherHome extends Component {
       
 
   }
-
+//主页面实况天气
   renderCurrentWeather(){
 
     return(
@@ -143,7 +141,7 @@ export default class WeatherHome extends Component {
         return(
           <View key={index} style={{margin:10}}>
             <Text style={{color:'#fff'}}>{item.hour}</Text>
-            <Image source={require('../../image/icon_rain.png')} style={{width:25,height:25}}></Image>
+            <Image source={require('../../image/icon_rain.png')} style={{width:22,height:22}}></Image>
             <Text style={{color:'#fff'}}>{item.tmp}</Text>
         </View>
       
@@ -153,14 +151,10 @@ export default class WeatherHome extends Component {
   }
   //未来天气预测
   renderForecast(){
-    
-    let bb = [{'date':"4月1日昨天",'tmp':'17℃/12℃'},{'date':"4月2日今天",'tmp':'18℃/14℃'},{'date':"4月3日星期五",'tmp':'16℃/10℃'},{'date':"4月4日星期六",'tmp':'17℃/12℃'},]
-    
+   
     return(
       futureData.map((item,index)=>{
-        let date = Moment(item.date).format('MM月DD日');
-        // let today = Moment(todayData.date_y,'YYYYMMDD').format('YYYYMMDD');
-        
+        let date = Moment(item.date).format('MM月DD日');        
         return(
           <View  key={index} style={{flex:1,flexDirection:'row',justifyContent:'space-around',width:width,marginTop:20,marginBottom:20}}>
               <View style={{width:110}}>
@@ -172,7 +166,7 @@ export default class WeatherHome extends Component {
               </View>
               <View >
                 {/* <Image source={require('../../image/icon_rain.png')} style={{width:25,height:25}}></Image> */}
-                <WeatherIcon wid={futureData.weather_id} style={{width:25,height:25}}></WeatherIcon>
+                <WeatherIcon wid={futureData.weather_id} style={{width:20,height:20}}></WeatherIcon>
                 <Text>{futureData.weather}</Text>
               </View>
               <View>
@@ -188,7 +182,7 @@ export default class WeatherHome extends Component {
     return (
      
                
-      <View style={{borderTopWidth:1,borderColor:'#ccc',marginTop:20,flexDirection:'row',flex:1,justifyContent:'space-around',flexWrap:'wrap'}}>
+      <View style={{borderTopWidth:0.5,borderColor:'#657089',marginTop:20,flexDirection:'row',flex:1,justifyContent:'space-around',flexWrap:'wrap'}}>
         <View style={{margin:10}}>
           <Text style={{color:'#fff',textAlign:'center',padding:10}}>穿衣指数</Text>
           <Text style={{color:'#fff',textAlign:'center',opacity:0.5}}>{todayData.dressing_index||null}</Text>
@@ -270,13 +264,13 @@ export default class WeatherHome extends Component {
                 // marginTop: 40,
               }}>
               <View style={{width:width,flex:1}}>
-                <View style={{width:width,justifyContent:'center',borderTopWidth:1,borderColor:'#ccc'}}>
+                <View style={{width:width,justifyContent:'center',borderTopWidth:0.5,borderColor:'#657089'}}>
                   <Text style={{marginTop:20,color:'#fff'}}>逐小时天气</Text>
                   <View style={{flexDirection:'row',flexWrap:'nowrap',justifyContent:'space-around'}}>{this.renderHourly()}</View>
                  
                  
                 </View>
-                <View style={{width:width,borderTopWidth:1,borderBottomWidth:1,borderColor:'#ccc'}}>
+                <View style={{width:width,borderTopWidth:0.5,borderBottomWidth:0.5,borderColor:'#657089'}}>
                   <Text style={{marginTop:20,color:'#fff'}}>未来天气</Text>
                   <View style={{marginBottom:20}}>{this.renderForecast()}</View>
                   

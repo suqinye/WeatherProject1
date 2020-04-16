@@ -42,10 +42,10 @@ export  default class NetUtil{
           fetch(url)
               .then(response=>response.json())
               .then(result=>{
-                  resolve(result)
+                  resolve(result);
               })
               .catch(error=>{
-                  reject(error)
+                  reject(error);
               })
       })
   }
@@ -61,7 +61,7 @@ export  default class NetUtil{
           })
               .then(response=>response.json())
               .then(result=>{
-                  resolve(result)
+                  resolve(result);
               })
               .catch(error=>{
                   reject(error)

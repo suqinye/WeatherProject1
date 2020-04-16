@@ -55,7 +55,7 @@ export default class CityHome extends Component {
     return (      
       listArr.map((item,index)=>{
         return(
-          <TouchableOpacity style={{margin:10}} >           
+          <TouchableOpacity style={{margin:10}} key={index} >           
             <ImageBackground
               source={require('../../image/icon_bgCity.jpg')}
               style={{width: 100, height: 100}}>

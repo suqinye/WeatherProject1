@@ -3,14 +3,14 @@
 	"reason":"successed!",
 	"result":{
 		"sk":{	//当前实况天气
-			"temp":"14",/*当前温度*/
+			"temp":"19",/*当前温度*/
 			"wind_direction":"西南风", /*当前风向*/
-			"wind_strength":"3级",/*当前风力*/
+			"wind_strength":"2级",/*当前风力*/
 			"humidity":"28%",/*当前湿度*/
 			"time":"21:08"/*更新时间*/
 		},
 		"today":{
-			"temperature":"7℃~20℃",/*今日温度*/
+			"temperature":"16℃~26℃",/*今日温度*/
 			"weather":"晴转霾",/*今日天气*/
 			"weather_id":{/*天气唯一标识*/
 				"fa":"00",/*天气标识00：晴*/

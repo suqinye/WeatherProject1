@@ -1,0 +1,208 @@
+{
+    "status": "1",
+    "regeocode": {
+        "roads": [
+            {
+                "id": "1774G49F04502869",
+                "location": "111.256,24.1483",
+                "direction": "东南",
+                "name": "327省道",
+                "distance": "629.406"
+            },
+            {
+                "id": "1774G49F047027125",
+                "location": "111.267,24.1464",
+                "direction": "西",
+                "name": "704县道",
+                "distance": "901.038"
+            }
+        ],
+        "roadinters": [
+            {
+                "second_name": "704县道",
+                "first_id": "1774G49F04502869",
+                "second_id": "1774G49F047027125",
+                "location": "111.2644789,24.14980389",
+                "distance": "952.714",
+                "first_name": "327省道",
+                "direction": "西南"
+            }
+        ],
+        "formatted_address": "广西壮族自治区贺州市昭平县樟木林乡新华村",
+        "addressComponent": {
+            "city": "贺州市",
+            "province": "广西壮族自治区",
+            "adcode": "451121",
+            "district": "昭平县",
+            "towncode": "451121205000",
+            "streetNumber": {
+                "number": [],
+                "direction": [],
+                "distance": [],
+                "street": []
+            },
+            "country": "中国",
+            "township": "樟木林乡",
+            "businessAreas": [ 
+            ],
+            "building": {
+                "name": [],
+                "type": []
+            },
+            "neighborhood": {
+                "name": [],
+                "type": []
+            },
+            "citycode": "1774"
+        },
+        "aois": [],
+        "pois": [
+            {
+                "id": "B06EE0LX0E",
+                "direction": "东北",
+                "businessarea": [],
+                "address": "新华村委会附近",
+                "poiweight": "0.183121",
+                "name": "樟木林中心小学",
+                "location": "111.261239,24.145442",
+                "distance": "371.984",
+                "tel": [],
+                "type": "科教文化服务;学校;小学"
+            },
+             {
+                "id": "B06EE0M0FJ",
+                "direction": "东北",
+                "businessarea": [],
+                "address": "樟木林中心小学附近",
+                "poiweight": "0.347424",
+                "name": "新华村委会",
+                "location": "111.261712,24.144698",
+                "distance": "361.899",
+                "tel": [],
+                "type": "政府机构及社会团体;政府机关;乡镇以下级政府及事业单位"
+            },
+             {
+                "id": "B06EE008NI",
+                "direction": "东北",
+                "businessarea": [],
+                "address": "昭平县",
+                "poiweight": "0.347179",
+                "name": "新华村",
+                "location": "111.261711,24.144696",
+                "distance": "361.721",
+                "tel": [],
+                "type": "地名地址信息;普通地名;村庄级地名"
+            },
+            {
+                "id": "B06EE00EHO",
+                "direction": "东",
+                "businessarea": [],
+                "address": "昭平县",
+                "poiweight": "0.329042",
+                "name": "大寨",
+                "location": "111.262800,24.143386",
+                "distance": "428.807",
+                "tel": [],
+                "type": "地名地址信息;普通地名;村庄级地名"
+            },
+            {
+                "id": "B06EE0LX0F",
+                "direction": "东",
+                "businessarea": [],
+                "address": "农村合作银行(天天乐生活超市旁)",
+                "poiweight": "0.194636",
+                "name": "昭平农村合作银行(樟木林支行)",
+                "location": "111.267918,24.145840",
+                "distance": "993.815",
+                "tel": "0774-6572308",
+                "type": "金融保险服务;银行;农村商业银行"
+            },
+             {
+                "id": "B06EE008LS",
+                "direction": "西",
+                "businessarea": [],
+                "address": "昭平县",
+                "poiweight": "0.177763",
+                "name": "旺岗",
+                "location": "111.252289,24.141619",
+                "distance": "660.599",
+                "tel": [],
+                "type": "地名地址信息;普通地名;村庄级地名"
+            },
+            {
+                "id": "B06EE008ND",
+                "direction": "北",
+                "businessarea": [],
+                "address": "昭平县",
+                "poiweight": "0.319391",
+                "name": "旺山",
+                "location": "111.260209,24.151164",
+                "distance": "907.805",
+                "tel": [],
+                "type": "地名地址信息;普通地名;村庄级地名"
+            },
+             {
+                "id": "B0FFI7GPG2",
+                "direction": "西北",
+                "businessarea": [],
+                "address": "327省道东50米",
+                "poiweight": "0.22142",
+                "name": "新华宾馆",
+                "location": "111.256243,24.148035",
+                "distance": "594.254",
+                "tel": [],
+                "type": "住宿服务;宾馆酒店;宾馆酒店"
+            },
+            {
+                "id": "B0FFL9ETTU",
+                "direction": "南",
+                "businessarea": [],
+                "address": "昭平县",
+                "poiweight": "0.199557",
+                "name": "桥头",
+                "location": "111.257264,24.135660",
+                "distance": "842.052",
+                "tel": [],
+                "type": "地名地址信息;普通地名;村庄级地名"
+            },
+             {
+                "id": "B0FFLCZ3BS",
+                "direction": "东",
+                "businessarea": [],
+                "address": [],
+                "poiweight": "0.120969",
+                "name": "樟林村村务监督委员会",
+                "location": "111.267955,24.144448",
+                "distance": "962.119",
+                "tel": [],
+                "type": "政府机构及社会团体;政府机关;乡镇以下级政府及事业单位"
+            },
+            {
+                "id": "B0FFGDQK6N",
+                "direction": "东",
+                "businessarea": [],
+                "address": "樟木街中国联通对面",
+                "poiweight": "0.157163",
+                "name": "永达石材",
+                "location": "111.265952,24.144126",
+                "distance": "755.801",
+                "tel": "13737888399",
+                "type": "购物服务;家居建材市场;建材五金市场"
+            },
+             {
+                "id": "B0FFKL5LBE",
+                "direction": "东",
+                "businessarea": [],
+                "address": "樟木林镇樟木街43号",
+                "poiweight": "0.123179",
+                "name": "昭平县馨嘉装饰工程有限公司",
+                "location": "111.266688,24.145395",
+                "distance": "859.935",
+                "tel": [],
+                "type": "公司企业;公司企业;公司企业"
+            }
+        ]
+    },
+    "info": "OK",
+    "infocode": "10000"
+}

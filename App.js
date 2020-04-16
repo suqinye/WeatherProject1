@@ -57,17 +57,17 @@ topNavigation (){
       { //天气首页 
         WeatherHome:{screen:WeatherHome,
               navigationOptions: {
-                header:null
+                headerShown:false
               } 
             },
          CityHome: {  screen:CityHome}, //城市管理页 
-         AddCity:{screen:AddCity,navigationOptions:{header:null}}
+         AddCity:{screen:AddCity,navigationOptions:{headerShown:false}}
       },
       {
         navigationOptions:{
           headerTitle:'天气',
           tabBarLabel: '天气',
-          header:null,
+          headerShown:false,
           tabBarVisible:({navigation,screenProps}) => {
             let tabBarVisible = true;
             if (navigation.state.index > 0) {
@@ -97,7 +97,7 @@ topNavigation (){
         navigationOptions:{
           headerTitle:'我的',
           tabBarLabel: '我的',
-          header:null,
+          headerShown:false,
           tabBarIcon: ({ focused, tintColor }) => (
             <Image
               source={focused ?icon_selectNav2 :icon_noSelectNav2}

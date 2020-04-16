@@ -54,7 +54,7 @@ export default class AddCity extends Component {
            isediting:false,
            showSearchResult: false,
            allCitiesList:all_Cities_List,
-          hotCityArray:defaultHotCityArray
+          hotCityArray:[]
 
         }
         _this = this;
@@ -162,7 +162,7 @@ export default class AddCity extends Component {
     let url = 'https://github.com/suqinye/WeatherProject1/blob/dev/app/pages/City/cities.json';  
     this.setState({isChecking: true});  
       fetch(url)
-      .then(response=>response.json())
+      .then((response)=>(response.json()))
       .then(result=>{
         this.setState({
           searchList:JSON.stringify(result),
@@ -195,6 +195,8 @@ export default class AddCity extends Component {
   //                   hotCityArray: JSON.stringify(error)
   //                 })
   //             })
+
+
     // fetch(url, {
     //     //请求方式，GET或POST
     //     method: 'GET',
@@ -251,18 +253,23 @@ export default class AddCity extends Component {
     hotCitiesList (){
      let {hotCityArray} =this.state;
      console.log(hotCityArray);
-     return(
-      hotCityArray.map((item,index)=>{
-        return (
-        
-          <View  key={index} style={{width:75,height:25,margin:10,borderRadius:20,borderWidth:1,borderColor:'#ddd',alignItems:'center'}}>
-            <Text style={{color:'#eee',fontSize:15}}>{item.city}</Text>
-          </View>
+     if(hotCityArray.lengt==0){
+       return ;
+       
+     }else{
+        return(
+          hotCityArray.map((item,index)=>{
+            return (
             
-        );
-
-      })
-     )
+              <View  key={index} style={{width:75,height:25,margin:10,borderRadius:20,borderWidth:1,borderColor:'#ddd',alignItems:'center'}}>
+                <Text style={{color:'#eee',fontSize:15}}>{item.city}</Text>
+              </View>
+                
+            );
+    
+          })
+        )
+     }
     }
     render(){
 
