@@ -10,12 +10,14 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.9.0",
     "@react-native-community/masked-view": "^0.1.7",
     "moment": "^2.24.0",
     "native-base": "^2.13.12",
     "native-cmos-fetch": "0.0.3",
     "react": "16.9.0",
     "react-native": "0.61.5",
+    "react-native-drawer-layout": "^2.0.0",
     "react-native-easy-toast": "^1.2.0",
     "react-native-geolocation-service": "^4.0.0",
     "react-native-gesture-handler": "^1.6.1",

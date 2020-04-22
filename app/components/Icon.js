@@ -13,13 +13,15 @@ import {
    export default class WeatherIcon extends Component{
     constructor(props){
       super(props);
-      this.state={
-        weatherTypesData:''
-      }
+      // this.state={
+      //   weatherTypesData:'',
+      //   wid:''
+      // }
        
     }
     componentDidMount() {
-       // let wid = this.props.wid;
+     
+
      //this.getWeatherTypesData();//Weather types获取天气种类
     
       }
@@ -38,25 +40,30 @@ import {
 
 
       // }
-      aa(){
-        let aa =weatherTypesJson.result;
-        let source = require('../image/weatherTypesImg/wid_cloudy01.png');
-        return(
-            <Image resizeMode='contain' style={{width:22,height:22}} source={source}></Image>
-
-        )
-      }
+     
 
     render(){
 
-        
-        return(
-            <View>
-                {/* <Image source={require('../image/guideUp@2x.png')} style={{width:15,height:15}}></Image> */}
-                {this.aa()}
+      let wid = this.props.Value;      
+      // let wid = '晴';
+      // let aa =weatherTypesJson.result;
+      let source = require('../image/weatherTypesImg/wid_cloudy01.png');      
+      if(wid =='晴'){
+        source = require('../image/weatherTypesImg/wid_sunny00.png');
+      }else if(wid =='阴'){
+        source = require('../image/weatherTypesImg/wid_yin02.png');
+      } else if(wid.indexOf("雨")>-1 && wid.indexOf("雪")==-1){ //下雨
+        source = require('../image/weatherTypesImg/wid_rain07.png');
+      }else if(wid.indexOf('雨') == -1 && wid.indexOf('雪')>-1){  //下雪
+        source = require('../image/weatherTypesImg/wid_snow.png');
+      }else if ((wid.indexOf('雨')>-1 && wid.indexOf('雪') > -1)){ //雨夹雪
+        source = require('../image/weatherTypesImg/wid_rain_snow.png');
+      }
+     
+      return(
+          <Image  style={{width:22,height:22}} source={source}></Image>
 
-            </View>
-        )
+      )
     }
 
-}
+  }

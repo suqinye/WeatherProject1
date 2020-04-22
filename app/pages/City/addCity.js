@@ -76,6 +76,7 @@ export default class AddCity extends Component {
 
     goBack = () => {
       this.props.navigation.pop();
+      // this.props.navigation.goBack();
       // this.props.navigation.push('CityHome');
     };
     renderInput() {

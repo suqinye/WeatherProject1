@@ -42,8 +42,8 @@ export default class CityHome extends Component {
     this.props.navigation.push('AddCity');
   }
   goBack = () => {
-    // this.props.navigation.goback();
-    this.props.navigation.push('WeatherHome');
+    this.props.navigation.goBack();
+    // this.props.navigation.push('WeatherHome');
   };
   goWearthDetail (item) {
     this.props.navigation.push('WeatherHome',{city:item});
@@ -76,17 +76,17 @@ export default class CityHome extends Component {
   render() {
     return (
       <ImageBackground
-        source={require('../../image/icon_weatherHome.jpg')}
+        source={require('../../image/icon_weatherImgBG.jpg')}
         style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}>
         {/*可以使用 ListView */}
-        <TouchableOpacity onPress={this.goBack}  style={{flexDirection: 'row', alignItems: 'center', margin: 8}}>
-          <Image
-            source={require('../../image/icon_left_back.png')}
-            style={{width: 18, height: 18}}></Image>
-          <Text style={{textAlign: 'center', fontSize: 18, color: '#fff'}}>
-            城市管理
-          </Text>
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', justifyContent:'space-between',alignItems: 'center',marginLeft:10,marginRight:10,marginTop:8}}>          
+          <TouchableOpacity onPress={this.goBack} style={{alignItems: 'center',flexDirection:'row'}}>
+            <Image
+              source={require('../../image/icon_left_back.png')}
+              style={{width: 15, height: 15}}></Image>
+            <Text style={{textAlign: 'center', fontSize: 15, color: '#fff'}}>返回</Text></TouchableOpacity>
+          <TouchableOpacity><Text style={{textAlign: 'center', fontSize: 15, color: '#fff'}}>编辑</Text></TouchableOpacity>
+        </View>
         <ScrollView style={{height:SCREEN_HEIGHT,width:SCREEN_WIDTH}}>
           <View style={{flex:1,flexDirection:'row',flexWrap:'wrap'}}>
             {this.renderCityItem()}

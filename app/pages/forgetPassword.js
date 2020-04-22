@@ -8,8 +8,8 @@ export default class ForgetPassword extends Component{
 
     }
     goBack = () => {
-        // this.props.navigation.goback();
-         this.props.navigation.push('Login');       
+        this.props.navigation.goBack();
+              
        };
 
     render(){

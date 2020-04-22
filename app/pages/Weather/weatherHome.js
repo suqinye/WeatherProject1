@@ -11,13 +11,16 @@ import {
   ImageBackground,
   Dimensions,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import {Button} from '../../components/Button';
 import Loading from '../../components/Loading';
+import Header from '../../components/Header';
 import { Item } from 'native-base';
 import Moment from 'moment';
 import weatherData from './weatherData.json';
 import WeatherIcon from '../../components/Icon';
+import DrawerLayout from 'react-native-drawer-layout';
 import Position from '../City/position';
 let weatherJson = weatherData.result;
 let actualityData =weatherJson.sk;	//当前实况天气
@@ -154,7 +157,8 @@ export default class WeatherHome extends Component {
    
     return(
       futureData.map((item,index)=>{
-        let date = Moment(item.date).format('MM月DD日');        
+        let date = Moment(item.date).format('MM月DD日'); 
+               
         return(
           <View  key={index} style={{flex:1,flexDirection:'row',justifyContent:'space-around',width:width,marginTop:20,marginBottom:20}}>
               <View style={{width:110}}>
@@ -164,10 +168,9 @@ export default class WeatherHome extends Component {
                 <Text style={{color:'#fff'}}>{date}{item.week}</Text> }
                        
               </View>
-              <View >
-                {/* <Image source={require('../../image/icon_rain.png')} style={{width:25,height:25}}></Image> */}
-                <WeatherIcon wid={futureData.weather_id} style={{width:20,height:20}}></WeatherIcon>
-                <Text>{futureData.weather}</Text>
+              <View style={{width:70}}>             
+                <WeatherIcon  Value={item.weather} style={{width:20,height:20}}/>
+                <Text style={{marginLeft:32,color:'#fff',fontSize:15}}>{item.weather}</Text>
               </View>
               <View>
               <Text style={{color:'#fff'}}>{item.temperature}</Text>       
@@ -213,43 +216,58 @@ export default class WeatherHome extends Component {
     )
   }
 
-  //跳到城市管理页面
-  goCityMagementPage() {
-    this.props.navigation.push('CityHome',{aa:'从weatherhome页面传参'});
-  }
   
   render() {
      const {params} = this.props.navigation.state;
     let {location,result}= this.state;
     let todyData = result.future[0];
-    //  if(params.city!=undefined){
-    //    location = city ;
-
-    //  }else{
-    //    location = this.state.location;
-    //  }
-
+    const navigationView = (
+      <View style={{height:height,width:200,backgroundColor:'rgb(30,30,30)'}}>        
+         <View ><Text style={{fontSize:18,color:'#bbb',textAlign:'center',margin:15}}>冷暖天气</Text></View>
+         <View style={{justifyContent:'flex-end'}}>
+          <TouchableOpacity  onPress={() => this.goCityMagementPage()} 
+          style={{height:40,flexDirection:'row',justifyContent:'space-between',alignItems:'center',backgroundColor:'#444',marginBottom:2, marginRight:5}}>
+            <View><Text style={{fontSize:16,marginLeft:10,color:'#bbb'}}>城市管理</Text></View>
+            <Image source={require('../../image/icon_rightBack.png')} style={{width:20,height:15}}></Image>
+          </TouchableOpacity>
+          <TouchableOpacity  onPress={() => this.goToLoginPage()} 
+          style={{height:40,flexDirection:'row',justifyContent:'space-between',alignItems:'center',backgroundColor:'#444',marginBottom:2, marginRight:5}}>
+            <View><Text style={{fontSize:16,marginLeft:10,color:'#bbb'}}>登录/注册</Text></View>
+            <Image source={require('../../image/icon_rightBack.png')} style={{width:20,height:15}}></Image>
+          </TouchableOpacity>
+         
+         </View>
+       
+      </View>
+    );
     return (
       <ImageBackground
-        source={require('../../image/icon_weatherHome.jpg')}
+        source={require('../../image/icon_weatherImgBG.jpg')}
         style={{flex: 1, width: width, height: height}}>
+        <DrawerLayout 
+         drawerLockMode={'unlocked'}
+         drawerWidth={200}
+         ref="drawer"
+         drawerPosition={DrawerLayout.positions.Left}
+         renderNavigationView = {() => navigationView}        
+         >
         <View
           style={{
-           
             alignItems:'center',
             height: 40,            
             justifyContent: 'center',
             flexDirection: 'row',
           }}>
+           
+           <TouchableOpacity onPress={()=> this.onPenLeftDrawable()}>
+             <Image source={require('../../image/icon_menu.png')} style={{width:20,height:20,marginLeft:10}}></Image>
+           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => this.goCityMagementPage()}
+           
             style={{flex: 1,marginLeft: 10, flexDirection: 'row', justifyContent: 'center'}}>
             <Image
               source={require('../../image/icon_add.png')}
-              style={{width: 15, height: 15, top: 3,right:10}}></Image>
-            {/* <Text style={{marginLeft: 10, fontSize: 16, color: '#fff'}}>
-              {location}
-            </Text> */}
+              style={{width: 15, height: 15, top: 3,right:10}}></Image>            
             <Position></Position>
           </TouchableOpacity>
         </View>
@@ -288,16 +306,27 @@ export default class WeatherHome extends Component {
            
           </ScrollView>
         </View>
+        </DrawerLayout>
 
         <Loading ref="loading" />
       </ImageBackground>
     );
   }
 
-
+//跳到城市管理页面
+goCityMagementPage() {
+  this.props.navigation.push('CityHome',{aa:'从weatherhome页面传参'});
+}
+//跳到我的页面
+goToLoginPage(){
+  this.props.navigation.push('Login');
+}
+onPenLeftDrawable(){
+  this.refs.drawer.openDrawer();
+}
+onColLeftDrawable(){
+  this.refs.drawer.closeDrawer();
+}
 
 }
-const styles = StyleSheet.create({
 
-
-})

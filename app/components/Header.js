@@ -6,7 +6,7 @@ import {
   Image,
   StyleSheet,
    TouchableOpacity} from 'react-native';
-   xport default class Header extends Component{
+   export default class Header extends Component{
     constructor(props){
       super(props);
        
@@ -14,10 +14,10 @@ import {
 
     render(){
         return(
-            <View>
+            <TouchableOpacity onPress={this.props.onPress} >
                 <Image source={require('../image/icon_left_back.png')} style={{width:15,height:15}}></Image>
 
-            </View>
+            </TouchableOpacity>
         )
     }
 

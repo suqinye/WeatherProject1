@@ -32,7 +32,7 @@ export default class Position extends Component{
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
                 );           
                 if(granteds === PermissionsAndroid.RESULTS.GRANTED){
-                _this.getPosition()
+                //_this.getPosition()
                 }
             }else {            
                 this.refs.toast.show('定位权限被禁止',1000)
