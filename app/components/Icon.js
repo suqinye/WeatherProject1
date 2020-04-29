@@ -61,7 +61,13 @@ import {
       }
      
       return(
-          <Image  style={{width:22,height:22}} source={source}></Image>
+        
+          <View style={{flexDirection:'row',flex:1}}>
+            <Image  style={{width:22,height:22}} source={source}></Image>
+            <View>
+              <Text style={{color:'#fff',fontSize:14,marginLeft:20}}>{wid}</Text>
+            </View>
+          </View>
 
       )
     }

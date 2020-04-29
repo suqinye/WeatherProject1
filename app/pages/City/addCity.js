@@ -21,6 +21,7 @@ import LeftBack from '../../components/LeftBack';
 import mainStyles from './style';
 import SearchInput from './searchCityInput';
 import cityData from './cities.json';
+import Loading from '../../components/Loading';
 let SCREEN_WIDTH = Dimensions.get('window').width; //宽
 let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 
@@ -54,7 +55,7 @@ export default class AddCity extends Component {
            isediting:false,
            showSearchResult: false,
            allCitiesList:all_Cities_List,
-          hotCityArray:[]
+          hotCityArray:[]//热门城市列表
 
         }
         _this = this;
@@ -71,9 +72,61 @@ export default class AddCity extends Component {
   componentDidMount(){
     this.getCitiesListData();
   }
-  
 
+  //获取热门城市列表
+  getCitiesListData(){
+    let url ='https://search.heweather.net/top?group=cn&key=f3952ac02f9c4e03961fce578e01c830&number=10';   
+   // let url = 'https://github.com/suqinye/WeatherProject1/blob/dev/app/pages/City/cities.json';
+         
+     fetch(url).then((response) => {
+       if (response.ok) {
+           return response.json();
+       }
+   }).then((jsonData) => {
+     console.log('hotCityArray*****************');
+     console.log(jsonData.HeWeather6[0]);
+     this.onSuccessCity(jsonData.HeWeather6[0]);    
+      
+   }).catch((error) => {
+     this.refs.toast.show("获取数据失败",1000);
+   }); 
+  }
+  onSuccessCity(hotCityjson){
+   const aa = hotCityjson.basic;        
+   this.setState({       
+     hotCityArray:aa,
+         
+   }); 
 
+ }
+  render(){
+    let {hotCityArray}= this.state;
+      return (
+        <ImageBackground
+          source={require('../../image/icon_bgCity.jpg')}
+          style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT,flex:1}}>
+          <LeftBack title='添加城市' onPressBack={()=>this.goBack()}/>  
+          {!hotCityArray? <LoadingBg /> :
+            <View style={{flex:1}}>
+
+              {this.renderInput()}
+              <View><Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text></View>
+              {/* width:50,height:50,flexWrap:'wrap',borderRadius:20,borderWidth:1,borderColor:'#ddd', */}
+              <View style={{flex:1,flexDirection:'row',justifyContent:'flex-start',margin:10,flexWrap:'wrap'}}>
+                  {this.renderHotCity()} 
+              </View>
+                        
+             
+            </View>
+          
+          }
+          
+          <Toast ref="toast"/>        
+               
+         
+        </ImageBackground>
+      );
+  }
     goBack = () => {
       this.props.navigation.pop();
       // this.props.navigation.goBack();
@@ -179,119 +232,38 @@ export default class AddCity extends Component {
       
 
   }
-  getCitiesListData(){
-    //  let url ='http://apis.juhe.cn/simpleWeather/cityList?key=dcf70f81a9ec418d203dab88719049ad';   
-    let url = 'https://github.com/suqinye/WeatherProject1/blob/dev/app/pages/City/cities.json';
-    console.log("点击了事件");
-
-  //  NetUtil.get(url)
-  //             .then(result => {
-  //               let aa = JSON.stringify(result);
-  //                 _this.setState({
-  //                   hotCityArray: aa.result
-  //                 },()=>{console.log(this.state.hotCityArray);})
-  //             })
-  //             .catch(error => {
-  //                 _this.setState({
-  //                   hotCityArray: JSON.stringify(error)
-  //                 })
-  //             })
-
-
-    // fetch(url, {
-    //     //请求方式，GET或POST
-    //     method: 'GET',
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json',
-    //     }
-    // //请求参数，如果有的话，可以这样方式定义,注意需要服务端支持json入参，如果不支持的话，可以尝试下面的方式
-    //   //body: JSON.stringify({
-    //   //   firstParam: 'value1',
-    //   //   secondParam: 'value1',
-    //   // }),
-
-    //   //如果服务端不支持json入参，请使用这种拼接方式
-    //   //body: 'key1=value1&key2=value2'
-    // }).then((response) => response.json()).then(
-    //     (responseJson) => {
-    //       this.setState({
-    //         hotCityArray:responseJson.result
-    //       },()=>{console.log(this.state.hotCityArray);})
-            
-    //     })
-    fetch(url).then((response) => {
-      if (response.ok) {
-          return response.json();
-      }
-  }).then((weatherData) => {
-      this.onSuccess(weatherData);
-  }).catch((error) => {
-      this.onFailure(error);
-  });
-    
-
-  }
-
-  onSuccess(weatherData){
-    const aa = weatherData.result;
-    
-    this.setState({
-       
-      hotCityArray:aa
-    });
-    // let dataList = [];
-    // for (let i = 0; i < aa.length; i++) {
-    //     dataList.push(aa);
-    // }
-   
-
-  }
+  
+ 
   onFailure = (error) => {
 
   };
 
-    hotCitiesList (){
-     let {hotCityArray} =this.state;
+    renderHotCity(){
+     let {hotCityArray} =_this.state;
      console.log(hotCityArray);
-     if(hotCityArray.lengt==0){
-       return ;
+     if(hotCityArray.length==0){
+       return null;
        
-     }else{
-        return(
-          hotCityArray.map((item,index)=>{
-            return (
+     }
+    return(
+      hotCityArray.map((item,index)=>{
+         return (
             
-              <View  key={index} style={{width:75,height:25,margin:10,borderRadius:20,borderWidth:1,borderColor:'#ddd',alignItems:'center'}}>
-                <Text style={{color:'#eee',fontSize:15}}>{item.city}</Text>
-              </View>
+          <TouchableOpacity onPress={()=>this.goToWeatherPage(item.location)} key={index} style={{width:90,height:35,margin:10,borderRadius:10,borderWidth:1,borderColor:'#ddd',alignItems:'center'}}>
+            <Text style={{color:'#eee',fontSize:15,textAlign:'center',marginTop:5}}>{item.location}</Text> 
+          </TouchableOpacity>
                 
             );
     
           })
         )
-     }
+     
     }
-    render(){
 
-        return (
-          <ImageBackground
-            source={require('../../image/icon_bgCity.jpg')}
-            style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}>
-            <LeftBack title='添加城市' onPressBack={()=>this.goBack()}/>  
-            <View style={{flex:1}}>
-
-              {this.renderInput()}
-              <View><Text style={{color:'#fff',margin:20,fontSize:16}}>热门城市</Text></View>
-              <View style={{flex:1,width:'100%',flexWrap:'wrap',flexDirection:'row',justifyContent:'space-around'}}>{this.hotCitiesList()}</View>
-              
-            </View> 
-            <Toast ref="toast"/>   
-                 
-           
-          </ImageBackground>
-        );
+    goToWeatherPage(city){
+      this.props.navigation.navigate('WeatherHome',{city:city});
     }
+    
 }
 
 const styles = StyleSheet.create({

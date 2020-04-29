@@ -14,7 +14,7 @@ import {
      Alert,    
      TouchableOpacity, 
      } from 'react-native';
-// import AsyncStorage from '@react-native-community/async-storage';
+
 import Storage from '../components/storage';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import { StackNavigator } from 'react-navigation';
@@ -27,50 +27,25 @@ let _this= null;
 export default class Login extends Component{
     constructor(props){
         super(props);
-        this.state={
+        this.state={           
             userName:'',
-            password:''
+            password:'',
+            logonSuccess:true,//登录成功
+            isRegistered:false
         };
         _this = this;
     }
-    // 登录，跳转到天气首页
-    goToWeatherHomePage=()=>{
-       
-       //{content:'当前是Page2'}为传递的参数
-       this.props.navigation.push('WeatherHome',{content:'当前是WeatherHome页面'});
-    }
-//跳转到注册账号页面
-    goTOapplicationAccountPage(){
-        
-        this.props.navigation.push('AppAccount');
-       
-
-    }
-    //跳转到忘记密码
-    goToForgetpasswordPage=()=>{
-        this.props.navigation.push('ForgetPassword');
-
-    }
-    
-     handleCheck(){
-        let {userName,password}=this.state;       
-
-        if(userName == ''){
-            this.refs.toast.show("账号不能为空！",1000);         
+    componentDidMount(){
+        if(this.props.navigation.state.params!=undefined){
+            let {user,psd} = this.props.navigation.state.params;
+            this.setState({              
+                userName:user,//用户名
+                password:psd,//密码
+                isRegistered:true//已注册
+            })
         }
-        else if(password == ''){
-            this.refs.toast.show("密码不能为空!",500);
-        }else{
-            Storage.set('userName',userName);
-            Storage.set('password',password);
-           console.log('_save success: ',userName,password);
-            _this.goToWeatherHomePage(userName,password);
-        }
-        
-
-    }
-    render (){
-       
+    }    
+    render (){       
         //screenHeight,screenWidth
         return(
 
@@ -89,8 +64,9 @@ export default class Login extends Component{
                             <TextInput
                             ref=" textAccVale"
                             autoFocus={true}
-                            placeholder="请输入手机号"
-                            placeholderTextColor="#ddd"
+                            placeholder="请输入用户名"
+                            placeholderTextColor="#ddd"                            
+                            value = {this.state.isRegistered?this.state.userName:null}                            
                             onChangeText={(text) => this.setState({userName:text})}
                             >
 
@@ -102,13 +78,14 @@ export default class Login extends Component{
                             placeholder="请输入密码"
                             placeholderTextColor="#ddd"
                             secureTextEntry={true}
+                            value = {this.state.isRegistered?this.state.password:null}
                             onChangeText={(password) => this.setState({password})}
                             >
 
                             </TextInput>
                         </View>                   
                         <View style={{marginTop:30}}>
-                            <Button title="登录" onPressLogin={()=>this.handleCheck()}/>
+                            <Button title="登录" onPressLogin={()=>this.onPressCallback()}/>
                         </View>
                         <View style={{marginTop:70,flex:1,flexDirection:'row',justifyContent:'space-between',fontSize:15}}>
                             <View>
@@ -127,11 +104,49 @@ export default class Login extends Component{
             </ImageBackground>
         )
     }
+    onPressCallback(){
+        let {userName,password} = this.state;
+        if(password == ''){
+            this.refs.toast.show("密码不能为空!",1000);
+            return;  
+        }  if(userName == ''){
+            this.refs.toast.show("用户名不能为空!",1000);
+            return;  
+        } 
+        let inforData = Storage.get('defaultData');
+        for(let i=0;i<inforData.length;i++){
+           if (inforData[i].userName ==userName &&inforData[i].password==password){
+               //{content:'当前是Page2'}为传递的参数
+            _this. goToMinePage(userName);
+
+           }else{
+            this.refs.toast.show("登录失败",1000);
+            this.setState({
+                logonSuccess:false
+            })
+           }
+       }
+         
+        
+    }
     goBack = () => {
         this.props.navigation.goBack();
-      
-      };
-
+    };
+      // 登录，跳转到我的页面
+    goToMinePage=(user)=>{       
+        this.props.navigation.push('MinePage',{userName:user});  
+    }
+     //跳转到注册账号页面
+     goTOapplicationAccountPage(){         
+         this.props.navigation.push('AppAccount'); 
+    }
+     //跳转到忘记密码
+     goToForgetpasswordPage=()=>{
+         this.props.navigation.push('ForgetPassword');
+ 
+    }
+     
+   
 }
 const styles = StyleSheet.create({
 

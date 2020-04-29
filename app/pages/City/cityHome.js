@@ -83,9 +83,9 @@ export default class CityHome extends Component {
           <TouchableOpacity onPress={this.goBack} style={{alignItems: 'center',flexDirection:'row'}}>
             <Image
               source={require('../../image/icon_left_back.png')}
-              style={{width: 15, height: 15}}></Image>
-            <Text style={{textAlign: 'center', fontSize: 15, color: '#fff'}}>返回</Text></TouchableOpacity>
-          <TouchableOpacity><Text style={{textAlign: 'center', fontSize: 15, color: '#fff'}}>编辑</Text></TouchableOpacity>
+              style={{width: 16, height: 16,marginRight:8}}></Image>
+            <Text style={{textAlign: 'center', fontSize: 16, color: '#fff'}}>返回</Text></TouchableOpacity>
+          <TouchableOpacity><Text style={{textAlign: 'center', fontSize: 16, color: '#fff'}}>编辑</Text></TouchableOpacity>
         </View>
         <ScrollView style={{height:SCREEN_HEIGHT,width:SCREEN_WIDTH}}>
           <View style={{flex:1,flexDirection:'row',flexWrap:'wrap'}}>

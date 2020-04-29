@@ -30,6 +30,7 @@ import AddCity from './app/pages/City/addCity';
 import CityHome from './app/pages/City/cityHome';
 import SettingPage from './app/pages/setting';
 import MinePage from './app/pages/minePage';
+import EmptyPage from './app/components/emptyPage';
 import { Form } from 'native-base';
 // import Main from './app/pages/main';
 
@@ -180,6 +181,7 @@ const StackNavigation = createStackNavigator({
     screen:ForgetPassword,//忘记密码页
     navigationOptions:{
       header:null
+      //headerShown: false
     }
   },
   AddCity:{
@@ -195,18 +197,30 @@ const StackNavigation = createStackNavigator({
     }
   },
   SettingPage:{
-    screen:SettingPage//设置页面
+    screen:SettingPage,//设置页面
+    navigationOptions:{
+      header:null
+    }
 
   },
   MinePage:{
-    screen:MinePage//我的页面
+    screen:MinePage,//我的页面
+    navigationOptions:{
+      header:null
+    }
   },
+  EmptyPage:{
+    screen:EmptyPage,
+    navigationOptions:{
+      header:null
+    }
+  }
 
   
   
 },
 {
-  initialRouteName: 'WeatherHome',
+  initialRouteName: 'AddCity',
   headerMode: 'screen'
 }
 

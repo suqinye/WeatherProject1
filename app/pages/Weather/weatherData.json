@@ -43,7 +43,7 @@
 			},
 			{
 				"temperature":"9℃~24℃",
-				"weather":"晴",
+				"weather":"阴",
 				"weather_id":{
 					"fa":"00",
 					"fb":"00"
@@ -54,7 +54,7 @@
 			},
 			{
 				"temperature":"4℃~17℃",
-				"weather":"晴",
+				"weather":"多云",
 				"weather_id":{
 					"fa":"00",
 					"fb":"00"
@@ -65,7 +65,7 @@
 			},
 			{
 				"temperature":"6℃~20℃",
-				"weather":"晴",
+				"weather":"雨",
 				"weather_id":{
 					"fa":"00",
 					"fb":"00"
@@ -86,8 +86,8 @@
 				"date":"20200406"
 			},
 			{
-				"temperature":"9℃~24℃",
-				"weather":"晴",
+				"temperature":"-9℃~-4℃",
+				"weather":"雪",
 				"weather_id":{
 					"fa":"00",
 					"fb":"00"
@@ -97,8 +97,8 @@
 				"date":"20200407"
 			},
 			{
-				"temperature":"9℃~24℃",
-				"weather":"晴",
+				"temperature":"-9℃~-2℃",
+				"weather":"雨夹雪",
 				"weather_id":{
 					"fa":"00",
 					"fb":"00"

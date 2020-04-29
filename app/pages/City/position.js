@@ -57,10 +57,7 @@ export default class Position extends Component{
                         longitude:longitude,//经度
                         latitude:latitude//纬度
 
-                    },this.getLocation(longitude,latitude));
-                   
-                                  
-  
+                    },this.getLocation(longitude,latitude));  
                 },
                 (error) => {
                     reject(error);
@@ -76,7 +73,6 @@ export default class Position extends Component{
                     timeout: 15000,
                     maximumAge: 10000
                 }
-
             );
         })
     }
@@ -96,8 +92,6 @@ getLocation(log,lat){
               .catch(error => {
                 //console.error(error);
               });
-
-
 }
 getLocationSuccess=(jsonDa)=>{
         let newVar = jsonDa.locations.split(',')
@@ -108,25 +102,17 @@ getLocationSuccess=(jsonDa)=>{
             //通过调用高德地图逆地理接口，传入经纬度获取位置信息
     //访问网络开始  逆地理编码api服务地址
     NetUtil.get('https://restapi.amap.com/v3/geocode/regeo?key=b1ea7e718756c25b175b2a948d9f3505'+'&location='+_this.state.longitude+','+_this.state.latitude+'&radius=1000&extensions=all&batch=false&roadlevel=0')
-         
-        .then((jsonData) => {  
+       .then((jsonData) => {  
              let aa = jsonData.regeocode.addressComponent.district;
             this.setState({
                 district:aa,
             });                               
                console.log(this.state.district);
-            
-           
         })
         .catch((error) => {
            // console.error(error);
         });
-
-
         });
-    
-
-
     }
    
     render(){

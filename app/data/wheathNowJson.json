@@ -1,0 +1,170 @@
+{
+    // 实时天气
+    "basic": {
+        "admin_area": "广西",
+        "cid": "CN101300701",
+        "cnty": "中国",
+        "lat": "24.4141407",
+        "location": "贺州",
+        "lon": "111.55205536",
+        "parent_city": "贺州",
+        "tz": "+8.00"
+    },
+    "update": {
+        "loc": "2020-04-28 21:36",
+        "utc": "2020-04-28 13:36"
+    },
+    "status": "ok",
+    "now": {
+        "cloud": "91", //云量
+        "cond_code": "101", //实况天气状况代码
+        "cond_txt": "多云", //实况天气状况描述
+        "fl": "26", //体感温度，默认单位：摄氏度
+        "hum": "50", //相对湿度
+        "pcpn": "0.0", //降水量
+        "pres": "997", //大气压强
+        "tmp": "25", //	温度，默认单位：摄氏度
+        "vis": "16", //能见度，默认单位：公里
+        "wind_deg": "233", //风向360角度
+        "wind_dir": "西南风", //风向
+        "wind_sc": "1", //风力
+        "wind_spd": "4" //风速，公里/小时
+    },
+    " daily_forecast":[ {
+        
+    },
+    {
+        "cond_code_d": "101",
+        "cond_code_n": "101",
+        "cond_txt_d": "多云",
+        "cond_txt_n": "多云",
+        "date": "2020-04-29",
+        "hum": "74",
+        "pcpn": "0.0",
+        "pop": "17",
+        "pres": "974",
+        "tmp_max": "28",
+        "tmp_min": "17",
+        "uv_index": "8",
+        "vis": "25",
+        "wind_deg": "177",
+        "wind_dir": "南风",
+        "wind_sc": "1-2",
+        "wind_spd": "2"
+    },
+    {
+        "cond_code_d": "101",
+        "cond_code_n": "101",
+        "cond_txt_d": "多云",
+        "cond_txt_n": "多云",
+        "date": "2020-04-29",
+        "hum": "74",
+        "pcpn": "0.0",
+        "pop": "17",
+        "pres": "974",
+        "tmp_max": "28",
+        "tmp_min": "17",
+        "uv_index": "8",
+        "vis": "25",
+        "wind_deg": "177",
+        "wind_dir": "南风",
+        "wind_sc": "1-2",
+        "wind_spd": "2"
+    },
+    {
+        "cond_code_d": "101",
+        "cond_code_n": "101",
+        "cond_txt_d": "多云",
+        "cond_txt_n": "多云",
+        "date": "2020-04-29",
+        "hum": "74",
+        "pcpn": "0.0",
+        "pop": "17",
+        "pres": "974",
+        "tmp_max": "28",
+        "tmp_min": "17",
+        "uv_index": "8",
+        "vis": "25",
+        "wind_deg": "177",
+        "wind_dir": "南风",
+        "wind_sc": "1-2",
+        "wind_spd": "2"
+    },
+    {
+        "cond_code_d": "101",
+        "cond_code_n": "101",
+        "cond_txt_d": "多云",
+        "cond_txt_n": "多云",
+        "date": "2020-04-29",
+        "hum": "74",
+        "pcpn": "0.0",
+        "pop": "17",
+        "pres": "974",
+        "tmp_max": "28",
+        "tmp_min": "17",
+        "uv_index": "8",
+        "vis": "25",
+        "wind_deg": "177",
+        "wind_dir": "南风",
+        "wind_sc": "1-2",
+        "wind_spd": "2"
+    },
+    {
+        "cond_code_d": "101",
+        "cond_code_n": "101",
+        "cond_txt_d": "多云",
+        "cond_txt_n": "多云",
+        "date": "2020-04-29",
+        "hum": "74",
+        "pcpn": "0.0",
+        "pop": "17",
+        "pres": "974",
+        "tmp_max": "28",
+        "tmp_min": "17",
+        "uv_index": "8",
+        "vis": "25",
+        "wind_deg": "177",
+        "wind_dir": "南风",
+        "wind_sc": "1-2",
+        "wind_spd": "2"
+    },
+    {
+        "cond_code_d": "101",
+        "cond_code_n": "101",
+        "cond_txt_d": "多云",
+        "cond_txt_n": "多云",
+        "date": "2020-04-29",
+        "hum": "74",
+        "pcpn": "0.0",
+        "pop": "17",
+        "pres": "974",
+        "tmp_max": "28",
+        "tmp_min": "17",
+        "uv_index": "8",
+        "vis": "25",
+        "wind_deg": "177",
+        "wind_dir": "南风",
+        "wind_sc": "1-2",
+        "wind_spd": "2"
+    },
+    {
+        "cond_code_d": "101",
+        "cond_code_n": "101",
+        "cond_txt_d": "多云",
+        "cond_txt_n": "多云",
+        "date": "2020-04-29",
+        "hum": "74",
+        "pcpn": "0.0",
+        "pop": "17",
+        "pres": "974",
+        "tmp_max": "28",
+        "tmp_min": "17",
+        "uv_index": "8",
+        "vis": "25",
+        "wind_deg": "177",
+        "wind_dir": "南风",
+        "wind_sc": "1-2",
+        "wind_spd": "2"
+    }
+]
+}
