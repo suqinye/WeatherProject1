@@ -14,12 +14,13 @@ import {
      Alert,    
      TouchableOpacity, 
      } from 'react-native';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import Storage from '../components/storage';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import { StackNavigator } from 'react-navigation';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
+import LeftBack from '../components/LeftBack';
 // import AppAccount from './applicationAccount';
 
 let {height,width} =  Dimensions.get('window');
@@ -32,30 +33,27 @@ export default class Login extends Component{
             password:'',
             logonSuccess:true,//登录成功
             isRegistered:false
+           
         };
         _this = this;
     }
     componentDidMount(){
         if(this.props.navigation.state.params!=undefined){
-            let {user,psd} = this.props.navigation.state.params;
+            let {user,psd} = this.props.navigation.state.params;                       
             this.setState({              
                 userName:user,//用户名
                 password:psd,//密码
                 isRegistered:true//已注册
             })
         }
+        
     }    
     render (){       
         //screenHeight,screenWidth
         return(
 
             <ImageBackground source={require('../image/icon_weather.jpg')} style={{ flex: 1,width: width, height: height}}>
-                <TouchableOpacity onPress={this.goBack} style={{flexDirection:'row',alignItems: 'center',marginLeft:10,marginTop:8}}>
-                    <Image
-                    source={require('../image/icon_left_back.png')}
-                    style={{width: 15, height: 15}}></Image>
-                    <Text style={{textAlign: 'center', fontSize: 15, color: '#fff'}}>返回</Text>
-                </TouchableOpacity>
+                <View  style={{marginTop:10,marginLeft:8}}><LeftBack title='返回' onPress={()=>this.goBack()}></LeftBack></View> 
                 <View style={{alignItems:'center',flexDirection:'column'}}>
                     <View style={{marginTop:20,width:'80%',height:'100%'}}>
                         <Text style={{marginTop:100,fontSize:20,color:'#555'}}>欢迎来到冷暖天气</Text>
@@ -91,9 +89,9 @@ export default class Login extends Component{
                             <View>
                                 <Text style={{color:'#FFF'}} onPress={()=>this.goTOapplicationAccountPage()}>注册账号</Text>
                             </View>
-                            <View> 
-                                <Text style={{color:'#FFF'}} onPress={()=>this.goToForgetpasswordPage()}>忘记密码</Text>
-                            </View>
+                            {/* <View> 
+                                <Text style={{color:'#FFF'}} onPress={()=>this.goToForgetpasswordPage()}>记住密码</Text>
+                            </View> */}
                         </View>
                     </View>
 
@@ -105,7 +103,7 @@ export default class Login extends Component{
         )
     }
     onPressCallback(){
-        let {userName,password} = this.state;
+        let {userName,password,inforData} = this.state;
         if(password == ''){
             this.refs.toast.show("密码不能为空!",1000);
             return;  
@@ -113,19 +111,29 @@ export default class Login extends Component{
             this.refs.toast.show("用户名不能为空!",1000);
             return;  
         } 
-        let inforData = Storage.get('defaultData');
-        for(let i=0;i<inforData.length;i++){
-           if (inforData[i].userName ==userName &&inforData[i].password==password){
-               //{content:'当前是Page2'}为传递的参数
-            _this. goToMinePage(userName);
+       
+            
+         _this.goToMinePage(userName);
+        //  let inforData = AsyncStorage.getItem('localData');
+        //  console.log(inforData);
+        // if(inforData.userName==userName&&inforData.password==password){
+        //     _this.goToMinePage(userName);
+        // }else{
+        //     this.refs.toast.show("用户名或密码不正确!",1000);
+        // }
+    //     for(let i=0;i<inforData.length;i++){
+    //        if (inforData[i].userName ==userName &&inforData[i].password==password){
+    //            //{content:'当前是Page2'}为传递的参数
+    //         _this.goToMinePage(userName);
 
-           }else{
-            this.refs.toast.show("登录失败",1000);
-            this.setState({
-                logonSuccess:false
-            })
-           }
-       }
+    //        }else{
+    //         this.refs.toast.show("登录失败",1000);
+    //         this.setState({
+    //             logonSuccess:false
+    //         })
+    //        }
+    //    }
+    
          
         
     }
@@ -141,10 +149,10 @@ export default class Login extends Component{
          this.props.navigation.push('AppAccount'); 
     }
      //跳转到忘记密码
-     goToForgetpasswordPage=()=>{
-         this.props.navigation.push('ForgetPassword');
+    //  goToForgetpasswordPage=()=>{
+    //      this.props.navigation.push('ForgetPassword');
  
-    }
+    // }
      
    
 }

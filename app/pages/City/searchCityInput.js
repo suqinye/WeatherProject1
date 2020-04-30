@@ -18,14 +18,6 @@ import mainStyles from './style';
 let SCREEN_WIDTH = Dimensions.get('window').width; //宽
 let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 
-
-let hotCitys = [];
-let defaultHotCityArray = [
-    {cityCode: "310000", cityName: "上海市"},
-    {cityCode: "440300", cityName: "深圳市"},
-    {cityCode: "110000", cityName: "北京市"},
-    {cityCode: "440100", cityName: "广州市"},
-];
 let _this = null;
 export default class SearchCityInput extends Component {
     constructor(props){

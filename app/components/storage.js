@@ -6,10 +6,29 @@ class Storage {
    * @returns {Promise<T>|*|Promise.<TResult>}
    */
   static get(key) {
-      return AsyncStorage.getItem(key).then((error,value)=>{
+    //   return AsyncStorage.getItem(key).then((error,value)=>{
+    //       const jsonValue = JSON.parse(value);
+    //       return jsonValue;
+    //   })
+    return AsyncStorage.getItem(key)
+      .then(
+        //使用Promise机制的方法
+        value => {
+          //使用Promise机制,如果操作成功不会有error参数
+          if (value == null) {
+            //没有指定的key
+            return;
+          }
           const jsonValue = JSON.parse(value);
+          // console.log('===' + value);
+          // console.log(jsonValue);
           return jsonValue;
-      })
+        },
+      )
+      .catch(error => {
+        //读取操作失败
+        console.log('error:' + error.message);
+      });
   }
   /**
    * 保存
@@ -18,7 +37,16 @@ class Storage {
    * @returns {*}
    */
   static set(key,value){
-      return AsyncStorage.setItem(key,JSON.stringify(value));
+      return AsyncStorage.setItem(key,JSON.stringify(value)).then(
+        (value)=>{   //成功的操作
+            // console.log('保存成功');
+            // console.log(JSON.stringify(value));
+        }).catch(
+ 
+            (error)=>{
+                //错误的处理
+                console.log(error);
+              });
   }
   /**
    * 更新

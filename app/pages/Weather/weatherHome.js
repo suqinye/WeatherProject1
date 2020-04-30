@@ -22,6 +22,7 @@ import Geolocation from 'react-native-geolocation-service';
 import {Button} from '../../components/Button';
 import Loading from '../../components/Loading';
 import LoadingBg from '../../components/LoadingBg';
+import Storage from '../../components/storage';
 import { Item } from 'native-base';
 import Moment from 'moment';
 import NetUtil from '../../util/NetUtil';
@@ -34,7 +35,6 @@ let todayData = weatherJson.today;
 let futureData = weatherJson.future;
 let {height, width} = Dimensions.get('window');
 let _this = null;
-
 export default class WeatherHome extends Component {
 
   constructor(props) {
@@ -52,8 +52,8 @@ export default class WeatherHome extends Component {
       district: '正在定位',
       actualityData:'',//当前实况天气   
       basic:'',//当前城市基本数据 
-      nowData:'', 
-      updateTime:'',//更新时间
+      nowData:'',
+      currtTime:'',     
       todayData:'',//今天天气
       hourlyDataList:[],//逐小时预报数据
       forecastDataList:[],//未来天气预报数据
@@ -61,11 +61,15 @@ export default class WeatherHome extends Component {
       futureData:''//近五天天气情况
     };
     _this = this;
+    
   }
 
-  componentWillUnmount() {}
+  
 
-async componentDidMount() {
+async componentDidMount() {  
+  
+  // if (this.refs.loading) {this.refs.loading.show();}
+  this.getCurrtDate();  
   if(this.props.navigation.state.params!=undefined){
     let {city} = this.props.navigation.state.params;
     this.setState({              
@@ -80,7 +84,7 @@ async componentDidMount() {
 
     if(Platform.OS == 'ios'){
       _this.getPosition();
-  }else{        
+   }else{        
       const hasLocationPermission =await  PermissionsAndroid.check( PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION )
       if (hasLocationPermission) { 
           const granteds = await PermissionsAndroid.request(
@@ -93,6 +97,10 @@ async componentDidMount() {
           this.refs.toast.show('定位权限被禁止',1000)
       }
     }
+    this.getAdressInfor();
+   this.getWeatherNowBean();
+
+    
 }
   
    
@@ -100,9 +108,20 @@ async componentDidMount() {
   // componentWillReceiveProps(nextProps){
 
   // }
-
+getCurrtDate(){
+  let currtDate = new Date();
+  let hours = currtDate.getHours() ;
+  let minute =currtDate.getMinutes() ;   
+  if (hours< 10) hours = "0"+hours;
+  if (minute< 10) minute = "0" +minute;
+  let  updateTime = hours+':'+minute;
+   this.setState({
+    currtTime:updateTime
+   })
+}
   //获取当前位置
-  getPosition=()=>{
+  getPosition=()=>{   
+    
     return new Promise((resolve,reject)=>{
       //获取当前位置
       Geolocation.getCurrentPosition(
@@ -120,6 +139,8 @@ async componentDidMount() {
           },
           (error) => {
               reject(error);
+              if (_this.refs.loading) { _this.refs.loading.hide(); }
+              this.setState({isRefreshing: false});
               if(error.code==2){
                   ToastAndroid.show('定位失败，请查看手机是否开启GPS定位服务',ToastAndroid.SHORT);
               }else if(error.code==3){
@@ -137,6 +158,8 @@ async componentDidMount() {
   }
 
   getLocation(log,lat){
+
+    
     // 坐标转换 
     NetUtil.get(`https://restapi.amap.com/v3/assistant/coordinate/convert?locations=${log},${lat}&coordsys=gps&output=json&key=b1ea7e718756c25b175b2a948d9f3505`)
     // fetch('https://restapi.amap.com/v3/assistant/coordinate/convert?locations=116.480656,39.989677&coordsys=gps&output=json&key=fc996d54d790c198851bd79018f10d7a', { method: "GET" })
@@ -146,6 +169,8 @@ async componentDidMount() {
     })
     .catch(error => {
       console.log(error);
+      this.setState({isRefreshing: false});
+      if (_this.refs.loading) { _this.refs.loading.hide(); }
       this.refs.toast.show("获取数据失败",1000);
     });
 }
@@ -162,6 +187,7 @@ async componentDidMount() {
         let aa = jsonData.regeocode.addressComponent;
         let city =aa.city;
         let district =aa.district;
+        Storage.set("addressBean",aa);
         this.setState({
             district:district,
             city:city
@@ -174,8 +200,10 @@ async componentDidMount() {
         });                               
            console.log(this.state.district);       
       })
-    .catch((error) => {
+    .catch((error) => {      
+      if (_this.refs.loading) { _this.refs.loading.hide(); }
       this.refs.toast.show("获取数据失败",1000);
+      this.setState({isRefreshing: false}); 
     });
     });
   }
@@ -193,18 +221,22 @@ async componentDidMount() {
   }).then((jsonData) => {
     console.log('now*****************');
     console.log(jsonData.HeWeather6[0]);
+    if (_this.refs.loading) { _this.refs.loading.hide(); }
     this.onSuccessNow(jsonData.HeWeather6[0]);    
      
   }).catch((error) => {
+    if (_this.refs.loading) { _this.refs.loading.hide(); }
     this.refs.toast.show("获取数据失败",1000);
+    this.setState({isRefreshing: false});
   });      
   }
   onSuccessNow(weatherData){
-    const aa = weatherData.basic;        
+    const aa = weatherData.now;
+    Storage.set('weatherNowBean',weatherData);           
     this.setState({       
-      basic:aa,
-      nowData:weatherData.now,
-      updateTime:weatherData.update      
+      basic:weatherData.basic,
+      nowData:aa,      
+      isRefreshing: false     
     });    
   }
    //获取当前城市hourly逐小时预报数据
@@ -218,16 +250,20 @@ async componentDidMount() {
     }).then((jsonData) => {
       console.log('hourly逐小时*****************');
       console.log(jsonData.HeWeather6[0]);
+      if (_this.refs.loading) { _this.refs.loading.hide(); }
       this.onSuccessHourly(jsonData.HeWeather6[0]);    
        
     }).catch((error) => {
+      if (_this.refs.loading) { _this.refs.loading.hide(); }
       this.refs.toast.show("获取数据失败",1000);
+      this.setState({isRefreshing: false});
     }); 
    }
    onSuccessHourly(hourlyJaon){
     const aa = hourlyJaon.hourly;        
     this.setState({       
       hourlyDataList:aa,
+      isRefreshing: false
           
     }); 
    }
@@ -242,10 +278,13 @@ async componentDidMount() {
     }).then((jsonData) => {
       console.log('forecast预报*****************');
       console.log(jsonData);
+      if (_this.refs.loading) { _this.refs.loading.hide(); }
       this.onSuccessForecast(jsonData.HeWeather6[0]);    
        
     }).catch((error) => {
+      if (_this.refs.loading) { _this.refs.loading.hide(); }
       this.refs.toast.show("获取数据失败",1000);
+      this.setState({isRefreshing: false});
     }); 
    
    }
@@ -253,6 +292,7 @@ async componentDidMount() {
     const aa = forecastData.daily_forecast;        
     this.setState({       
       forecastDataList:aa,
+      isRefreshing: false
           
     }); 
 
@@ -268,25 +308,58 @@ async componentDidMount() {
       }).then((jsonData) => {
         console.log('lifestyle生活指数t*****************');
         console.log(jsonData);
+        if (_this.refs.loading) { _this.refs.loading.hide(); }
         this.onSuccessLifestyle(jsonData.HeWeather6[0]);    
          
       }).catch((error) => {
+        if (_this.refs.loading) { _this.refs.loading.hide(); }
         this.refs.toast.show("获取数据失败",1000);
+        this.setState({isRefreshing: false});
       });      
          
      }  
       onSuccessLifestyle(lifestyleData){
         let lifestyle = lifestyleData.lifestyle
         this.setState({
-          lifestyleData:lifestyle
+          lifestyleData:lifestyle,
+          isRefreshing: false
         })
 
       }
   
-    
+      getAdressInfor(){
+        Storage.get('addressBean').then((tags)=>{
+          if(tags!=undefined){
+            let district = tags.district;
+          this.setState({
+            district
+          })
+          }else{
+            return null;
+          }
+        })
+      }
+      getWeatherNowBean(){
+        Storage.get('weatherNowBean').then((tags)=>{
+          if(tags!=undefined){
+            console.log("+++++++++++++"+tags);
+            // let time = tags.update;
+            // time = (time.loc).substr(11, 16).replace(/-/g, ""); 
+          this.setState({
+            nowData:tags.now,
+          })
+          }else{
+            return null;
+          }
+        })
+
+      }
+      // getWeatherHourlyBean
   render() {
     const {params} = this.props.navigation.state;
-    let {location,basic,nowData,updateTime}= this.state;
+    let {location,basic,nowData,currtTime}= this.state;   
+                       
+  
     const navigationView = (
      <View style={{height:height,width:200,backgroundColor:'rgb(30,30,30)'}}>        
         <View ><Text style={{fontSize:18,color:'#bbb',textAlign:'center',margin:15}}>冷暖天气</Text></View>
@@ -308,7 +381,7 @@ async componentDidMount() {
      <ImageBackground
        source={require('../../image/icon_weatherImgBG.jpg')}
        style={{flex: 1, width: width, height: height}}>         
-         {!nowData||nowData.length==0?<LoadingBg ref="LoadingBg" />:
+         {/* {!nowData?<LoadingBg ref="LoadingBg" />: */}
           <DrawerLayout 
           drawerLockMode={'unlocked'}
           drawerWidth={200}
@@ -317,17 +390,21 @@ async componentDidMount() {
           renderNavigationView = {() => navigationView}        
           >
            <ScrollView style={{marginBottom:30}}  refreshControl={this.getRefreshControl()}>
-            <View style={{ alignItems:'center', height: 40,flexDirection: 'row', }}>            
-              <TouchableOpacity onPress={()=> this.onPenLeftDrawable()}>
-                <Image source={require('../../image/icon_menu.png')} style={{width:20,height:20,marginLeft:10}}></Image>
-              </TouchableOpacity> 
-              <View style={{flex:1,flexDirection:'row',justifyContent:"center"}}>
+            <View style={{flex:1, alignItems:'center', height: 40,flexDirection: 'row'}}>            
+              <View style={{flex:1, alignItems:'center', height: 40,flexDirection: 'row',justifyContent:'space-between' }}>
+                <TouchableOpacity onPress={()=> this.onPenLeftDrawable()}>
+                  <Image source={require('../../image/icon_menu.png')} style={{width:20,height:20,marginLeft:10}}></Image>
+                </TouchableOpacity>  
+              </View> 
+              <View style={{flex:1,flexDirection:'row',justifyContent:'center'}}>
                  <View style={{marginRight:5}}>
-                   <Text style={{ fontSize: 16, color: '#fff'}}>{_this.state.district}</Text>
+                   <Text style={{ fontSize: 16, color: '#fff',textAlign:'center'}}>{_this.state.district}</Text>
                 </View>
-                <Image source={require('../../image/icon_location.png')} style={{marginTop:6,marginLeft:5,width:12,height:12}}/>
-              </View>      
-              
+                <Image source={require('../../image/icon_location.png')} style={{marginTop:6,marginLeft:5,width:12,height:12}}/>                
+              </View> 
+              <View style={{flex:1}}>
+                <Text style={{color:'#DDD',fontSize:12,marginLeft:20}}>更新时间: {currtTime}</Text>
+              </View>             
             </View>  
             {/* 当前天气 */}
             {this.renderCurrentWeather(nowData)}
@@ -351,8 +428,8 @@ async componentDidMount() {
             </View>           
           </ScrollView>          
          </DrawerLayout>
-        }
-       
+        {/* } */}
+       <Loading ref="loading"/>
        <Toast ref="toast"/>
        
      </ImageBackground>
@@ -535,9 +612,27 @@ async componentDidMount() {
   
   //下拉刷新
  getRefreshControl(){
+   return (
+     <RefreshControl
+       refreshing={this.state.isRefreshing}
+       onRefresh={this._onRefresh.bind(this)}
+       tintColor="gray"
+       title="加载中..."
+       titleColor="gray"
+       colors={['#0095e9']}
+       progressBackgroundColor="#ffffff"
+     />
+   );
 
-  //_this.getPosition();
+  
 
+  }
+  _onRefresh(){
+    this.setState({
+      isRefreshing: true,
+    });
+    _this.getPosition();
+    _this.getCurrtDate();
   }
 //跳到城市管理页面
 goCityMagementPage() {

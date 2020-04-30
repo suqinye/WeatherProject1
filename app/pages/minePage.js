@@ -39,6 +39,9 @@ export default class MinePage extends Component{
     goToEmptyPage=()=>{
         this.props.navigation.push('EmptyPage');
     }
+    goToWeatherPage(){
+        this.props.navigation.push('WeatherHome');
+    }
     goBack=()=>{
         this.props.navigation.goBack();
     }
@@ -49,35 +52,49 @@ export default class MinePage extends Component{
         return(
             <ImageBackground source={require('../image/icon_weatherImgBG.jpg')} 
             style={{flex:1,width:width12,height:height12}}>
-            <LeftBack title='返回' onPressBack={()=>this.goBack()}/> 
-              <View style={{flex:1,width:width12,height:height12}}>
-                <View style={{marginTop:50}}>
-                    <TouchableOpacity style={{flex:1,alignItems:'center',marginTop:20}} onPress={()=>this.goToLogin()}>
-                        <View style={{backgroundColor:'#baccED',width:65,height:65,borderRadius:50}}>
-                            <Image  source={require('../image/icon_login.png')} style={{width:45,height:45,margin:10}}/>                    
+                 <View style={{flex:0.5,flexDirection:'row',justifyContent:'space-between',height:40,marginTop:20}}>
+                        <View>
+                            <TouchableOpacity onPress={()=>this.goBack()} style={{alignItems: 'center',flexDirection:'row',marginLeft:10}}>
+                                <Image
+                                source={require('../image/icon_left_back.png')}
+                                style={{width: 16, height: 16,marginRight:8}}></Image>
+                                <Text style={{textAlign: 'center', fontSize: 16, color: '#fff'}}>返回</Text>                            
+                            </TouchableOpacity>
+                        </View>                        
+                        <View>
+                            <TouchableOpacity onPress={()=>this.goToWeatherPage()} style={{alignItems: 'center',flexDirection:'row'}}>                    
+                                <Text style={{textAlign: 'center', fontSize: 16, color: '#fff',marginRight:8}}>主页面</Text>
+                                <Image
+                                source={require('../image/icon_right_back.png')}
+                                style={{width: 16, height: 16,marginRight:10}}></Image>
+                            </TouchableOpacity>
                         </View>
-                        <Text style={{color:'#fff',marginTop:10,fontSize:16}}>{title}</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{flex:1,width:width12,marginTop:135,flexDirection:'row',backgroundColor:'#fff',borderRadius:20}}>                        
-                    <View style={{flex:1,justifyContent:'space-around',flexDirection:"row",marginTop:15}}>
-                        <TouchableOpacity style={styles.functionBox} onPress={()=>this.goToLogin()}>
-                            <Image source={require('../image/icon_choujiang.png')} style={styles.img}></Image>
-                            <Text style={styles.text}>今日抽奖</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.functionBox} onPress={()=>this.goToEmptyPage()}>
-                            <Image source={require('../image/icon_life.png')} style={styles.img}></Image>
-                            <Text style={styles.text}>生活服务</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.functionBox} onPress={()=>this.goToEmptyPage()}>
-                            <Image source={require('../image/icon_VIP.png')} style={styles.img}></Image>
-                            <Text style={styles.text}>会员中心</Text>
+                    </View>                        
+                    <View style={{flex:1,alignItems:'center'}}>
+                        <TouchableOpacity onPress={()=>this.goToLogin()} >
+                            <View style={{backgroundColor:'#baccED',width:65,height:65,borderRadius:50}}>
+                                <Image  source={require('../image/icon_login.png')} style={{width:45,height:45,margin:10}}/>                    
+                            </View>
+                            <Text style={{color:'#fff',marginTop:10,fontSize:16,textAlign:'center'}}>{title}</Text>
                         </TouchableOpacity>
                     </View>
-                    
-                </View>
-              </View>
-
+                    <View style={{flex:3,backgroundColor:'#fff',borderRadius:20}}>                        
+                            <View style={{flex:1,justifyContent:'space-around',flexDirection:"row",marginTop:15}}>
+                                <TouchableOpacity style={styles.functionBox} onPress={()=>this.goToEmptyPage()}>
+                                    <Image source={require('../image/icon_choujiang.png')} style={styles.img}></Image>
+                                    <Text style={styles.text}>今日抽奖</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.functionBox} onPress={()=>this.goToEmptyPage()}>
+                                    <Image source={require('../image/icon_life.png')} style={styles.img}></Image>
+                                    <Text style={styles.text}>生活服务</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.functionBox} onPress={()=>this.goToEmptyPage()}>
+                                    <Image source={require('../image/icon_VIP.png')} style={styles.img}></Image>
+                                    <Text style={styles.text}>会员中心</Text>
+                                </TouchableOpacity>
+                            </View>
+                            
+                    </View>
             </ImageBackground>
            
         )

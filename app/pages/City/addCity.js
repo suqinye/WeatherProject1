@@ -12,6 +12,8 @@ import {
   ImageBackground,
   TextInput,
   Keyboard,
+ 
+  FlatList,
   Dimensions
 } from 'react-native';
 
@@ -21,7 +23,7 @@ import LeftBack from '../../components/LeftBack';
 import mainStyles from './style';
 import SearchInput from './searchCityInput';
 import cityData from './cities.json';
-import Loading from '../../components/Loading';
+import LoadingBg from '../../components/LoadingBg';
 let SCREEN_WIDTH = Dimensions.get('window').width; //宽
 let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 
@@ -51,6 +53,7 @@ export default class AddCity extends Component {
         this.state={
           searchTitle:'',
           searchList: [],
+          groupList:[],
           isChecking:false,
            isediting:false,
            showSearchResult: false,
@@ -62,20 +65,14 @@ export default class AddCity extends Component {
     }
 
 
-  componentWillMount () {
-    
-  }
  
-  componentWillUnmount () {
-    
-  }
   componentDidMount(){
     this.getCitiesListData();
   }
 
   //获取热门城市列表
   getCitiesListData(){
-    let url ='https://search.heweather.net/top?group=cn&key=f3952ac02f9c4e03961fce578e01c830&number=10';   
+    let url ='https://search.heweather.net/top?group=cn&key=f3952ac02f9c4e03961fce578e01c830&number=20';   
    // let url = 'https://github.com/suqinye/WeatherProject1/blob/dev/app/pages/City/cities.json';
          
      fetch(url).then((response) => {
@@ -88,7 +85,7 @@ export default class AddCity extends Component {
      this.onSuccessCity(jsonData.HeWeather6[0]);    
       
    }).catch((error) => {
-     this.refs.toast.show("获取数据失败",1000);
+     this.refs.toast.show("获取热门城市失败",1000);
    }); 
   }
   onSuccessCity(hotCityjson){
@@ -106,12 +103,11 @@ export default class AddCity extends Component {
           source={require('../../image/icon_bgCity.jpg')}
           style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT,flex:1}}>
           <LeftBack title='添加城市' onPressBack={()=>this.goBack()}/>  
-          {!hotCityArray? <LoadingBg /> :
+          {!hotCityArray? <LoadingBg/> :
             <View style={{flex:1}}>
-
               {this.renderInput()}
-              <View><Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text></View>
-              {/* width:50,height:50,flexWrap:'wrap',borderRadius:20,borderWidth:1,borderColor:'#ddd', */}
+              {this.renderListCIity()}
+              <View><Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text></View>              
               <View style={{flex:1,flexDirection:'row',justifyContent:'flex-start',margin:10,flexWrap:'wrap'}}>
                   {this.renderHotCity()} 
               </View>
@@ -127,6 +123,52 @@ export default class AddCity extends Component {
         </ImageBackground>
       );
   }
+  renderListCIity(){
+    let {searchList} = this.state;
+        return (
+          <View style={{flex: 1}}>
+            <View style={{width: SCREEN_WIDTH, height: 1}}/>
+              <FlatList
+                data={searchList}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index })=>this.renderTopicItem(item,index)}                    
+                showsHorizontalScrollIndicator={false}
+              />
+          </View>
+        )
+
+  }
+  renderTopicItem(rowData, sectionID, rowID) {
+    let {searchList} = this.state;
+    let text = searchList.parent_city+','+searchList.location+','+searchList.admin_area+','+searchList.cnty;
+    // let headImg = require('../../../../../img/classHelper/ic_head.png');
+    // let imgSource = !rowData.userImgUrl ? headImg : { uri: rowData.userImgUrl };
+    // let name = rowData.staffName;
+    // let depNm = rowData.depNm;
+    // let wrkNm = rowData.wrkNm;
+    // let hrId = rowData.hrId;
+    // let depInfo = (depNm && wrkNm) ? (depNm + '-' + wrkNm) : depNm ? depNm : wrkNm ? wrkNm : " ";
+    // let hasAdded = this.hasAdded(rowData);
+
+    return(
+        <View>
+          <Text style={{fontSize: 11, color: '#c2c3c4', marginTop: 5}}>北京市</Text>
+          <Text>{text}</Text>
+            {/* <View style={{flexDirection: 'row', alignItems: 'center', paddingTop: 10, paddingBottom: 10}}>
+                <Image resizeMode={'stretch'} style={{ width: 34, height: 34, marginLeft: 20, marginRight: 10, borderRadius: 17}} source={imgSource} />
+                <View style={{justifyContent: 'center', flex: 1}}>
+                    <Text style={{fontSize: 15, color: '#36383c'}}>{name}<Text style={{fontSize: 12, color: '#626262', marginLeft: 5}}> {hrId}</Text></Text>
+                    <Text style={{fontSize: 11, color: '#c2c3c4', marginTop: 5}}>{depInfo}</Text>
+                </View>
+                {hasAdded ? <View style={{width: 24, height: 24, marginRight: 30}}/> :
+                    <TouchableOpacity onPress={() => {this.addStaff(rowData)}}>
+                        <Image style={{width: 24, height: 24, marginRight: 30}} source={require('../../../../../img/classHelper/icon_add.png')}/>
+                    </TouchableOpacity>}
+            </View>
+            <View style={{width: SCREEN_WIDTH, height: 1, backgroundColor: '#f5f5f5', marginLeft: 64}}/> */}
+        </View>
+    )
+}
     goBack = () => {
       this.props.navigation.pop();
       // this.props.navigation.goBack();
@@ -150,19 +192,23 @@ export default class AddCity extends Component {
       )
   }
   onChangeText(text) {
-    if(text==''){
-      this.setState({
-        showSearchResult: false
-    })
-    }else{
-       // 在这里过滤数据结果
-       let dataList = this.filterCityData(text);
-       this.setState({
-        searchTitle: text,
-        showSearchResult: true,
-        searchList: dataList
-    })
-    }
+    this.setState({
+      searchTitle: text,
+      searchList: []
+  })
+    // if(text==''){
+    //   this.setState({
+    //     showSearchResult: false
+    // })
+    // }else{
+    //    // 在这里过滤数据结果
+    //    let dataList = this.filterCityData(text);
+    //    this.setState({
+    //     searchTitle: text,
+    //     showSearchResult: true,
+    //     searchList: dataList
+    // })
+    // }
     
   }
   filterCityData(text) {
@@ -210,28 +256,35 @@ export default class AddCity extends Component {
         this.checkStaff();
     }
   }
-  getStaffList(value) {
-
+  //搜索城市接口
+  getStaffList(value) {   
     // let url ='http://apis.juhe.cn/simpleWeather/cityList?key=dcf70f81a9ec418d203dab88719049ad';
-    let url = 'https://github.com/suqinye/WeatherProject1/blob/dev/app/pages/City/cities.json';  
+    let url = 'https://search.heweather.net/find?key=f3952ac02f9c4e03961fce578e01c830&location='+value;  
     this.setState({isChecking: true});  
-      fetch(url)
-      .then((response)=>(response.json()))
-      .then(result=>{
-        this.setState({
-          searchList:JSON.stringify(result),
-          isChecking:false
-        })
-      })
-      .catch(error=>{//捕获异常
-        this.setState({
-          searchList:JSON.stringify(error)
-        })
-      })
+    fetch(url).then((response) => {
+      if (response.ok) {
+          return response.json();
+      }
+    }).then((jsonData) => {
+      console.log('搜索城市*****************');
+      console.log(jsonData.HeWeather6[0]);    
+      this.onSuccess(jsonData.HeWeather6[0]);   
+    }).catch((error) => {    
+      this.setState({isChecking: false, searchList: []});
+      this.refs.toast.show("查询失败",1000);
+    }); 
+ }
         
-      
+ onSuccess(result){
 
-  }
+  this.setState({
+    searchList:result.basic,
+    isChecking:false
+  })
+
+ }    
+
+  
   
  
   onFailure = (error) => {
@@ -261,7 +314,7 @@ export default class AddCity extends Component {
     }
 
     goToWeatherPage(city){
-      this.props.navigation.navigate('WeatherHome',{city:city});
+      this.props.navigation.push('WeatherHome',{city:city});
     }
     
 }

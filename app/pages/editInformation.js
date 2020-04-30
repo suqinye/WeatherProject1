@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { View, Text, TextInput, StyleSheet, Image, PixelRatio,ImageBackground,Dimensions } from 'react-native';
 import Button from '../components/Button';
 
-export default class ForgetPassword extends Component{
+export default class EditInformation extends Component{
     constructor(props){
         super(props);
 

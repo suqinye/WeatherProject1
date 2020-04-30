@@ -9,33 +9,37 @@ import {
     PixelRatio,
     ImageBackground,
     Dimensions } from 'react-native';
-    import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 import Button from '../components/Button';
 import LeftBack from '../components/LeftBack';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import { Value } from 'react-native-reanimated';
 import Storage from '../components/storage';
 let {height,width} =  Dimensions.get('window');
-
+let blue_eye = require('../image/icon_blue_eye.png');
+let grey_eye = require('../image/icon_grey_eye.png');
 export default class AppAccount extends Component{
     constructor(props){
         super(props);             
         this.state = {
-         
+         aa:'',
           userName:'',//用户名
           password:'',//密码
           isRepeatUser:false,//true表示用户名重复
           isRepeatNum:false,//true表示手机号重复          
           errorLog:"",//错误提示文字
           isRepeatPsd:false,//flase表示输入的两次密码不一样
-          VerCode:'',
+          checkPsd:false,//是否查看密码
+          verCode:'',
+          codeText:'',
           content: 'AppAccount',
           storageData:[]
           }
 
     }
     componentDidMount(){
-    //  this.refreshCode();
+     this.refreshCode();
      
     }
     //读取本地存储数据
@@ -60,10 +64,10 @@ export default class AppAccount extends Component{
            i--;
            continue;
          }
-         result+=char;
+         result=result+char;
       }
       this.setState({
-        VerCode:result
+        verCode:result
       })
 
     }
@@ -93,7 +97,7 @@ export default class AppAccount extends Component{
     //检查两次密码是否一样
     handleCheckPasd(rePsd){
       let {password} = this.state;
-      if(password==rePsd){   
+      if(password==rePsd){         
         this.setState({         
           isRepeatPsd:true
         })
@@ -104,8 +108,12 @@ export default class AppAccount extends Component{
         })        
       }
     }
-    onPressCallback(){
-      let {userName,password,storageData}=this.state;
+    handleCheckCode(code){
+      
+
+    }
+     onPressCallback(){
+      let {userName,password,storageData,verCode,codeText}=this.state;  
       if(userName==''){        
         this.refs.toast.show("用户名不能为空",1000);
         return;
@@ -113,23 +121,31 @@ export default class AppAccount extends Component{
       if(password==''){
         this.refs.toast.show("密码不能为空",1000)
         return;
-      }     
-      let localData = [{userName:userName,password:password}];
+      } 
+      if(codeText==''){
+        this.refs.toast.show("请输入验证码",1000)
+      }
+      let localData = [{"userName":userName,"password":password}];
       // localData.push({userName:userName,password:password});
       // Storage.set('defaultData',localData);       
       Storage.set('localData',localData); 
+      if(verCode==codeText){
+        this.props.navigation.push('Login',{user:userName,psd:password});
+      }else{
+        this.refs.toast.show("验证码错误",1000)
+      }
       
-      this.props.navigation.push('Login',{user:userName,psd:password});
 
     }
     render(){
 
         // const {params} = this.props.navigation.state;
         // let content=params.content;
-        let {VerCode} = this.state;
+        let {verCode,checkPsd} = this.state;
+       
         return (
           <ImageBackground source={require('../image/icon_weather.jpg')}  style={{width:width,height:height}}>
-            <View  style={{marginTop:10,marginLeft:8}}><LeftBack onPress={()=>this.goBack()}></LeftBack></View>  
+            <View  style={{marginTop:10,marginLeft:8}}><LeftBack title='返回' onPress={()=>this.goBack()}></LeftBack></View>  
             <View style={{flex:1,alignItems:'center',width:width,marginTop:50}}>
               <View style={{width:'80%',flex:1}}>
                   <View style={{borderBottomWidth:1,borderColor:'#ddd'}}>
@@ -144,45 +160,49 @@ export default class AppAccount extends Component{
                     
                   </View> 
                   <View style={{borderBottomWidth:1,borderColor:'#ddd'}}>
-                    <TextInput    
-                          placeholder="请输入密码"
-                          placeholderTextColor="#ddd"
-                          secureTextEntry={true}
-                          onChangeText={(text) => this.setState({password:text}) }
-                          >
-                    </TextInput>                    
+                    <View>
+                      <TextInput
+                      ref=" textPsd1"    
+                      placeholder="请输入密码"
+                      placeholderTextColor="#ddd"
+                      secureTextEntry={true}
+                      onChangeText={(text) => this.setState({password:text}) }
+                      >
+                      </TextInput> 
+                    </View>                   
                   </View> 
                   <View style={{borderBottomWidth:1,borderColor:'#ddd',flexDirection:'row',alignItems:'center'}}>
+                    
                     <TextInput
-                          placeholder="请再次输入密码"
-                          placeholderTextColor="#ddd"
-                          secureTextEntry={true}
-                          onChangeText={(text) => this.handleCheckPasd(text)}
-                          >
-                    </TextInput>                   
+                      ref=" textPsd2"
+                      placeholder="请再次输入密码"
+                      placeholderTextColor="#ddd"
+                      secureTextEntry={true}
+                      onChangeText={(text) => this.handleCheckPasd(text)}
+                    >
+                    </TextInput>   
+                    {/* <TouchableOpacity onPress={()=>this.handleClick()}>
+                      <Image source={checkPsd?blue_eye:grey_eye} style={{width:25,height:20}}></Image>
+                    </TouchableOpacity> */}
+                                     
                     { this.state.isRepeatPsd ?null:
-                        <Text style={{color:'red',fontSize:13}}>{this.state.isRepeatPsd ? null:this.state.errorLog}</Text>                      
+                      <View><Text style={{color:'red',fontSize:13}}>{this.state.isRepeatPsd ? null:this.state.errorLog}</Text></View>                    
                     }                    
-                  </View> 
-                  {/* <View style={{height:48,borderBottomWidth:1,borderColor:'#ddd'}}>
-                      <TextInput
-                        ref=" textAccVale"                        
-                        placeholder="请输入手机号"
-                        placeholderTextColor="#ddd"
-                        onChangeText={(text) => this.handleCheckNum(text)}   
-                      />                       
-                  </View>         */}
+                  </View>                   
                   <View style={{height:48,borderBottomWidth:1,borderColor:'#ddd'}}>
                     <View style={{flex:1,flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
                       <TextInput
-                    
+
                       placeholder="请输入验证码"
                       placeholderTextColor="#ddd"                    
-                      // onChangeText={(pwd) => this.setState({pwd})}
+                      onChangeText={(text) => this.setState({codeText:text})}
                       />   
-                      <TouchableOpacity>
-                        <Text style={{color:'#4B85ED',marginRight:8}}>{VerCode}</Text>
-                      </TouchableOpacity>
+                      <LinearGradient start={{x:0,y:4}}  end={{x:1.0,y:1.0}} colors={[ '#cc99dd', '#99ccff','#77ccff']} locations={[0, 0.5, 0.6]}>
+                        <View style={{width:100,height:45}}>
+                          <Text style={{color:'#4B85ED',fontSize:23,textAlign:'center',paddingTop:5}}>{verCode}</Text>
+                        </View>
+                      </LinearGradient>
+                      
                      
                     </View>                                
                   </View>
@@ -198,7 +218,16 @@ export default class AppAccount extends Component{
         );
     
     }
-   
+    // handleClick(){
+    //   let {checkPsd}= this.state;
+    //   if(checkPsd==true){
+    //     this.refs.textPsd2.secureTextEntry=false
+    //   }
+    //   this.setState({
+    //     checkPsd:!checkPsd
+    //   })
+
+    // }
     goBack = () => {
       this.props.navigation.goBack();
       
