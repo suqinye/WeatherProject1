@@ -154,18 +154,7 @@ export default class AddCity extends Component {
         <View>
           <Text style={{fontSize: 11, color: '#c2c3c4', marginTop: 5}}>北京市</Text>
           <Text>{text}</Text>
-            {/* <View style={{flexDirection: 'row', alignItems: 'center', paddingTop: 10, paddingBottom: 10}}>
-                <Image resizeMode={'stretch'} style={{ width: 34, height: 34, marginLeft: 20, marginRight: 10, borderRadius: 17}} source={imgSource} />
-                <View style={{justifyContent: 'center', flex: 1}}>
-                    <Text style={{fontSize: 15, color: '#36383c'}}>{name}<Text style={{fontSize: 12, color: '#626262', marginLeft: 5}}> {hrId}</Text></Text>
-                    <Text style={{fontSize: 11, color: '#c2c3c4', marginTop: 5}}>{depInfo}</Text>
-                </View>
-                {hasAdded ? <View style={{width: 24, height: 24, marginRight: 30}}/> :
-                    <TouchableOpacity onPress={() => {this.addStaff(rowData)}}>
-                        <Image style={{width: 24, height: 24, marginRight: 30}} source={require('../../../../../img/classHelper/icon_add.png')}/>
-                    </TouchableOpacity>}
-            </View>
-            <View style={{width: SCREEN_WIDTH, height: 1, backgroundColor: '#f5f5f5', marginLeft: 64}}/> */}
+           
         </View>
     )
 }
