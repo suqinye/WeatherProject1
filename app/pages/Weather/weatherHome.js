@@ -69,7 +69,7 @@ export default class WeatherHome extends Component {
 async componentDidMount() {  
   
   // if (this.refs.loading) {this.refs.loading.show();}
-  this.getCurrtDate();  
+   
   if(this.props.navigation.state.params!=undefined){
     let {city} = this.props.navigation.state.params;
     this.setState({              
@@ -97,8 +97,9 @@ async componentDidMount() {
           this.refs.toast.show('定位权限被禁止',1000)
       }
     }
+    this.getCurrtDate(); 
     this.getAdressInfor();
-   this.getWeatherNowBean();
+  //  this.getWeatherNowBean();
 
     
 }
@@ -333,6 +334,11 @@ getCurrtDate(){
             let district = tags.district;
           this.setState({
             district
+          },()=>{
+            this.getWeatherDataNow(district);//获取实况天气
+            this.getWeatherDataHourly(district);//获取小时天气
+            this.getWeatherDataForecast(district);//获取未来10天天气
+            this.getWeatherDataLifestyle(district);//获取生活指数
           })
           }else{
             return null;
