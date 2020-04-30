@@ -106,7 +106,7 @@ const StackNavigation = createStackNavigator({
   
 },
 {
-  initialRouteName: 'CityHome',
+  initialRouteName: 'WeatherHome',
   headerMode: 'screen'
 }
 

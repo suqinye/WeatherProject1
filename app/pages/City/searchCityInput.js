@@ -45,18 +45,9 @@ export default class SearchCityInput extends Component {
     };
 
     hotCitiesList =() =>{
-      
-       
-
-      
-    
     }
-
-
     render(){
-
-        return (
-           
+        return (           
             <View style={ [mainStyles.inputView, {flexDirection: 'row'}] }>
               <View style={{ flexDirection: "row", flex: 1 }}>
                 <View style={[mainStyles.inputBtn, { flex: 1, borderTopLeftRadius: 2, borderBottomLeftRadius: 2 }]}>
@@ -93,7 +84,7 @@ export default class SearchCityInput extends Component {
                     />
                   {this.state.isediting ?
                   <TouchableOpacity style={this.props.value ? styles.inputDelImg : styles.inputDelImgNone} onPress={this.props._onDelTextHandle}>
-                    <Image style={this.props.value ? styles.inputDelImg : styles.inputDelImgNone}  resizeMode={'stretch'} source={require('../../image/icon_delete.png')} />
+                    <Image style={this.props.value ? styles.inputDelImg : styles.inputDelImgNone}  resizeMode={'stretch'} source={require('../../image/icon_delete_grey.png')} />
                   </TouchableOpacity> :
                   <View></View>
                   }
@@ -104,10 +95,7 @@ export default class SearchCityInput extends Component {
                         <Text style={{ fontSize: 15, color: '#fff', }}>{this.props.btnName}</Text>
                     </View>
                 </TouchableOpacity>
-            </View>         
-           
-          
-         
+            </View>           
         );
     }
 }

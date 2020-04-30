@@ -11,8 +11,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   TextInput,
-  Keyboard,
- 
+  Keyboard, 
   FlatList,
   Dimensions
 } from 'react-native';
@@ -30,20 +29,6 @@ let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 // const dismissKeyboard = require('dismissKeyboard');
 
 let _this= null;
-
-let defaultHotCityArray = [
-    {cityCode: "310000", city: "上海市"},
-    {cityCode: "440300", city: "深圳市"},
-    {cityCode: "110000", city: "北京市"},
-    {cityCode: "440100", city: "广州市"},
-    {cityCode: "110000", city: "北京市"},
-    {cityCode: "440100", city: "广州市"},
-    {cityCode: "110000", city: "北京市"},
-    {cityCode: "440100", city: "广州市"},
-    {cityCode: "110000", city: "北京市"}
-    
-    
-];
 let all_Cities_List = cityData.result;
 
 
@@ -51,14 +36,14 @@ export default class AddCity extends Component {
     constructor(props){
         super(props);
         this.state={
-          searchTitle:'',
-          searchList: [],
-          groupList:[],
+          searchTitle:'',//输入的值
+          searchList: [],//搜索到的城市信息列表
           isChecking:false,
            isediting:false,
            showSearchResult: false,
            allCitiesList:all_Cities_List,
-          hotCityArray:[]//热门城市列表
+          hotCityArray:[],//热门城市列表
+          
 
         }
         _this = this;
@@ -72,7 +57,7 @@ export default class AddCity extends Component {
 
   //获取热门城市列表
   getCitiesListData(){
-    let url ='https://search.heweather.net/top?group=cn&key=f3952ac02f9c4e03961fce578e01c830&number=20';   
+    let url ='https://search.heweather.net/top?group=cn&key=f3952ac02f9c4e03961fce578e01c830&number=18';   
    // let url = 'https://github.com/suqinye/WeatherProject1/blob/dev/app/pages/City/cities.json';
          
      fetch(url).then((response) => {
@@ -97,14 +82,26 @@ export default class AddCity extends Component {
 
  }
   render(){
-    let {hotCityArray}= this.state;
+    let {hotCityArray,showSearchResult}= this.state;
       return (
         <ImageBackground
           source={require('../../image/icon_bgCity.jpg')}
           style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT,flex:1}}>
           <LeftBack title='添加城市' onPressBack={()=>this.goBack()}/>  
-          {!hotCityArray? <LoadingBg/> :
-            <View style={{flex:1}}>
+          {/* {!hotCityArray? <LoadingBg/> :
+           
+          }           */}
+          <View >
+            {this.renderInput()}             
+            { showSearchResult?
+              this.renderListCIity():                
+              <View style={{flex:1}}>
+                <Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text>
+                <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'flex-start',margin:15}}>{this.renderHotCity()}</View>            
+              </View>
+            }   
+            </View>
+            {/* <View style={{flex:1}}>
               {this.renderInput()}
               {this.renderListCIity()}
               <View><Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text></View>              
@@ -113,22 +110,19 @@ export default class AddCity extends Component {
               </View>
                         
              
-            </View>
-          
-          }
-          
-          <Toast ref="toast"/>        
-               
-         
+            </View> */}
+          <Toast ref="toast"/>         
         </ImageBackground>
       );
   }
   renderListCIity(){
     let {searchList} = this.state;
+    console.log('render搜索列表');
+    console.log(searchList)
         return (
           <View style={{flex: 1}}>
             <View style={{width: SCREEN_WIDTH, height: 1}}/>
-              <FlatList
+            <FlatList
                 data={searchList}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index })=>this.renderTopicItem(item,index)}                    
@@ -138,23 +132,16 @@ export default class AddCity extends Component {
         )
 
   }
-  renderTopicItem(rowData, sectionID, rowID) {
-    let {searchList} = this.state;
-    let text = searchList.parent_city+','+searchList.location+','+searchList.admin_area+','+searchList.cnty;
-    // let headImg = require('../../../../../img/classHelper/ic_head.png');
-    // let imgSource = !rowData.userImgUrl ? headImg : { uri: rowData.userImgUrl };
-    // let name = rowData.staffName;
-    // let depNm = rowData.depNm;
-    // let wrkNm = rowData.wrkNm;
-    // let hrId = rowData.hrId;
-    // let depInfo = (depNm && wrkNm) ? (depNm + '-' + wrkNm) : depNm ? depNm : wrkNm ? wrkNm : " ";
-    // let hasAdded = this.hasAdded(rowData);
-
+  renderTopicItem(rowData, sectionID, rowID) {    
+   
     return(
-        <View>
-          <Text style={{fontSize: 11, color: '#c2c3c4', marginTop: 5}}>北京市</Text>
-          <Text>{text}</Text>
-           
+        <View style={{marginTop:10,borderBottomWidth:1,borderColor:'#FFF',flexDirection:'row'}}>         
+          <TouchableOpacity onPress={()=>this.goToWeatherPage(rowData.parent_city)}>
+            <Text style={{fontSize:16, color: '#fff', marginTop: 5}}>{rowData.parent_city},{rowData.location},{rowData.admin_area},{rowData.cnty}</Text> 
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>this.goToWeatherPage('北京')}>
+            <Text style={{fontSize:16, color: '#fff', marginTop: 5}}>北京</Text> 
+          </TouchableOpacity>
         </View>
     )
 }
@@ -181,30 +168,31 @@ export default class AddCity extends Component {
       )
   }
   onChangeText(text) {
+    console.log("点击了onChangeText")
     this.setState({
       searchTitle: text,
       searchList: []
   })
-    // if(text==''){
-    //   this.setState({
-    //     showSearchResult: false
-    // })
-    // }else{
-    //    // 在这里过滤数据结果
-    //    let dataList = this.filterCityData(text);
-    //    this.setState({
-    //     searchTitle: text,
-    //     showSearchResult: true,
-    //     searchList: dataList
-    // })
-    // }
+    if(text==''){
+      this.setState({
+        showSearchResult: false
+    })
+    }else{
+       // 在这里过滤数据结果
+       let dataList = this.filterCityData(text);
+       this.setState({
+        searchTitle: text,
+        showSearchResult: true,
+        searchList: dataList
+    })
+    }
     
   }
   filterCityData(text) {
     let rst = [];
     for (let i = 0; i < all_Cities_List.length; i++) {
       let item = all_Cities_List[i];
-      if (item.city.includes(text)) {
+      if (item.parent_city.includes(text)) {
         rst.push(item);
       }
     }
@@ -218,10 +206,16 @@ export default class AddCity extends Component {
         searchList: [],
     })
   }
-   //查询
-   checkStaff(){
+  whenEndEdit() {
+      if (this.state.searchList.length == 0) {
+          this.checkStaff();
+      }
+  }
+    //查询
+  checkStaff(){
     // diKeyboard.dismiss;
     //dismissKeyboard();
+    console.log("点击了checkStaff")
     if (this.state.isChecking) {
         return
     }
@@ -240,11 +234,7 @@ export default class AddCity extends Component {
         searchList: []
     });
   }
-  whenEndEdit() {
-    if (this.state.searchList.length == 0) {
-        this.checkStaff();
-    }
-  }
+  
   //搜索城市接口
   getStaffList(value) {   
     // let url ='http://apis.juhe.cn/simpleWeather/cityList?key=dcf70f81a9ec418d203dab88719049ad';
@@ -262,49 +252,78 @@ export default class AddCity extends Component {
       this.setState({isChecking: false, searchList: []});
       this.refs.toast.show("查询失败",1000);
     }); 
- }
+  }
         
- onSuccess(result){
+  onSuccess(result){
 
-  this.setState({
-    searchList:result.basic,
-    isChecking:false
-  })
-
- }    
+    this.setState({
+      searchList:result.basic,
+      isChecking:false
+    },()=>this.handleNoContentView())
+    
+  }    
 
   
+  handleSelect(rowID) {
   
- 
+  }
+  
   onFailure = (error) => {
 
   };
-
-    renderHotCity(){
+//热门城市
+  renderHotCity(){
      let {hotCityArray} =_this.state;
      console.log(hotCityArray);
      if(hotCityArray.length==0){
-       return null;
-       
+       return null;       
      }
     return(
       hotCityArray.map((item,index)=>{
          return (
-            
-          <TouchableOpacity onPress={()=>this.goToWeatherPage(item.location)} key={index} style={{width:90,height:35,margin:10,borderRadius:10,borderWidth:1,borderColor:'#ddd',alignItems:'center'}}>
-            <Text style={{color:'#eee',fontSize:15,textAlign:'center',marginTop:5}}>{item.location}</Text> 
-          </TouchableOpacity>
-                
-            );
+          <View key={index} style={{alignItems: 'center',flexDirection:'row'}}>
+             <TouchableOpacity
+             onPress={() => this.goToWeatherPage(item.location)}            
+             style={{
+               width: 90,
+               height: 35,
+               margin: 10,
+               borderRadius: 10,
+               borderWidth: 1,
+               borderColor: '#ddd'               
+             }}>
+             <Text
+               style={{
+                 color: '#eee',
+                 fontSize: 15,
+                 textAlign: 'center',
+                 marginTop: 5,
+               }}>
+               {item.location}
+             </Text>
+           </TouchableOpacity>
+          </View>
+         );
     
           })
         )
      
-    }
-
-    goToWeatherPage(city){
-      this.props.navigation.push('WeatherHome',{city:city});
-    }
+  }
+  handleNoContentView(){
+      let list_Data = this.state.searchList;
+      if(list_Data.length==0){
+        this.setState({
+          showSearchResult:false
+        })
+      }else{
+        this.setState({
+          showSearchResult:true
+        })
+      }     
+  }
+  goToWeatherPage(city){
+        this.props.navigation.navigate('WeatherHome',{city:city});
+  }
     
 }
 

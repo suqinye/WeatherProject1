@@ -69,7 +69,7 @@ export default class WeatherHome extends Component {
 async componentDidMount() {  
   
   // if (this.refs.loading) {this.refs.loading.show();}
-   
+  this.getCurrtDate(); 
   if(this.props.navigation.state.params!=undefined){
     let {city} = this.props.navigation.state.params;
     this.setState({              
@@ -97,7 +97,7 @@ async componentDidMount() {
           this.refs.toast.show('定位权限被禁止',1000)
       }
     }
-    this.getCurrtDate(); 
+    
     this.getAdressInfor();
   //  this.getWeatherNowBean();
 
