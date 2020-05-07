@@ -19,40 +19,45 @@ import Storage from '../components/storage';
 let {height,width} =  Dimensions.get('window');
 let blue_eye = require('../image/icon_blue_eye.png');
 let grey_eye = require('../image/icon_grey_eye.png');
+let _this;
 export default class AppAccount extends Component{
     constructor(props){
         super(props);             
         this.state = {
          aa:'',
           userName:'',//用户名
-          password:'',//密码
-          isRepeatUser:false,//true表示用户名重复
+          password:'',//密码         
           isRepeatNum:false,//true表示手机号重复          
-          errorLog:"",//错误提示文字
-          isRepeatPsd:false,//flase表示输入的两次密码不一样
+          psdErrorLog:"",//错误提示文字
+          userErrorLog:'',
+          isRepeatPsd:true,//flase表示输入的两次密码不一样
           checkPsd:false,//是否查看密码
           verCode:'',
           codeText:'',
           content: 'AppAccount',
-          storageData:[]
+          localtorageData:[]
           }
+          _this=this;
 
     }
     componentDidMount(){
      this.refreshCode();
+     this.getStorageData();
      
     }
     //读取本地存储数据
-    getStorageData(){      
-      let defaultData = [{userName:'admin',password:'123569'}];
-      let data = Storage.get('defaultData'); 
-      console.log(data);
-      if(data!==null){
-         return ;
-      }else{        
-        return defaultData;
-      }
-    }
+    getStorageData(){  
+       Storage.get('localData').then((tags)=>{
+         console.log('localData=========');
+         console.log(tags);
+        if(tags!=null||tags!=undefined){
+          this.setState({
+            localtorageData:tags
+          })         
+        }
+   
+       })
+  }      
     refreshCode(){
       let code = '0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
       let char = '';
@@ -72,70 +77,79 @@ export default class AppAccount extends Component{
 
     }
 
-    handleCheckUser(value){   
-      // let dataArr = this.getStorageData(); 
-      // console.log(dataArr);
-      // for(let i=0;i<dataArr.length;i++){
-      //   if(dataArr[i].userName==value){
-      //     this.setState({
-      //       isRepeatUser:true,
-      //       errorLog:'该用户名已注册'
-      //     })  
-      //   }else{
-      //     dataArr[i].userName = value;
-      //     this.setState({userName:value});      
-      //   }
-      // }
-            
+    handleCheckUser(value){  
       this.setState({
-        userName:value        
-      })
-      
-     
+        userName:value
+       
+      })         
     }
    
     //检查两次密码是否一样
     handleCheckPasd(rePsd){
       let {password} = this.state;
+      if(rePsd==''){
+        this.setState({password:rePsd,isRepeatPsd:false})
+      }
       if(password==rePsd){         
         this.setState({         
           isRepeatPsd:true
         })
       }else{
         this.setState({
-          errorLog:'两次密码不一样',
+          psdErrorLog:'两次密码不一样',
           isRepeatPsd:false
         })        
       }
     }
-    handleCheckCode(code){
-      
-
-    }
+    
      onPressCallback(){
-      let {userName,password,storageData,verCode,codeText}=this.state;  
+      let {userName,password,localtorageData,verCode,codeText}=this.state;  
       if(userName==''){        
         this.refs.toast.show("用户名不能为空",1000);
         return;
       }
       if(password==''){
-        this.refs.toast.show("密码不能为空",1000)
+        this.refs.toast.show("密码不能为空",1000);
         return;
       } 
       if(codeText==''){
-        this.refs.toast.show("请输入验证码",1000)
-      }
-      let localData = [{"userName":userName,"password":password}];
-      // localData.push({userName:userName,password:password});
-      // Storage.set('defaultData',localData);       
-      Storage.set('localData',localData); 
-      if(verCode==codeText){
+        this.refs.toast.show("请输入验证码",1000);
+        return;
+      }    
+    if(localtorageData.length==0){
+      if(verCode==codeText){           
+        localtorageData.push({"userName":userName,"password":password});  
+        console.log("localtorageData.push==================");
+        console.log(localtorageData);      
+        Storage.set('localData',localtorageData);
         this.props.navigation.push('Login',{user:userName,psd:password});
       }else{
         this.refs.toast.show("验证码错误",1000)
-      }
-      
-
+      } 
+    }else{        
+     this.checkUserRe();
+    }
+  }
+    //检查用户名是否被注册过
+    checkUserRe(){
+      let {userName,password,localtorageData,verCode,codeText}=this.state;  
+      for(let i = 0;i<localtorageData.length;i++){
+        let item = localtorageData[i];
+        if(item.userName.includes(userName)){
+          this.refs.toast.show("该用户名已注册,重新注册",1000);
+        }
+        if(!item.userName.includes(userName)){ 
+          if(verCode==codeText){           
+            localtorageData.push({"userName":userName,"password":password});  
+            console.log("localtorageData.push==================");
+            console.log(localtorageData);      
+            Storage.set('localData',localtorageData);
+            this.props.navigation.push('Login',{user:userName,psd:password});
+          }else{
+            this.refs.toast.show("验证码错误",1000)
+          } 
+        }
+      }   
     }
     render(){
 
@@ -145,10 +159,10 @@ export default class AppAccount extends Component{
        
         return (
           <ImageBackground source={require('../image/icon_weather.jpg')}  style={{width:width,height:height}}>
-            <View  style={{marginTop:10,marginLeft:8}}><LeftBack title='返回' onPress={()=>this.goBack()}></LeftBack></View>  
+            <View  style={{marginTop:10,marginLeft:8}}><LeftBack title='返回' onPressBack={()=>this.goBack()}></LeftBack></View>  
             <View style={{flex:1,alignItems:'center',width:width,marginTop:50}}>
               <View style={{width:'80%',flex:1}}>
-                  <View style={{borderBottomWidth:1,borderColor:'#ddd'}}>
+                  <View style={{borderBottomWidth:1,borderColor:'#ddd',flexDirection:'row',alignItems:'center'}}>
                     <TextInput
                           ref=" textAccVale"
                           autoFocus={true}
@@ -186,7 +200,7 @@ export default class AppAccount extends Component{
                     </TouchableOpacity> */}
                                      
                     { this.state.isRepeatPsd ?null:
-                      <View><Text style={{color:'red',fontSize:13}}>{this.state.isRepeatPsd ? null:this.state.errorLog}</Text></View>                    
+                      <View><Text style={{color:'red',fontSize:13}}>{this.state.isRepeatPsd ? null:this.state.psdErrorLog}</Text></View>                    
                     }                    
                   </View>                   
                   <View style={{height:48,borderBottomWidth:1,borderColor:'#ddd'}}>

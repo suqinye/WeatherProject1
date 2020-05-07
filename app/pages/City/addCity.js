@@ -23,6 +23,7 @@ import mainStyles from './style';
 import SearchInput from './searchCityInput';
 import cityData from './cities.json';
 import LoadingBg from '../../components/LoadingBg';
+import Storage from '../../components/storage';
 let SCREEN_WIDTH = Dimensions.get('window').width; //宽
 let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 
@@ -38,9 +39,8 @@ export default class AddCity extends Component {
         this.state={
           searchTitle:'',//输入的值
           searchList: [],//搜索到的城市信息列表
-          isChecking:false,
-           isediting:false,
-           showSearchResult: false,
+          isChecking:false,//是否可以编辑
+           showSearchResult: false,//是否显示搜索到的城市信息列表
            allCitiesList:all_Cities_List,
           hotCityArray:[],//热门城市列表
           
@@ -74,12 +74,16 @@ export default class AddCity extends Component {
    }); 
   }
   onSuccessCity(hotCityjson){
-   const aa = hotCityjson.basic;        
-   this.setState({       
-     hotCityArray:aa,
-         
-   }); 
-
+    let data = hotCityjson.status;
+    if(data!='ok'){
+      this.refs.toast.show("获取热门城市失败！",5000);      
+    }else{
+      const aa = hotCityjson.basic;        
+      this.setState({       
+      hotCityArray:aa,
+          
+      }); 
+    }   
  }
   render(){
     let {hotCityArray,showSearchResult}= this.state;
@@ -94,23 +98,14 @@ export default class AddCity extends Component {
           <View >
             {this.renderInput()}             
             { showSearchResult?
-              this.renderListCIity():                
+            <View style={{flexDirection:'row',justifyContent:'center',margin:15}}>{this.renderListCIity()}</View>  
+            :                
               <View style={{flex:1}}>
                 <Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text>
                 <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'flex-start',margin:15}}>{this.renderHotCity()}</View>            
               </View>
             }   
-            </View>
-            {/* <View style={{flex:1}}>
-              {this.renderInput()}
-              {this.renderListCIity()}
-              <View><Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text></View>              
-              <View style={{flex:1,flexDirection:'row',justifyContent:'flex-start',margin:10,flexWrap:'wrap'}}>
-                  {this.renderHotCity()} 
-              </View>
-                        
-             
-            </View> */}
+            </View>           
           <Toast ref="toast"/>         
         </ImageBackground>
       );
@@ -120,28 +115,27 @@ export default class AddCity extends Component {
     console.log('render搜索列表');
     console.log(searchList)
         return (
-          <View style={{flex: 1}}>
-            <View style={{width: SCREEN_WIDTH, height: 1}}/>
-            <FlatList
-                data={searchList}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index })=>this.renderTopicItem(item,index)}                    
-                showsHorizontalScrollIndicator={false}
-              />
-          </View>
+          <FlatList
+          data={searchList}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index })=>this.renderTopicItem(item,index)}                    
+          showsHorizontalScrollIndicator={false}
+          // ItemSeparatorComponent={()=>this.sepa()}//item间隔
+          // ListFooterComponent={()=><View style={{height:1,backgroundColor:'#fff'}}></View>}//底部间隔
+        />
         )
 
   }
+  sepa() {
+    return (<View style={{height:1,backgroundColor:'#FFF'}}></View>)
+}
   renderTopicItem(rowData, sectionID, rowID) {    
    
     return(
-        <View style={{marginTop:10,borderBottomWidth:1,borderColor:'#FFF',flexDirection:'row'}}>         
-          <TouchableOpacity onPress={()=>this.goToWeatherPage(rowData.parent_city)}>
-            <Text style={{fontSize:16, color: '#fff', marginTop: 5}}>{rowData.parent_city},{rowData.location},{rowData.admin_area},{rowData.cnty}</Text> 
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>this.goToWeatherPage('北京')}>
-            <Text style={{fontSize:16, color: '#fff', marginTop: 5}}>北京</Text> 
-          </TouchableOpacity>
+        <View style={{marginTop:10,paddingBottom:10,flexDirection:'row',borderBottomWidth:1,borderColor:'#fff'}}>         
+          <TouchableOpacity onPress={()=>this.goToWeatherPage(rowData.parent_city)} >
+            <Text style={{fontSize:16, color: '#fff', marginTop: 5}} >{rowData.location},{rowData.parent_city},{rowData.admin_area},{rowData.cnty}</Text> 
+          </TouchableOpacity>         
         </View>
     )
 }
@@ -168,68 +162,78 @@ export default class AddCity extends Component {
       )
   }
   onChangeText(text) {
-    console.log("点击了onChangeText")
+    console.log("调用了onChangeText");
+    this.checkStaff(text);  
     this.setState({
       searchTitle: text,
-      searchList: []
-  })
-    if(text==''){
-      this.setState({
-        showSearchResult: false
-    })
-    }else{
-       // 在这里过滤数据结果
-       let dataList = this.filterCityData(text);
-       this.setState({
-        searchTitle: text,
-        showSearchResult: true,
-        searchList: dataList
-    })
-    }
+      searchList: [],
+      showSearchResult: true
+     })
+ 
+    // if(text==''){
+    //   this.setState({
+    //     showSearchResult: false
+    // })
+    // }else{
+      
+    //    在这里过滤数据结果
+    //    let dataList = this.filterCityData(text);
+    //    this.setState({
+    //     searchTitle: text,
+    //     showSearchResult: true,
+    //     searchList: dataList
+    // })
+    // }
     
   }
-  filterCityData(text) {
-    let rst = [];
-    for (let i = 0; i < all_Cities_List.length; i++) {
-      let item = all_Cities_List[i];
-      if (item.parent_city.includes(text)) {
-        rst.push(item);
-      }
-    }
-    return rst;
-  }
+  // filterCityData(text) {
+  //   console.log("调用了filterCityData");
+  //   let rst = [];
+  //   for (let i = 0; i < all_Cities_List.length; i++) {
+  //     let item = all_Cities_List[i];
+  //     if (item.parent_city.includes(text)) {
+  //       rst.push(item);
+  //     }
+  //   }
+  //   return rst;
+  // }
 
 
   deleHandle() {
+    console.log("调用了deleHandle");
     this.setState({
         searchTitle: "",
         searchList: [],
+        showSearchResult:false
     })
   }
   whenEndEdit() {
+    console.log("调用了whenEndEdit");
       if (this.state.searchList.length == 0) {
           this.checkStaff();
       }
   }
     //查询
-  checkStaff(){
+  checkStaff(text){
     // diKeyboard.dismiss;
     //dismissKeyboard();
-    console.log("点击了checkStaff")
+    console.log("调用了checkStaff");
     if (this.state.isChecking) {
         return
     }
-
-    let {searchTitle} = this.state;
-    if (!searchTitle || searchTitle.trim().length == 0) {
+    if(text==undefined){
+      text = this.state.searchTitle;
+    }   
+    if (!text || text.trim().length == 0) {
       this.refs.toast.show("请输入城市名称");
         return;
     }
-    searchTitle = searchTitle.trim()
-    this.clearStaff()
-    this.getStaffList(searchTitle)
+    text = text.trim()
+    // this.clearStaff()
+    this.getStaffList(text)
   }
   clearStaff() {
+    console.log("调用了clearStaff");
     this.setState({
         searchList: []
     });
@@ -237,6 +241,7 @@ export default class AddCity extends Component {
   
   //搜索城市接口
   getStaffList(value) {   
+    console.log("调用了 getStaffList");
     // let url ='http://apis.juhe.cn/simpleWeather/cityList?key=dcf70f81a9ec418d203dab88719049ad';
     let url = 'https://search.heweather.net/find?key=f3952ac02f9c4e03961fce578e01c830&location='+value;  
     this.setState({isChecking: true});  
@@ -249,17 +254,25 @@ export default class AddCity extends Component {
       console.log(jsonData.HeWeather6[0]);    
       this.onSuccess(jsonData.HeWeather6[0]);   
     }).catch((error) => {    
-      this.setState({isChecking: false, searchList: []});
+      this.setState({searchList: []});
       this.refs.toast.show("查询失败",1000);
     }); 
   }
         
   onSuccess(result){
-
-    this.setState({
-      searchList:result.basic,
-      isChecking:false
-    },()=>this.handleNoContentView())
+    let data = result.status;
+    if(data!='ok'){
+      this.refs.toast.show("未查到该城市，请重新输入",5000);
+      this.setState({
+        searchList:[],
+        isChecking:false      
+      },()=>this.handleNoContentView())
+    }else{
+      this.setState({
+        searchList:result.basic,
+        isChecking:false      
+      },()=>this.handleNoContentView())
+    }
     
   }    
 
@@ -274,7 +287,8 @@ export default class AddCity extends Component {
 //热门城市
   renderHotCity(){
      let {hotCityArray} =_this.state;
-     console.log(hotCityArray);
+    //  console.log('调用了 renderHotCity 方法')
+    //  console.log(hotCityArray);
      if(hotCityArray.length==0){
        return null;       
      }
@@ -322,7 +336,7 @@ export default class AddCity extends Component {
       }     
   }
   goToWeatherPage(city){
-        this.props.navigation.navigate('WeatherHome',{city:city});
+        this.props.navigation.push('WeatherHome',{city:city});
   }
     
 }

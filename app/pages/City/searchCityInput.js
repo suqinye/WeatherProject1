@@ -56,7 +56,7 @@ export default class SearchCityInput extends Component {
                   <TextInput
                             ref="textInput"
                             style={{ flex: 1, fontSize: 14, color: '#333', padding: 0}}
-                            autoFocus={true}
+                            autoFocus={false}
                             maxLength={12}
                             keyboardType={this.props.keyboardType}
                             underlineColorAndroid='transparent'

@@ -31,13 +31,25 @@ export default class Login extends Component{
         this.state={           
             userName:'',
             password:'',
+            userInfor:'',
             logonSuccess:true,//登录成功
             isRegistered:false
            
         };
         _this = this;
     }
-    componentDidMount(){
+    componentDidMount(){ 
+       // Storage.remove("localData");     
+        Storage.get('localData').then((tags)=>{
+            console.log('localData===========');
+            console.log(tags);
+            if(tags!=null||tags!=undefined){
+                this.setState({
+                    userInfor:tags
+                })         
+              }           
+        })
+        
         if(this.props.navigation.state.params!=undefined){
             let {user,psd} = this.props.navigation.state.params;                       
             this.setState({              
@@ -53,9 +65,9 @@ export default class Login extends Component{
         return(
 
             <ImageBackground source={require('../image/icon_weather.jpg')} style={{ flex: 1,width: width, height: height}}>
-                <View  style={{marginTop:10,marginLeft:8}}><LeftBack title='返回' onPress={()=>this.goBack()}></LeftBack></View> 
+                <View  style={{marginTop:10,marginLeft:8}}><LeftBack title='返回' onPressBack={()=>this.goBack()}></LeftBack></View> 
                 <View style={{alignItems:'center',flexDirection:'column'}}>
-                    <View style={{marginTop:20,width:'80%',height:'100%'}}>
+                    <View style={{width:'80%',height:'100%'}}>
                         <Text style={{marginTop:100,fontSize:20,color:'#555'}}>欢迎来到冷暖天气</Text>
                         <Text style={{marginTop:10,fontSize:14,color:'#888'}}>知天气，利出行，天天好心情</Text>
                         <View style={{height:48,marginTop:30,borderBottomWidth:1,borderColor:'#ddd'}}>
@@ -79,7 +91,6 @@ export default class Login extends Component{
                             value = {this.state.isRegistered?this.state.password:null}
                             onChangeText={(password) => this.setState({password})}
                             >
-
                             </TextInput>
                         </View>                   
                         <View style={{marginTop:30}}>
@@ -103,7 +114,7 @@ export default class Login extends Component{
         )
     }
     onPressCallback(){
-        let {userName,password,inforData} = this.state;
+        let {userName,password,userInfor} = this.state;
         if(password == ''){
             this.refs.toast.show("密码不能为空!",1000);
             return;  
@@ -111,33 +122,18 @@ export default class Login extends Component{
             this.refs.toast.show("用户名不能为空!",1000);
             return;  
         } 
-       
-            
-         _this.goToMinePage(userName);
-        //  let inforData = AsyncStorage.getItem('localData');
-        //  console.log(inforData);
-        // if(inforData.userName==userName&&inforData.password==password){
-        //     _this.goToMinePage(userName);
-        // }else{
-        //     this.refs.toast.show("用户名或密码不正确!",1000);
-        // }
-    //     for(let i=0;i<inforData.length;i++){
-    //        if (inforData[i].userName ==userName &&inforData[i].password==password){
-    //            //{content:'当前是Page2'}为传递的参数
-    //         _this.goToMinePage(userName);
-
-    //        }else{
-    //         this.refs.toast.show("登录失败",1000);
-    //         this.setState({
-    //             logonSuccess:false
-    //         })
-    //        }
-    //    }
-    
-         
+        for(let i = 0;i<userInfor.length;i++){
+            let item = userInfor[i];
+            if(item.userName==userName&&item.password==password){         
+                _this.goToMinePage(userName);
+            }
+            if(item.userName!=userName&&item.password!=password){
+                this.refs.toast.show("账号或密码不正确，请重新登录!",1000);
+            }
+        }
         
     }
-    goBack = () => {
+    goBack() {
         this.props.navigation.goBack();
     };
       // 登录，跳转到我的页面

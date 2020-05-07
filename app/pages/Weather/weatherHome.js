@@ -22,7 +22,7 @@ import Geolocation from 'react-native-geolocation-service';
 import {Button} from '../../components/Button';
 import Loading from '../../components/Loading';
 import LoadingBg from '../../components/LoadingBg';
-import Storage from '../../components/storage';
+import Storage from '../../components/storage'
 import { Item } from 'native-base';
 import Moment from 'moment';
 import NetUtil from '../../util/NetUtil';
@@ -58,7 +58,8 @@ export default class WeatherHome extends Component {
       hourlyDataList:[],//逐小时预报数据
       forecastDataList:[],//未来天气预报数据
       lifestyleData:[],//生活指数
-      futureData:''//近五天天气情况
+      futureData:'',//近五天天气情况
+      manage_CityInfor: [],
     };
     _this = this;
     
@@ -66,12 +67,12 @@ export default class WeatherHome extends Component {
 
   
 
-async componentDidMount() {  
-  
+async componentDidMount() {    
   // if (this.refs.loading) {this.refs.loading.show();}
-  this.getCurrtDate(); 
+  this.getCurrtDate();  
   if(this.props.navigation.state.params!=undefined){
     let {city} = this.props.navigation.state.params;
+    this.getAdressInfor();
     this.setState({              
         district:city
         
@@ -80,7 +81,7 @@ async componentDidMount() {
       this.getWeatherDataHourly(city);//获取小时天气
       this.getWeatherDataForecast(city);//获取未来10天天气
       this.getWeatherDataLifestyle(city);//获取生活指数
-}else{
+  }else{
 
     if(Platform.OS == 'ios'){
       _this.getPosition();
@@ -98,13 +99,9 @@ async componentDidMount() {
       }
     }
     
-    this.getAdressInfor();
+     this.getAdressInfor();
   //  this.getWeatherNowBean();
-
-    
-}
-  
-   
+  }
 }
   // componentWillReceiveProps(nextProps){
 
@@ -119,6 +116,18 @@ getCurrtDate(){
    this.setState({
     currtTime:updateTime
    })
+}
+getAdressInfor(){
+  // Storage.remove('manage_CityInfor');
+  Storage.get('manage_CityInfor').then((tags)=>{
+    console.log("+++++++++++++");
+    console.log(tags);
+    if(tags!=undefined||tags!=null){
+      this.setState({
+        manage_CityInfor:tags
+      })
+    }
+  })
 }
   //获取当前位置
   getPosition=()=>{   
@@ -176,37 +185,47 @@ getCurrtDate(){
     });
 }
   getLocationSuccess=(jsonDa)=>{
-    let newVar = jsonDa.locations.split(',')
-    this.setState({
-        longitude: newVar[0],//经度
-        latitude: newVar[1],//纬度
-    },()=>{
-        //通过调用高德地图逆地理接口，传入经纬度获取位置信息
-      //访问网络开始  逆地理编码api服务地址
-    NetUtil.get('https://restapi.amap.com/v3/geocode/regeo?key=b1ea7e718756c25b175b2a948d9f3505'+'&location='+_this.state.longitude+','+_this.state.latitude+'&radius=1000&extensions=all&batch=false&roadlevel=0')
-      .then((jsonData) => {  
-        let aa = jsonData.regeocode.addressComponent;
-        let city =aa.city;
-        let district =aa.district;
-        Storage.set("addressBean",aa);
-        this.setState({
-            district:district,
-            city:city
-        },()=>{
-          this.getWeatherDataNow(district);//获取实况天气
-          this.getWeatherDataHourly(district);//获取小时天气
-          this.getWeatherDataForecast(district);//获取未来10天天气
-          this.getWeatherDataLifestyle(district);//获取生活指数
+    if(jsonDa.status=='0'){//请求失败
+      this.refs.toast.show("请求数据失败",1000);
+    }else{
+      let newVar = jsonDa.locations.split(',')
+      this.setState({
+          longitude: newVar[0],//经度
+          latitude: newVar[1],//纬度
+      },()=>{
+          //通过调用高德地图逆地理接口，传入经纬度获取位置信息
+        //访问网络开始  逆地理编码api服务地址
+      NetUtil.get('https://restapi.amap.com/v3/geocode/regeo?key=b1ea7e718756c25b175b2a948d9f3505'+'&location='+_this.state.longitude+','+_this.state.latitude+'&radius=1000&extensions=all&batch=false&roadlevel=0')
+        .then((jsonData) => { 
+          if(jsonDa.status=='1'){
+            let aa = jsonData.regeocode.addressComponent;
+            let city =aa.city;
+            let district =aa.district;            
+            this.setState({
+                district:district,
+                city:city
+                
+            },()=>{
+              this.getWeatherDataNow(district);//获取实况天气
+              this.getWeatherDataHourly(district);//获取小时天气
+              this.getWeatherDataForecast(district);//获取未来10天天气
+              this.getWeatherDataLifestyle(district);//获取生活指数
+    
+            });                               
+              console.log(this.state.district);
 
-        });                               
-           console.log(this.state.district);       
-      })
-    .catch((error) => {      
-      if (_this.refs.loading) { _this.refs.loading.hide(); }
-      this.refs.toast.show("获取数据失败",1000);
-      this.setState({isRefreshing: false}); 
-    });
-    });
+          }else{
+            this.refs.toast.show("请求数据失败",1000);
+          }
+        })
+      .catch((error) => {      
+        if (_this.refs.loading) { _this.refs.loading.hide(); }
+        this.refs.toast.show("获取数据失败",1000);
+        this.setState({isRefreshing: false}); 
+      });
+      });
+    }
+   
   }
   //获取当前城市now天气数据
    getWeatherDataNow(city) {
@@ -231,14 +250,50 @@ getCurrtDate(){
     this.setState({isRefreshing: false});
   });      
   }
+  //请求数据成功
   onSuccessNow(weatherData){
-    const aa = weatherData.now;
-    Storage.set('weatherNowBean',weatherData);           
-    this.setState({       
-      basic:weatherData.basic,
-      nowData:aa,      
-      isRefreshing: false     
-    });    
+    let data = weatherData.status;
+    if(data!='ok'){
+      this.refs.toast.show("请求天气数据失败",5000);
+    }else{
+      this.aaaa(weatherData.now);   
+           
+      this.setState({       
+        basic:weatherData.basic,
+        nowData:weatherData.now,      
+        isRefreshing: false     
+      });   
+    }     
+  }
+  //保存已查询过的城市信息
+  aaaa(data){ 
+    let{ manage_CityInfor,district} = _this.state;
+    let tmp =data.tmp;
+    let cond_txt =data.cond_txt;
+    if(manage_CityInfor.length==0){      
+      manage_CityInfor.push({"location":district,"tmp":tmp,"cond_txt":cond_txt});  
+      Storage.set('manage_CityInfor',manage_CityInfor)
+      this.setState({
+        manage_CityInfor
+      })
+    }else{
+    for(let i = 0;i<manage_CityInfor.length;i++){
+      let item = manage_CityInfor[i];
+      if(item.location.includes(district)){      
+        return;      
+      }
+      if(item.location.includes(district)==false){ 
+        manage_CityInfor.push({"location":district,"tmp":tmp,"cond_txt":cond_txt});                    
+        Storage.set('manage_CityInfor',manage_CityInfor);
+        this.setState({
+          manage_CityInfor
+        })
+      }
+    }
+  }
+   
+  
+  
   }
    //获取当前城市hourly逐小时预报数据
    getWeatherDataHourly(city){
@@ -261,12 +316,19 @@ getCurrtDate(){
     }); 
    }
    onSuccessHourly(hourlyJaon){
-    const aa = hourlyJaon.hourly;        
-    this.setState({       
-      hourlyDataList:aa,
-      isRefreshing: false
-          
-    }); 
+    let data = hourlyJaon.status;
+    if(data!='ok'){
+      this.refs.toast.show("请求逐小时数据失败",5000);
+      
+    }else{
+      const aa = hourlyJaon.hourly;        
+      this.setState({       
+        hourlyDataList:aa,
+        isRefreshing: false
+            
+      }); 
+    }
+    
    }
    //获取当前城市forecast(3-10天预报)天气数据
    getWeatherDataForecast(city){
@@ -290,12 +352,19 @@ getCurrtDate(){
    
    }
    onSuccessForecast(forecastData){
-    const aa = forecastData.daily_forecast;        
-    this.setState({       
-      forecastDataList:aa,
-      isRefreshing: false
-          
-    }); 
+     let data = forecastData.status;
+    if(data!='ok'){
+      this.refs.toast.show("请求未来天气数据失败",5000);
+      
+    }else{
+      const aa = forecastData.daily_forecast;        
+      this.setState({       
+        forecastDataList:aa,
+        isRefreshing: false
+            
+      }); 
+    }
+    
 
    }
     //获取当前城市lifestyle生活指数
@@ -320,31 +389,22 @@ getCurrtDate(){
          
      }  
       onSuccessLifestyle(lifestyleData){
-        let lifestyle = lifestyleData.lifestyle
-        this.setState({
-          lifestyleData:lifestyle,
-          isRefreshing: false
-        })
+        let data = lifestyleData.status;
+        if (data!='ok'){
+          this.refs.toast.show("请求生活指数数据失败",5000);         
+        }else{
+          let lifestyle = lifestyleData.lifestyle
+          this.setState({
+            lifestyleData:lifestyle,
+            isRefreshing: false
+          })
+
+        }
+       
 
       }
   
-      getAdressInfor(){
-        Storage.get('addressBean').then((tags)=>{
-          if(tags!=undefined){
-            let district = tags.district;
-          this.setState({
-            district
-          },()=>{
-            this.getWeatherDataNow(district);//获取实况天气
-            this.getWeatherDataHourly(district);//获取小时天气
-            this.getWeatherDataForecast(district);//获取未来10天天气
-            this.getWeatherDataLifestyle(district);//获取生活指数
-          })
-          }else{
-            return null;
-          }
-        })
-      }
+    
       getWeatherNowBean(){
         Storage.get('weatherNowBean').then((tags)=>{
           if(tags!=undefined){
@@ -417,15 +477,15 @@ getCurrtDate(){
             <View  style={{ flex: 1}}>
               <View style={{width:width,flex:1}}>
                 <View style={{width:width,justifyContent:'center',borderTopWidth:0.5,borderColor:'#657089'}}>
-                  <Text style={{marginTop:10,marginLeft:10,color:'#fff'}}>逐小时天气</Text>
+                  {/* <Text style={{marginTop:10,marginLeft:10,color:'#fff'}}>逐小时天气</Text> */}
                   <View style={{flexDirection:'row',flexWrap:'nowrap',justifyContent:'space-around'}}>{this.renderHourly()}</View>
                 </View>
                 <View style={{width:width,borderTopWidth:0.5,borderBottomWidth:0.5,borderColor:'#657089'}}>
-                  <Text style={{marginTop:20,marginLeft:10,color:'#fff'}}>未来天气</Text>
+                  {/* <Text style={{marginTop:20,marginLeft:10,color:'#fff'}}>未来天气</Text> */}
                   <View style={{marginBottom:10}}>{this.renderForecast()}</View>                  
                 </View>
                 <View style={{marginTop:20}}>
-                  <Text style={{color:'#fff',marginLeft:10,}}>生活指数</Text>
+                  {/* <Text style={{color:'#fff',marginLeft:10,}}>生活指数</Text> */}
                   <View >
                     {this.renderLifestyle()}
                   </View>                  
@@ -634,10 +694,15 @@ getCurrtDate(){
 
   }
   _onRefresh(){
+    let city =this.state.district;
     this.setState({
       isRefreshing: true,
     });
-    _this.getPosition();
+
+    this.getWeatherDataNow(city);//获取实况天气
+    this.getWeatherDataHourly(city);//获取小时天气
+    this.getWeatherDataForecast(city);//获取未来10天天气
+    this.getWeatherDataLifestyle(city);//获取生活指数
     _this.getCurrtDate();
   }
 //跳到城市管理页面

@@ -10,12 +10,14 @@ import { View,
       
       Dimensions } from 'react-native';
 let {height12, width12} = Dimensions.get('window');
+import Toast, {DURATION} from 'react-native-easy-toast';
 import LeftBack from '../components/LeftBack';
 export default class MinePage extends Component{
     constructor(props){
         super(props);
         this.state={
             title:'登录/注册',
+            isLogin:false//flase用户表示为登录
             
         }
 
@@ -24,16 +26,22 @@ export default class MinePage extends Component{
         if(this.props.navigation.state.params!=undefined){
             let {userName} = this.props.navigation.state.params;
             this.setState({
-                title:userName
-                
-
+                title:userName,
+                isLogin:true
             })
 
         }
     }
     goToLogin=()=> {
+        let {isLogin}= this.state;
         // this.props.navigation.goback();
-         this.props.navigation.push('Login');       
+        if(isLogin){
+            // this.props.navigation.push('EmptyPage');
+            this.props.navigation.push('EmptyPage');
+        }else{
+            this.props.navigation.push('Login');     
+        }
+          
        };
        //功能未开通页面
     goToEmptyPage=()=>{
@@ -43,11 +51,11 @@ export default class MinePage extends Component{
         this.props.navigation.push('WeatherHome');
     }
     goBack=()=>{
-        this.props.navigation.goBack();
+        this.props.navigation.push('WeatherHome');
     }
 
     render(){
-        let {title}=this.state;
+        let {title,isLogin}=this.state;
 
         return(
             <ImageBackground source={require('../image/icon_weatherImgBG.jpg')} 
@@ -56,17 +64,9 @@ export default class MinePage extends Component{
                         <View>
                             <TouchableOpacity onPress={()=>this.goBack()} style={{alignItems: 'center',flexDirection:'row',marginLeft:10}}>
                                 <Image
-                                source={require('../image/icon_left_back.png')}
-                                style={{width: 16, height: 16,marginRight:8}}></Image>
-                                <Text style={{textAlign: 'center', fontSize: 16, color: '#fff'}}>返回</Text>                            
-                            </TouchableOpacity>
-                        </View>                        
-                        <View>
-                            <TouchableOpacity onPress={()=>this.goToWeatherPage()} style={{alignItems: 'center',flexDirection:'row'}}>                    
-                                <Text style={{textAlign: 'center', fontSize: 16, color: '#fff',marginRight:8}}>主页面</Text>
-                                <Image
-                                source={require('../image/icon_right_back.png')}
-                                style={{width: 16, height: 16,marginRight:10}}></Image>
+                                source={require('../image/icon_Main.png')}
+                                style={{width: 18, height: 18,marginRight:8}}></Image>
+                                <Text style={{textAlign: 'center', fontSize: 16, color: '#fff'}}>主页面</Text>                            
                             </TouchableOpacity>
                         </View>
                     </View>                        
@@ -75,7 +75,9 @@ export default class MinePage extends Component{
                             <View style={{backgroundColor:'#baccED',width:65,height:65,borderRadius:50}}>
                                 <Image  source={require('../image/icon_login.png')} style={{width:45,height:45,margin:10}}/>                    
                             </View>
-                            <Text style={{color:'#fff',marginTop:10,fontSize:16,textAlign:'center'}}>{title}</Text>
+                            <View style={{flexDirection:'row'}}><Text style={{color:'#fff',marginTop:10,fontSize:16,textAlign:'center'}}>{title}</Text>
+                            {isLogin?<Image  source={require('../image/icon_edit.png')} style={{width:15,height:15,marginLeft:10,marginTop:13}}/>:null}                            
+                            </View>                            
                         </TouchableOpacity>
                     </View>
                     <View style={{flex:3,backgroundColor:'#fff',borderRadius:20}}>                        
@@ -95,6 +97,7 @@ export default class MinePage extends Component{
                             </View>
                             
                     </View>
+                    <Toast ref="toast"/>
             </ImageBackground>
            
         )
