@@ -31,7 +31,7 @@ export default class Login extends Component{
         this.state={           
             userName:'',
             password:'',
-            userInfor:'',
+            userInfor:[],
             logonSuccess:true,//登录成功
             isRegistered:false
            
@@ -116,19 +116,23 @@ export default class Login extends Component{
     onPressCallback(){
         let {userName,password,userInfor} = this.state;
         if(password == ''){
-            this.refs.toast.show("密码不能为空!",1000);
+            this.refs.toast.show("密码不能为空!",2000);
             return;  
         }  if(userName == ''){
-            this.refs.toast.show("用户名不能为空!",1000);
+            this.refs.toast.show("用户名不能为空!",2000);
             return;  
         } 
+        if(userInfor.length==0){
+            this.refs.toast.show("账号不存在，请先进行注册!",2000);
+            return; 
+        }
         for(let i = 0;i<userInfor.length;i++){
             let item = userInfor[i];
             if(item.userName==userName&&item.password==password){         
                 _this.goToMinePage(userName);
             }
             if(item.userName!=userName&&item.password!=password){
-                this.refs.toast.show("账号或密码不正确，请重新登录!",1000);
+                this.refs.toast.show("账号或密码不正确，请重新登录!",2000);
             }
         }
         

@@ -281,20 +281,19 @@ getAdressInfor(){
       let item = manage_CityInfor[i];
       if(item.location.includes(district)){      
         return;      
-      }
-      if(item.location.includes(district)==false){ 
-        manage_CityInfor.push({"location":district,"tmp":tmp,"cond_txt":cond_txt});                    
-        Storage.set('manage_CityInfor',manage_CityInfor);
-        this.setState({
-          manage_CityInfor
-        })
-      }
-    }
+      }      
+    }    
+    manage_CityInfor.push({"location":district,"tmp":tmp,"cond_txt":cond_txt});                    
+    Storage.set('manage_CityInfor',manage_CityInfor);
+    this.setState({
+        manage_CityInfor
+    })
+    }  
   }
    
   
   
-  }
+  
    //获取当前城市hourly逐小时预报数据
    getWeatherDataHourly(city){
     console.log(city);

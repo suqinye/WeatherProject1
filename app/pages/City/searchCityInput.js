@@ -77,7 +77,7 @@ export default class SearchCityInput extends Component {
                                 });
                             }}
                             onEndEditing={() => this.props.whenEndEdit()}
-                            editable={this.props.editable}
+                            editable={true}
                             value={this.props.value}
                             placeholder={this.props.placeholder}
                             placeholderTextColor={this.props.placeholderTextColor}

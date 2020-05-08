@@ -134,7 +134,7 @@ export default class AddCity extends Component {
     return(
         <View style={{marginTop:10,paddingBottom:10,flexDirection:'row',borderBottomWidth:1,borderColor:'#fff'}}>         
           <TouchableOpacity onPress={()=>this.goToWeatherPage(rowData.parent_city)} >
-            <Text style={{fontSize:16, color: '#fff', marginTop: 5}} >{rowData.location},{rowData.parent_city},{rowData.admin_area},{rowData.cnty}</Text> 
+            <Text style={{fontSize:16, color: '#fff', marginTop: 5,paddingLeft:10}} >{rowData.location},{rowData.parent_city},{rowData.admin_area},{rowData.cnty}</Text> 
           </TouchableOpacity>         
         </View>
     )
