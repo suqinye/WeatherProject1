@@ -12,32 +12,52 @@ import { View,
 let {height12, width12} = Dimensions.get('window');
 import Toast, {DURATION} from 'react-native-easy-toast';
 import LeftBack from '../components/LeftBack';
+import Storage from '../components/storage';
 export default class MinePage extends Component{
     constructor(props){
         super(props);
         this.state={
             title:'登录/注册',
+            userName:'',
+            password:'',
+            user_infor:'',
             isLogin:false//flase用户表示为登录
             
         }
 
     }
     componentDidMount(){
-        if(this.props.navigation.state.params!=undefined){
-            let {userName} = this.props.navigation.state.params;
-            this.setState({
-                title:userName,
-                isLogin:true
-            })
+        Storage.get('user_infor').then((tags)=>{
+            console.log("tags==============");
+            console.log(tags);
+            let infor=tags;
+            if(tags!=undefined||tags!=null){
+                this.setState({
+                    title:infor.userName,
+                    userName:infor.userName,
+                    password:infor.password,
+                    user_infor:infor,
+                    isLogin:true
+                })
+            }
+        })
+        // if(this.props.navigation.state.params!=undefined){
+        //     let {userName,password} = this.props.navigation.state.params;
+        //     this.setState({
+        //         title:userName,
+        //         userName:userName,
+        //         password:password,
+        //         isLogin:true
+        //     })
 
-        }
+        // }
     }
     goToLogin=()=> {
-        let {isLogin}= this.state;
+        let {isLogin,user_infor}= this.state;
         // this.props.navigation.goback();
         if(isLogin){
             // this.props.navigation.push('EmptyPage');
-            this.props.navigation.push('EmptyPage');
+            this.props.navigation.push('SettingPage',user_infor);
         }else{
             this.props.navigation.push('Login');     
         }
@@ -47,11 +67,12 @@ export default class MinePage extends Component{
     goToEmptyPage=()=>{
         this.props.navigation.push('EmptyPage');
     }
+    //返回主页面
     goToWeatherPage(){
-        this.props.navigation.push('WeatherHome');
-    }
-    goBack=()=>{
-        this.props.navigation.push('WeatherHome');
+        let {isLogin,userName,password}= this.state;
+        //this.props.navigation.push('MinePage',{userName:user,password:psd}); 
+        let infor = [{'userName':userName,'password':password,'statusLogin':isLogin}] 
+        this.props.navigation.push('WeatherHome',infor);
     }
 
     render(){
@@ -62,7 +83,7 @@ export default class MinePage extends Component{
             style={{flex:1,width:width12,height:height12}}>
                  <View style={{flex:0.5,flexDirection:'row',justifyContent:'space-between',height:40,marginTop:20}}>
                         <View>
-                            <TouchableOpacity onPress={()=>this.goBack()} style={{alignItems: 'center',flexDirection:'row',marginLeft:10}}>
+                            <TouchableOpacity onPress={()=>this.goToWeatherPage()} style={{alignItems: 'center',flexDirection:'row',marginLeft:10}}>
                                 <Image
                                 source={require('../image/icon_Main.png')}
                                 style={{width: 18, height: 18,marginRight:8}}></Image>

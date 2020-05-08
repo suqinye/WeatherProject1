@@ -26,7 +26,8 @@ export default class AppAccount extends Component{
         this.state = {
          aa:'',
           userName:'',//用户名
-          password:'',//密码         
+          password:'',//密码   
+          conPasd:'',//确认密码      
           isRepeatNum:false,//true表示手机号重复          
           psdErrorLog:"",//错误提示文字
           userErrorLog:'',
@@ -35,7 +36,7 @@ export default class AppAccount extends Component{
           verCode:'',
           codeText:'',
           content: 'AppAccount',
-          localtorageData:[]
+          localStorageData:[]
           }
           _this=this;
 
@@ -53,7 +54,7 @@ export default class AppAccount extends Component{
          console.log(tags);
         if(tags!=null||tags!=undefined){
           this.setState({
-            localtorageData:tags
+            localStorageData:tags
           })         
         }
    
@@ -78,40 +79,65 @@ export default class AppAccount extends Component{
 
     }
 
-    handleCheckUser(value){  
-      this.setState({
-        userName:value
-       
-      })         
-    }
-    handleCheckPasdRule(value){
-      if (value.length<6) {
-        this.refs.toast.show("密码不能少于6位，请您重新输入",1000);
-        return;        
-    }
-      this.setState({password:value}) 
-
-    }
-    //检查两次密码是否一样
-    handleCheckPasd(rePsd){
-      let {password} = this.state;
-      if(rePsd==''){
-        this.setState({password:rePsd,isRepeatPsd:false})
-      }
+     //检查两次密码是否一样
+     handleCheckPasd(rePsd){
+      let {password} = this.state;      
       if(password==rePsd){         
-        this.setState({         
+        this.setState({ 
+          conPasd:rePsd,       
+          isRepeatPsd:true
+        })
+      }else if(rePsd==''){
+        this.setState({
+          conPasd:rePsd, 
           isRepeatPsd:true
         })
       }else{
         this.setState({
           psdErrorLog:'两次密码不一样',
+          conPasd:rePsd,
           isRepeatPsd:false
         })        
       }
     }
+    //密码规范
+    handleCheckPasdRule(value){
+      // let {password}=this.state;  
+      let reg = /^(?=.*[0-9])(?=.*[a-zA-Z])(.{6,18})$/;
+      if(reg.test(value))
+      {
+         this.handleCheckUser();
+      }else{
+        this.refs.toast.show("密码为6-18位且必须包含数字和字母，请您重新输入",1000);
+          return;
+      } 
+    }
+    //进行用户名验证
+    handleCheckUser(){
+      let {userName,password,localStorageData,verCode,codeText}=this.state; 
+      if(localStorageData.length!=0){
+        for(let i = 0;i<localStorageData.length;i++){
+          let item = localStorageData[i];
+          if(item.userName==userName){
+            _this.refs.toast.show("该用户名已注册,重新注册",1000);
+            return;
+          }        
+        }
+      }
+      if(verCode==codeText){           
+        localStorageData.push({"userName":userName,"password":password});  
+        console.log("localStorageData.push==================");
+        console.log(localStorageData);      
+        Storage.set('localData',localStorageData);
+        this.props.navigation.push('Login',{user:userName,psd:password});
+      }else{
+        this.refs.toast.show("验证码错误",1000)
+      } 
+    }
+   
     
      onPressCallback(){
-      let {userName,password,localtorageData,verCode,codeText}=this.state;  
+      let {userName,password,localStorageData,verCode,conPasd,codeText}=this.state;  
       if(userName==''){        
         this.refs.toast.show("用户名不能为空",1000);
         return;
@@ -120,45 +146,22 @@ export default class AppAccount extends Component{
         this.refs.toast.show("密码不能为空",1000);
         return;
       } 
+      if(conPasd==''){
+        this.refs.toast.show("请确认密码",1000);
+        return;
+      }
       if(codeText==''){
         this.refs.toast.show("请输入验证码",1000);
         return;
-      }    
-    if(localtorageData.length==0){
-      if(verCode==codeText){           
-        localtorageData.push({"userName":userName,"password":password});  
-        console.log("localtorageData.push==================");
-        console.log(localtorageData);      
-        Storage.set('localData',localtorageData);
-        this.props.navigation.push('Login',{user:userName,psd:password});
-      }else{
-        this.refs.toast.show("验证码错误",1000)
       } 
-    }else{        
-     this.checkUserRe();
-    }
-  }
-    //检查用户名是否被注册过
-    checkUserRe(){
-      let {userName,password,localtorageData,verCode,codeText}=this.state;  
+      this.handleCheckPasdRule(password); 
+     
+
+
       
-      for(let i = 0;i<localtorageData.length;i++){
-        let item = localtorageData[i];
-        if(item.userName==userName){
-          _this.refs.toast.show("该用户名已注册,重新注册",1000);
-          return;
-        }        
-      }
-      if(verCode==codeText){           
-        localtorageData.push({"userName":userName,"password":password});  
-        console.log("localtorageData.push==================");
-        console.log(localtorageData);      
-        Storage.set('localData',localtorageData);
-        this.props.navigation.push('Login',{user:userName,psd:password});
-      }else{
-        this.refs.toast.show("验证码错误",1000)
-      } 
-    }
+    
+  }
+  
     render(){
 
         // const {params} = this.props.navigation.state;
@@ -176,7 +179,7 @@ export default class AppAccount extends Component{
                           autoFocus={true}
                           placeholder="请输入用户名"
                           placeholderTextColor="#ddd"
-                          onChangeText={(text)=>this.handleCheckUser(text)}
+                          onChangeText={(text)=>this.setState({userName:text})  }
                           >
                     </TextInput>
                     
@@ -185,10 +188,10 @@ export default class AppAccount extends Component{
                     <View>
                       <TextInput
                       ref=" textPsd1"    
-                      placeholder="请输入密码"
+                      placeholder="请输入6-18位的密码"
                       placeholderTextColor="#ddd"
                       secureTextEntry={true}
-                      onChangeText={(text) =>this.handleCheckPasdRule(text)}
+                      onChangeText={(text) =>this.setState({password:text})}
                       >
                       </TextInput> 
                     </View>                   

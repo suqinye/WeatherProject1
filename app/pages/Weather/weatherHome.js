@@ -30,7 +30,7 @@ import weatherData from './weatherData.json';
 import WeatherIcon from '../../components/Icon';
 import DrawerLayout from 'react-native-drawer-layout';
 let weatherJson = weatherData.result;
-let actualityData =weatherJson.sk;	//当前实况天气
+
 let todayData = weatherJson.today;
 let futureData = weatherJson.future;
 let {height, width} = Dimensions.get('window');
@@ -41,25 +41,21 @@ export default class WeatherHome extends Component {
     super(props);
     this.state = {
       loading: true, //是否正在加载,修改这个值
-      isRefreshing: false,//是否手动下拉刷新
-      // 正在定位中
-      requestLocation: true,
+      isRefreshing: false,//是否手动下拉刷新      
       initialPosition: 'Unknow',//初始位置
       location:'Unknow',
       longitude:'',//经度
       latitude:'',//维度
       city: '',
-      district: '正在定位',
-      actualityData:'',//当前实况天气   
+      district: '正在定位',   
       basic:'',//当前城市基本数据 
       nowData:'',
-      currtTime:'',     
-      todayData:'',//今天天气
+      currtTime:'',  
       hourlyDataList:[],//逐小时预报数据
       forecastDataList:[],//未来天气预报数据
       lifestyleData:[],//生活指数
       futureData:'',//近五天天气情况
-      manage_CityInfor: [],
+      manage_CityInfor: []
     };
     _this = this;
     
@@ -69,18 +65,22 @@ export default class WeatherHome extends Component {
 
 async componentDidMount() {    
   // if (this.refs.loading) {this.refs.loading.show();}
-  this.getCurrtDate();  
-  if(this.props.navigation.state.params!=undefined){
-    let {city} = this.props.navigation.state.params;
-    this.getAdressInfor();
-    this.setState({              
-        district:city
-        
+  this.getCurrtDate(); 
+  if(this.props.navigation.state.params!=undefined){ 
+
+    let {city} = this.props.navigation.state.params;   
+    if(city!=undefined){
+      this.getAdressInfor();
+      this.setState({              
+        district:city        
     })
       this.getWeatherDataNow(city);//获取实况天气
       this.getWeatherDataHourly(city);//获取小时天气
       this.getWeatherDataForecast(city);//获取未来10天天气
       this.getWeatherDataLifestyle(city);//获取生活指数
+
+    }
+    
   }else{
 
     if(Platform.OS == 'ios'){
@@ -103,9 +103,7 @@ async componentDidMount() {
   //  this.getWeatherNowBean();
   }
 }
-  // componentWillReceiveProps(nextProps){
-
-  // }
+ 
 getCurrtDate(){
   let currtDate = new Date();
   let hours = currtDate.getHours() ;
@@ -290,10 +288,6 @@ getAdressInfor(){
     })
     }  
   }
-   
-  
-  
-  
    //获取当前城市hourly逐小时预报数据
    getWeatherDataHourly(city){
     console.log(city);
@@ -403,23 +397,6 @@ getAdressInfor(){
 
       }
   
-    
-      getWeatherNowBean(){
-        Storage.get('weatherNowBean').then((tags)=>{
-          if(tags!=undefined){
-            console.log("+++++++++++++"+tags);
-            // let time = tags.update;
-            // time = (time.loc).substr(11, 16).replace(/-/g, ""); 
-          this.setState({
-            nowData:tags.now,
-          })
-          }else{
-            return null;
-          }
-        })
-
-      }
-      // getWeatherHourlyBean
   render() {
     const {params} = this.props.navigation.state;
     let {location,basic,nowData,currtTime}= this.state;   
@@ -522,10 +499,6 @@ getAdressInfor(){
         <View>
           <Text style={{color: '#fff', fontSize: 40}}>{tmp}</Text>
         </View>
-        <View>
-          {/* <Text style={{color: '#fff', fontSize: 18}}>{todayData.temperature}</Text> */}
-        </View>
-
         <View style={{marginTop: 10}}>
           <Text style={{color: '#fff'}}>{nowData.cond_txt!=undefined?nowData.cond_txt:null} {nowData.wind_dir!=undefined?nowData.wind_dir:null} {wind_sc!=undefined?wind_sc:null}</Text>
         </View>
@@ -718,6 +691,24 @@ onPenLeftDrawable(){
 onColLeftDrawable(){
   this.refs.drawer.closeDrawer();
 }
+
+    
+  // getWeatherNowBean(){
+      //   Storage.get('weatherNowBean').then((tags)=>{
+      //     if(tags!=undefined){
+      //       console.log("+++++++++++++"+tags);
+      //       // let time = tags.update;
+      //       // time = (time.loc).substr(11, 16).replace(/-/g, ""); 
+      //     this.setState({
+      //       nowData:tags.now,
+      //     })
+      //     }else{
+      //       return null;
+      //     }
+      //   })
+
+      // }
+      
 
 }
 

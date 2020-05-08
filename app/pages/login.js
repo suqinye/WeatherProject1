@@ -129,7 +129,7 @@ export default class Login extends Component{
         for(let i = 0;i<userInfor.length;i++){
             let item = userInfor[i];
             if(item.userName==userName&&item.password==password){         
-                _this.goToMinePage(userName);
+                _this.goToMinePage(userName,password);
             }
             if(item.userName!=userName&&item.password!=password){
                 this.refs.toast.show("账号或密码不正确，请重新登录!",2000);
@@ -141,8 +141,10 @@ export default class Login extends Component{
         this.props.navigation.goBack();
     };
       // 登录，跳转到我的页面
-    goToMinePage=(user)=>{       
-        this.props.navigation.push('MinePage',{userName:user});  
+    goToMinePage=(user,psd)=>{ 
+        let user_infor = [{"userName":user,"password":psd}]
+        Storage.set('user_infor',user_infor);
+        this.props.navigation.push('MinePage');  
     }
      //跳转到注册账号页面
      goTOapplicationAccountPage(){         

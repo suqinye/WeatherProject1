@@ -25,7 +25,6 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import Login from './app/pages/login';
 import AppAccount from './app/pages/applicationAccount';
 import WeatherHome from './app/pages/Weather/weatherHome';
-import EditInformation from './app/pages/editInformation';
 import AddCity from './app/pages/City/addCity';
 import CityHome from './app/pages/City/cityHome';
 import SettingPage from './app/pages/setting';
@@ -36,10 +35,10 @@ import { Form } from 'native-base';
 
 
 //底部导航栏的图片
-let icon_selectNav1 = require('./app/image/icon_selectNav1.png');//
-let icon_noSelectNav1 = require('./app/image/icon_noSelectNav1.png');//
-let icon_selectNav2 = require('./app/image/icon_selectNav2.png');//
-let icon_noSelectNav2 = require('./app/image/icon_noSelectNav2.png');//
+// let icon_selectNav1 = require('./app/image/icon_selectNav1.png');//
+// let icon_noSelectNav1 = require('./app/image/icon_noSelectNav1.png');//
+// let icon_selectNav2 = require('./app/image/icon_selectNav2.png');//
+// let icon_noSelectNav2 = require('./app/image/icon_noSelectNav2.png');//
 let {height,width} =  Dimensions.get('window');
 let navigation = null ;
 
@@ -63,13 +62,7 @@ const StackNavigation = createStackNavigator({
       header:null
     }
   },
-  EditInformation:{
-    screen:EditInformation,//编辑信息页
-    navigationOptions:{
-      header:null
-      //headerShown: false
-    }
-  },
+ 
   AddCity:{
     screen:AddCity,//添加城市页
     navigationOptions: {
