@@ -142,7 +142,7 @@ export default class Login extends Component{
     };
       // 登录，跳转到我的页面
     goToMinePage=(user,psd)=>{ 
-        let user_infor = [{"userName":user,"password":psd}]
+        let user_infor = {"userName":user,"password":psd}
         Storage.set('user_infor',user_infor);
         this.props.navigation.push('MinePage');  
     }

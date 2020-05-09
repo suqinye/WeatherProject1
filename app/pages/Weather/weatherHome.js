@@ -98,7 +98,6 @@ async componentDidMount() {
           this.refs.toast.show('定位权限被禁止',1000)
       }
     }
-    
      this.getAdressInfor();
   //  this.getWeatherNowBean();
   }

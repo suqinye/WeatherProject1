@@ -1,3 +1,4 @@
+//我的页面
 import React, {Component} from 'react';
 import { View, 
      Text,
@@ -30,34 +31,23 @@ export default class MinePage extends Component{
         Storage.get('user_infor').then((tags)=>{
             console.log("tags==============");
             console.log(tags);
-            let infor=tags;
             if(tags!=undefined||tags!=null){
                 this.setState({
-                    title:infor.userName,
-                    userName:infor.userName,
-                    password:infor.password,
-                    user_infor:infor,
+                    title:tags.userName,
+                    userName:tags.userName,
+                    password:tags.password,
+                    user_infor:tags,
                     isLogin:true
                 })
             }
-        })
-        // if(this.props.navigation.state.params!=undefined){
-        //     let {userName,password} = this.props.navigation.state.params;
-        //     this.setState({
-        //         title:userName,
-        //         userName:userName,
-        //         password:password,
-        //         isLogin:true
-        //     })
-
-        // }
+        })       
     }
     goToLogin=()=> {
         let {isLogin,user_infor}= this.state;
         // this.props.navigation.goback();
         if(isLogin){
             // this.props.navigation.push('EmptyPage');
-            this.props.navigation.push('SettingPage',user_infor);
+            this.props.navigation.push('PersonalInformation',user_infor);
         }else{
             this.props.navigation.push('Login');     
         }

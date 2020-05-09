@@ -1,3 +1,4 @@
+//城市管理页面
 import React, {Component} from 'react';
 import {
   ScrollView,
@@ -114,56 +115,7 @@ export default class CityHome extends Component {
       </LinearGradient>
     );
   }
-  // renderTopicItem(item,index) {
-  //   // let aaa =this.props.navigation.getParam('aa');
-  //   const swipeoutBtns = [
-  //     {
-  //         text: '删除',
-  //         backgroundColor: 'red',
-  //         onPress: ()=>{
-  //             this.deleteCityItem(index);
-  //         },
-  //         // 自定义component
-  //             component: [<View style={{justifyContent: 'center', height: 130}}></View>] 
-  //     }
-  // ];  
-  //   return (
-  //     <Swipeout
-  //       close={
-  //         !(
-  //           this.state.rowID === index
-  //         )
-  //       }        
-  //       right={swipeoutBtns}
-  //       rowID={index}        
-  //       onOpen={( rowID) => {
-  //         this.setState({
-            
-  //           rowID
-  //         });
-  //       }}
-  //       autoClose={true}
-  //       close={true}
-  //       onClose={() => console.log('===close')}
-  //       scroll={event => console.log('scroll event')}> 
-  //        <LinearGradient start={{x:0,y:4}}  end={{x:1.2,y:1.5}} colors={[ '#cc99dd', '#99ccff','#77ccff']} locations={[0, 0.6, 0.8]}>
-  //            <View style={{flex:1,flexDirection:'row',alignItems:'center',justifyContent:'space-between',borderBottomWidth:1,borderColor:"#eee"}}>              
-  //             <View style={{marginLeft:10,flexDirection:'row',alignItems:'center',}}>
-  //               <Image source={require('../../image/icon_delete.png')} style={{width:17,height:17,marginRight:10,marginTop:5}}></Image>
-  //               <Text style={{textAlign: 'center', marginTop: 5,color:'#333',fontSize:17}}>{item.location}</Text>           
-  //             </View>
-  //             <View style={{flexDirection:'row',alignItems:'center',margin:20}}>
-  //               <View style={{marginRight:10}}><Text style={{textAlign: 'center',color:"#333",fontSize:17}}>{item.tmp}℃</Text></View>
-  //               <View style={{width:60,fontSize:16}}><Text>{item.cond_txt}</Text></View>
-  //             </View>
-  //           </View>
-
-  //         </LinearGradient>
-                
-  //     </Swipeout>
-  //   );
-  // }
-    
+  
   
   render() {
     let {listArray}=this.state;

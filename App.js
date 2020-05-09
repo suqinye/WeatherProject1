@@ -27,9 +27,10 @@ import AppAccount from './app/pages/applicationAccount';
 import WeatherHome from './app/pages/Weather/weatherHome';
 import AddCity from './app/pages/City/addCity';
 import CityHome from './app/pages/City/cityHome';
-import SettingPage from './app/pages/setting';
+import PersonalInformation from './app/pages/personalInformation';
 import MinePage from './app/pages/minePage';
 import EmptyPage from './app/components/emptyPage';
+import ChangePassword from './app/pages/changePassword';
 import { Form } from 'native-base';
 // import Main from './app/pages/main';
 
@@ -75,8 +76,8 @@ const StackNavigation = createStackNavigator({
       header:null
     }
   },
-  SettingPage:{
-    screen:SettingPage,//设置页面
+  PersonalInformation:{
+    screen:PersonalInformation,//设置页面
     navigationOptions:{
       header:null
     }
@@ -93,9 +94,13 @@ const StackNavigation = createStackNavigator({
     navigationOptions:{
       header:null
     }
+  },
+  ChangePassword:{
+    screen:ChangePassword,
+    navigationOptions:{
+      header:null
+    }
   }
-
-  
   
 },
 {
