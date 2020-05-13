@@ -55,14 +55,12 @@ export default class MinePage extends Component{
        };
        //功能未开通页面
     goToEmptyPage=()=>{
-        this.props.navigation.push('EmptyPage');
+        this.props.navigation.push('EmptyPage',{title:'此功能还未开通',isConnected:true});
     }
     //返回主页面
-    goToWeatherPage(){
-        let {isLogin,userName,password}= this.state;
-        //this.props.navigation.push('MinePage',{userName:user,password:psd}); 
-        let infor = [{'userName':userName,'password':password,'statusLogin':isLogin}] 
-        this.props.navigation.push('WeatherHome',infor);
+    goToWeatherPage(){        
+        //this.props.navigation.push('MinePage',{userName:user,password:psd});      
+        this.props.navigation.popToTop('WeatherHome');
     }
 
     render(){

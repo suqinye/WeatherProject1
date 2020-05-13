@@ -15,7 +15,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Button from '../components/Button';
 import LeftBack from '../components/LeftBack';
 import Toast, {DURATION} from 'react-native-easy-toast';
-import { Value } from 'react-native-reanimated';
 import Storage from '../components/storage';
 let {height,width} =  Dimensions.get('window');
 let blue_eye = require('../image/icon_blue_eye.png');

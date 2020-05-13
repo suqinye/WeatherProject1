@@ -14,9 +14,10 @@ import {
   TextInput,
   Keyboard, 
   FlatList,
-  Dimensions
+  Dimensions,
+  RefreshControl
 } from 'react-native';
-
+import NetWorkTool from '../../util/NetWorkTool';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import NetUtil from '../../util/NetUtil';
 import LeftBack from '../../components/LeftBack';
@@ -38,6 +39,8 @@ export default class AddCity extends Component {
     constructor(props){
         super(props);
         this.state={
+          isRefreshing: false,//手动刷新
+          isConnected:true,//是否有网络链接
           searchTitle:'',//输入的值
           searchList: [],//搜索到的城市信息列表
           isChecking:false,//是否可以编辑
@@ -48,12 +51,23 @@ export default class AddCity extends Component {
 
         }
         _this = this;
+        if (Platform.OS === 'android') {
+          NetWorkTool.checkNetworkState((isConnected) => {
+            // console.log(isConnected);
+              if (!isConnected) {
+                  this.setState({
+                      isConnected: false,
+                  },()=>this.goToEmptyPage());
+              }
+          });
+      }
     }
 
 
  
-  componentDidMount(){
-    this.getCitiesListData();
+  componentDidMount(){  
+    this.getCitiesListData();  
+    
   }
 
   //获取热门城市列表
@@ -71,6 +85,10 @@ export default class AddCity extends Component {
      this.onSuccessCity(jsonData.HeWeather6[0]);    
       
    }).catch((error) => {
+      this.setState({
+      isConnected: false,
+      isRefreshing: false
+      })
      this.refs.toast.show("获取热门城市失败",1000);
    }); 
   }
@@ -82,31 +100,65 @@ export default class AddCity extends Component {
       const aa = hotCityjson.basic;        
       this.setState({       
       hotCityArray:aa,
+      isConnected: true,
+      isRefreshing: false
           
       }); 
     }   
  }
+   //下拉刷新
+   getRefreshControl(){
+    return (
+      <RefreshControl
+        refreshing={this.state.isRefreshing}
+        onRefresh={this._onRefresh.bind(this)}
+        tintColor="gray"
+        title="加载中..."
+        titleColor="gray"
+        colors={['#0095e9']}
+        progressBackgroundColor="#ffffff"
+      />
+    );
+   }
+   _onRefresh(){     
+     
+     NetWorkTool.checkNetworkState((isConnected) => {
+       // console.log(isConnected);
+         if (!isConnected) {
+             this.setState({
+                 isConnected: false,
+             },()=>this.goToEmptyPage());
+         }else{
+          this.setState({
+            isRefreshing: true,
+          });
+              this.getCitiesListData();
+         }
+     });
+   }
   render(){
     let {hotCityArray,showSearchResult}= this.state;
       return (
         <ImageBackground
           source={require('../../image/icon_bgCity.jpg')}
           style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT,flex:1}}>
-          <LeftBack title='添加城市' onPressBack={()=>this.goBack()}/>  
-          {/* {!hotCityArray? <LoadingBg/> :
-           
-          }           */}
-          <View >
-            {this.renderInput()}             
-            { showSearchResult?
-            <View style={{flexDirection:'row',justifyContent:'center',margin:15}}>{this.renderListCIity()}</View>  
-            :                
-              <View style={{flex:1}}>
-                <Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text>
-                <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'flex-start',margin:15}}>{this.renderHotCity()}</View>            
-              </View>
-            }   
-            </View>           
+          <ScrollView  refreshControl={this.getRefreshControl()}>
+            <LeftBack title='添加城市' onPressBack={()=>this.goBack()}/>  
+            {/* {!hotCityArray? <LoadingBg/> :
+            
+            }           */}
+            <View >
+              {this.renderInput()}             
+              { showSearchResult?
+              <View style={{flexDirection:'row',justifyContent:'center',margin:15}}>{this.renderListCIity()}</View>  
+              :                
+                <View style={{flex:1}}>
+                  <Text style={{color:'#fff',fontSize:16,margin:15}}>热门城市</Text>
+                  <View style={{flexDirection:'row',flexWrap:'wrap',justifyContent:'flex-start',margin:15}}>{this.renderHotCity()}</View>            
+                </View>
+              }   
+              </View>  
+          </ScrollView>         
           <Toast ref="toast"/>         
         </ImageBackground>
       );
@@ -140,11 +192,11 @@ export default class AddCity extends Component {
         </View>
     )
 }
-    goBack = () => {
-      this.props.navigation.pop();
-      // this.props.navigation.goBack();
-      // this.props.navigation.push('CityHome');
-    };
+goBack = () => {
+  //this.props.navigation.pop();
+  this.props.navigation.goBack();
+  // this.props.navigation.push('CityHome');
+};
     renderInput() {
       return(
           <SearchInput
@@ -231,7 +283,12 @@ export default class AddCity extends Component {
     }
     text = text.trim()
     // this.clearStaff()
-    this.getStaffList(text)
+    if(this.state.isConnected){
+      this.getStaffList(text)
+    }else{
+      this.goToEmptyPage()
+    }
+    
   }
   clearStaff() {
     console.log("调用了clearStaff");
@@ -255,7 +312,7 @@ export default class AddCity extends Component {
       console.log(jsonData.HeWeather6[0]);    
       this.onSuccess(jsonData.HeWeather6[0]);   
     }).catch((error) => {    
-      this.setState({searchList: []});
+      this.setState({searchList: [],isConnected: false, isRefreshing: false});
       this.refs.toast.show("查询失败",1000);
     }); 
   }
@@ -266,12 +323,14 @@ export default class AddCity extends Component {
       this.refs.toast.show("未查到该城市，请重新输入",5000);
       this.setState({
         searchList:[],
-        isChecking:false      
+        isChecking:false   
       },()=>this.handleNoContentView())
     }else{
       this.setState({
         searchList:result.basic,
-        isChecking:false      
+        isChecking:false ,
+        isConnected: true,
+        isRefreshing: false    
       },()=>this.handleNoContentView())
     }
     
@@ -336,10 +395,15 @@ export default class AddCity extends Component {
         })
       }     
   }
+  //查看天气页面
   goToWeatherPage(city){
         this.props.navigation.push('WeatherHome',{city:city});
   }
     
+  //无网络页面
+goToEmptyPage=()=>{
+  this.props.navigation.push('EmptyPage',{title:'网络异常，请检查网络后重新加载',isConnected:false});
+}
 }
 
 const styles = StyleSheet.create({

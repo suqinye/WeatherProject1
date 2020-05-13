@@ -15,34 +15,38 @@ import {
    export default class EmptyPage extends Component{
     constructor(props){
       super(props);
-      // this.state={
-      //   weatherTypesData:'',
-      //   wid:''
-      // }
+      this.state={
+       title:'此功能还未开通',
+       isConnected:true
+      }
        
     }
-    componentDidMount() {
-     
-
-     
-    
+    componentDidMount() {     
+      if(this.props.navigation.state.params!=undefined){
+        let {title,isConnected} = this.props.navigation.state.params;   
+        if(title!=undefined){         
+          this.setState({              
+            title,
+            isConnected      
+        })}
       }
-      
+    }      
     goBack=()=>{
         this.props.navigation.goBack();
+       
     }
 
 
     render(){
-
+      
       
       return(
         <ImageBackground source={require('../image/icon_bgCity.jpg')} style={{flex:1,width:width12,height:height12}}>
-            <LeftBack title='返回' onPressBack={()=>this.goBack()}></LeftBack>
+           <LeftBack title='返回' onPressBack={()=>this.goBack()}></LeftBack>
             <View style={{flex:1,alignItems:'center'}}>                
                 <View style={{marginTop:100}}>
                     <Image  style={{width:235,height:220}} resizeMode='contain' source={require('../image/icon_null.png')}></Image> 
-                     <Text style={{color:'#fff',fontSize:16,textAlign:'center',marginTop:20}}>此功能还未开通</Text>                  
+                     <Text style={{color:'#fff',fontSize:16,textAlign:'center',marginTop:20}}>{this.state.title}</Text>                  
                 </View>               
                 
             </View>

@@ -6,9 +6,6 @@ import {
   Image,
   StyleSheet,
    TouchableOpacity} from 'react-native';
-
-  //  import NetUtil from '../util';
-  //  import Fetch from  'native-cmos-fetch';
    import weatherTypesJson from '../data/weatherTypes.json';
    export default class WeatherIcon extends Component{
     constructor(props){
@@ -19,27 +16,8 @@ import {
       // }
        
     }
-    componentDidMount() {
-     
-
-     //this.getWeatherTypesData();//Weather types获取天气种类
-    
-      }
-      // getWeatherTypesData(){
-      //     let url = 'http://apis.juhe.cn/simpleWeather/wids';
-      //     let params = '?key=dcf70f81a9ec418d203dab88719049ad';
-      //     url = url+params;
-      //     NetUtil.get(url)
-      //     .then((data) => {
-      //         this.setState({
-      //             weatherTypesData:data.result
-      //         })
-              
-      //       console.log(data)}) // JSON from `response.json()` call
-      //     .catch(error => console.error(error))
-
-
-      // }
+    componentDidMount() {  }
+  
      
 
     render(){

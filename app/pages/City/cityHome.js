@@ -60,8 +60,9 @@ export default class CityHome extends Component {
     this.props.navigation.push('AddCity');
   }
   goBack = () => {
-    // this.props.navigation.goBack();
-    this.props.navigation.push('WeatherHome');
+    this.props.navigation.goBack();
+   this.props.navigation.state.params.refresh();
+    // this.props.navigation.push('WeatherHome');
   };
   goWearthDetail (item) {
     this.props.navigation.push('WeatherHome',{city:item});
@@ -75,15 +76,13 @@ export default class CityHome extends Component {
 
   }
   deleteCityItem(i){
-
     let {listArray} = this.state;
     console.log('===DE');
     listArray.splice(i,1);
     console.log(listArray);
     Storage.set("manage_CityInfor",listArray);
     this.setState({
-      listArray:listArray
-      
+      listArray:listArray      
     })
 
 

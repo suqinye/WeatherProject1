@@ -15,7 +15,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Button from '../components/Button';
 import LeftBack from '../components/LeftBack';
 import Toast, {DURATION} from 'react-native-easy-toast';
-import { Value } from 'react-native-reanimated';
 import Storage from '../components/storage';
 let {height,width} =  Dimensions.get('window');
 let blue_eye = require('../image/icon_blue_eye.png');
@@ -55,7 +54,11 @@ export default class ChangePassword extends Component{
       }
   })  
      
-    }
+  }
+  componentWillUnmount(){
+    clearTimeout(this.timer);
+    
+}
     //读取本地存储数据
     getStorageData(){  
       // Storage.remove('localData');
@@ -135,7 +138,11 @@ export default class ChangePassword extends Component{
               console.log("localStorageData.push==================");
               console.log(localStorageData);      
               Storage.set('localData',localStorageData);
-              this.props.navigation.push('Login');
+              this.refs.toast.show("修改成功",2000)
+              let timer = setTimeout(()=>{
+                this.props.navigation.push('Login');
+              },2)
+              
             }else{
               this.refs.toast.show("验证码错误",1000)
             } 
@@ -187,6 +194,7 @@ export default class ChangePassword extends Component{
                     <TextInput
                           ref=" textAccVale"
                           autoFocus={true}
+                          secureTextEntry={true}
                           placeholder="请输入原密码"
                           placeholderTextColor="#ddd"
                           onChangeText={(text)=>this.setState({oldPassword:text})  }
