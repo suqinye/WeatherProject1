@@ -10,7 +10,7 @@ import {
     PixelRatio,
     ImageBackground,
     Dimensions } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import Button from '../components/Button';
 import LeftBack from '../components/LeftBack';
@@ -61,7 +61,7 @@ export default class ChangePassword extends Component{
 }
     //读取本地存储数据
     getStorageData(){  
-      // Storage.remove('localData');
+       //Storage.remove('localData');
        Storage.get('localData').then((tags)=>{
          console.log('localData=========');
          console.log(tags);

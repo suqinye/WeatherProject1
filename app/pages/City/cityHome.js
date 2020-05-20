@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Swipeout from 'react-native-swipeout';
+import Swipeout from 'react-native-swipeout';//滑动删除
 import  Storage from '../../components/storage';
 import AppAccount from '../applicationAccount';
 let SCREEN_WIDTH = Dimensions.get('window').width; //宽
@@ -30,8 +30,7 @@ let listArr = [
 export default class CityHome extends Component {
   static navigationOptions = {
     header:null,
-    tabBarVisible:false,
-    gesturesEnabled: false,
+    tabBarVisible:false
 };
   constructor(props) {
     super(props);
@@ -61,7 +60,7 @@ export default class CityHome extends Component {
   }
   goBack = () => {
     this.props.navigation.goBack();
-   this.props.navigation.state.params.refresh();
+  //  this.props.navigation.state.params.refresh();
     // this.props.navigation.push('WeatherHome');
   };
   goWearthDetail (item) {

@@ -14,10 +14,9 @@ import {
      Alert,    
      TouchableOpacity, 
      } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 import Storage from '../components/storage';
 import Toast, {DURATION} from 'react-native-easy-toast';
-import { StackNavigator } from 'react-navigation';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import LeftBack from '../components/LeftBack';
@@ -73,7 +72,7 @@ export default class Login extends Component{
                         <View style={{height:48,marginTop:30,borderBottomWidth:1,borderColor:'#ddd'}}>
                             <TextInput
                             ref=" textAccVale"
-                            autoFocus={true}
+                            autoFocus={false}
                             placeholder="请输入用户名"
                             placeholderTextColor="#ddd"                            
                             value = {this.state.isRegistered?this.state.userName:null}                            
@@ -128,13 +127,21 @@ export default class Login extends Component{
         }
         for(let i = 0;i<userInfor.length;i++){
             let item = userInfor[i];
-            if(item.userName==userName&&item.password==password){         
-                _this.goToMinePage(userName,password);
+            if(item.userName.includes(userName)){
+                if(item.userName==userName&&item.password==password){ 
+                    let user_infor = {"userName":userName,"password":password}
+                    Storage.set('user_infor',user_infor);        
+                    _this.goToMinePage(userName,password);
+                }
+                if(item.userName==userName&&item.password!=password){ 
+                    this.refs.toast.show("密码错误，请重新输入!",1000);
+                }
             }
-            if(item.userName!=userName&&item.password!=password){
-                this.refs.toast.show("账号或密码不正确，请重新登录!",2000);
+            if(!item.userName.includes(userName)){                  
+                this.refs.toast.show("账号不存在",1000);
             }
         }
+        
         
     }
     goBack() {
@@ -142,8 +149,7 @@ export default class Login extends Component{
     };
       // 登录，跳转到我的页面
     goToMinePage=(user,psd)=>{ 
-        let user_infor = {"userName":user,"password":psd}
-        Storage.set('user_infor',user_infor);
+      
         this.props.navigation.push('MinePage');  
     }
      //跳转到注册账号页面

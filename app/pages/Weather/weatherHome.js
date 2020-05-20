@@ -16,15 +16,14 @@ import {
    PermissionsAndroid,
   TouchableOpacity,
   RefreshControl,
+  DeviceEventEmitter,
 } from 'react-native';
-// import ​NetInfo from "@react-native-community/netinfo";
 import Toast, {DURATION} from 'react-native-easy-toast';
 import Geolocation from 'react-native-geolocation-service';
 import {Button} from '../../components/Button';
 import Loading from '../../components/Loading';
 import LoadingBg from '../../components/LoadingBg';
-import Storage from '../../components/storage'
-import { Item } from 'native-base';
+import Storage from '../../components/storage';
 import Moment from 'moment';
 import NetUtil from '../../util/NetUtil';
 import NetWorkTool from '../../util/NetWorkTool';
@@ -79,29 +78,34 @@ export default class WeatherHome extends Component {
 
   
 
-async componentDidMount() {    
+ async componentDidMount() {    
   // if (this.refs.loading) {this.refs.loading.show();}
   this.getCurrtDate(); 
   this.getAdressInfor();
+  // this.refreshSubScription = DeviceEventEmitter.addListener('refresh',()=>{
+  //   this.getAdressInfor();
+  //   this.aa();
+  //   this.getCurrtDate();
+  // })
+  
+  // let timer = setTimeout(()=>{
+  //   this.aa();
+  // },2)
+ 
   if(this.props.navigation.state.params!=undefined){ 
-
     let {city} = this.props.navigation.state.params;   
-    if(city!=undefined){
-      this.getAdressInfor();
+    if(city!=undefined){    
       this.setState({              
         district:city        
     })
       this.getWeatherDataNow(city);//获取实况天气
       this.getWeatherDataHourly(city);//获取小时天气
       this.getWeatherDataForecast(city);//获取未来10天天气
-      this.getWeatherDataLifestyle(city);//获取生活指数
-      
+      this.getWeatherDataLifestyle(city);//获取生活指数      
     }
-    
   }else{
-
     if(Platform.OS == 'android'){ 
-      const hasLocationPermission =await  PermissionsAndroid.check( PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION )
+      const hasLocationPermission =await  PermissionsAndroid.request( PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION )
       if (hasLocationPermission) { 
           const granteds = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
@@ -114,14 +118,16 @@ async componentDidMount() {
       }
     }   
   }
-
 }
-
-componentWillUnmount = () => {
+componentWillUnmount(){
+  clearTimeout(this.timer);
   this.setState = (state,callback)=>{
     return;
-  };
+};
+  // this.refreshSubScription.remove();
+  
 }
+
  
 getCurrtDate(){
   let currtDate = new Date();
@@ -135,7 +141,8 @@ getCurrtDate(){
    })
 }
 getAdressInfor(){
-   //Storage.remove('manage_CityInfor');
+ // Storage.remove('manage_CityInfor');
+  
   Storage.get('manage_CityInfor').then((tags)=>{
     console.log("+++++++++++++");
     console.log(tags);
@@ -145,6 +152,7 @@ getAdressInfor(){
       })
     }
   })
+ 
 }
   //获取当前位置
   getPosition=()=>{   
@@ -290,9 +298,9 @@ getAdressInfor(){
     let{ manage_CityInfor,district,nowData,hourlyDataList,forecastDataList,lifestyleData} = _this.state;
     let tmp =nowData.tmp;
     let cond_txt =nowData.cond_txt;
-    let data = {"location":district,"tmp":tmp,"cond_txt":cond_txt};
-    let all_Curr_WearthData = {"district":district,"nowData":nowData,"hourlyDataList":hourlyDataList,"forecastDataList":forecastDataList,"lifestyleData":lifestyleData};
-    Storage.set('all_Curr_WearthData',all_Curr_WearthData);
+    let data = {"location":district,"tmp":tmp,"cond_txt":cond_txt,"nowData":nowData,"hourlyDataList":hourlyDataList,"forecastDataList":forecastDataList,"lifestyleData":lifestyleData};
+   // let all_Curr_WearthData = {"district":district,"nowData":nowData,"hourlyDataList":hourlyDataList,"forecastDataList":forecastDataList,"lifestyleData":lifestyleData};
+  //  Storage.set('all_Curr_WearthData',all_Curr_WearthData);
     if(manage_CityInfor.length==0){      
       manage_CityInfor.push(data);  
       Storage.set('manage_CityInfor',manage_CityInfor);      
@@ -306,7 +314,7 @@ getAdressInfor(){
         return;      
       }      
     }    
-    manage_CityInfor.push({"location":district,"tmp":tmp,"cond_txt":cond_txt});                    
+    manage_CityInfor.push(data);                    
     Storage.set('manage_CityInfor',manage_CityInfor);
     this.setState({
         manage_CityInfor
@@ -427,7 +435,7 @@ getAdressInfor(){
     const {params} = this.props.navigation.state;
     let {nowData,currtTime,district}= this.state;   
                        
-  
+  //侧边栏
     const navigationView = (
      <View style={{height:height,width:200,backgroundColor:'rgb(30,30,30)'}}>        
         <View ><Text style={{fontSize:18,color:'#bbb',textAlign:'center',margin:15}}>冷暖天气</Text></View>
@@ -458,6 +466,7 @@ getAdressInfor(){
           renderNavigationView = {() => navigationView}        
           >
            <ScrollView style={{marginBottom:30}}  refreshControl={this.getRefreshControl()}>
+             {/* 头部 */}
             <View style={{flex:1, alignItems:'center', height: 40,flexDirection: 'row'}}>            
               <View style={{flex:1, alignItems:'center', height: 40,flexDirection: 'row',justifyContent:'space-between' }}>
                 <TouchableOpacity onPress={()=> this.onPenLeftDrawable()}>
@@ -690,7 +699,7 @@ getAdressInfor(){
   }
   _onRefresh(){
     let city =this.state.district;
-    
+    //判断网络状态
     NetWorkTool.checkNetworkState((isConnected) => {
       // console.log(isConnected);
         if (!isConnected) {
@@ -699,7 +708,7 @@ getAdressInfor(){
             },()=>this.goToEmptyPage());
         }else{
           this.setState({
-            isRefreshing: true,
+            isRefreshing: true
           });
           this.getWeatherDataNow(city);//获取实况天气
           this.getWeatherDataHourly(city);//获取小时天气
@@ -710,11 +719,11 @@ getAdressInfor(){
     });
   }
   backRefresh(){
-    Storage.get('all_Curr_WearthData').then((tags)=>{
-      console.log("all_Curr_WearthData=");
+    Storage.get('manage_CityInfor').then((tags)=>{
+      console.log("manage_CityInfor=");
       console.log(tags);
       this.setState=({
-        district:tags.district
+        district:tags.location
       })
     })
   }
@@ -722,7 +731,8 @@ getAdressInfor(){
 goCityMagementPage() {
   this.saveCheckCityData();
   this.refs.drawer.closeDrawer();
-  this.props.navigation.navigate('CityHome',{refresh:()=>{this.backRefresh()}});
+  this.props.navigation.push('CityHome');
+  //,{refresh:()=>{this.backRefresh()}}
   
 }
 //无网络页面
@@ -733,7 +743,8 @@ goToEmptyPage=()=>{
 goTMinePage(){
   this.saveCheckCityData();
   this.refs.drawer.closeDrawer();
-  this.props.navigation.navigate('MinePage');
+  Storage.set('curr_district',this.state.district)
+  this.props.navigation.push('MinePage');
 }
 onPenLeftDrawable(){
   this.refs.drawer.openDrawer();
@@ -743,14 +754,7 @@ onColLeftDrawable(){
 }
 
     
-  saveCurrAllWeatherData(){
-    let {district,nowData,hourlyDataList,forecastDataList,lifestyleData}= this.state; 
-    let all_WearthData = {"district":district,"nowData":nowData,"hourlyDataList":hourlyDataList,"forecastDataList":forecastDataList,"lifestyleData":lifestyleData};
 
-    Storage.set('all_WearthData',all_WearthData);
-       
-
-  }
       
 
 }

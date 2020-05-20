@@ -18,36 +18,39 @@ export default class MinePage extends Component{
     constructor(props){
         super(props);
         this.state={
-            title:'登录/注册',
-            userName:'',
-            password:'',
-            user_infor:'',
-            isLogin:false//flase用户表示为登录
+            title:'',
+            city:'',
+            isLogin:false//flase用户表示未登录
             
         }
 
     }
     componentDidMount(){
         Storage.get('user_infor').then((tags)=>{
-            console.log("tags==============");
+            console.log("user_infor==============");
             console.log(tags);
             if(tags!=undefined||tags!=null){
                 this.setState({
                     title:tags.userName,
-                    userName:tags.userName,
-                    password:tags.password,
-                    user_infor:tags,
-                    isLogin:true
+                    isLogin:true                   
                 })
             }
-        })       
+        }) 
+        Storage.get('curr_district').then((tags)=>{
+            console.log("curr_district=");
+            console.log(tags);
+            this.setState({
+              city:tags
+            })
+          })  
+        
     }
     goToLogin=()=> {
-        let {isLogin,user_infor}= this.state;
+        let {isLogin}= this.state;
         // this.props.navigation.goback();
         if(isLogin){
             // this.props.navigation.push('EmptyPage');
-            this.props.navigation.push('PersonalInformation',user_infor);
+            this.props.navigation.push('PersonalInformation');
         }else{
             this.props.navigation.push('Login');     
         }
@@ -59,8 +62,8 @@ export default class MinePage extends Component{
     }
     //返回主页面
     goToWeatherPage(){        
-        //this.props.navigation.push('MinePage',{userName:user,password:psd});      
-        this.props.navigation.popToTop('WeatherHome');
+        
+        this.props.navigation.push('WeatherHome',{city:this.state.city});
     }
 
     render(){
@@ -84,7 +87,7 @@ export default class MinePage extends Component{
                             <View style={{backgroundColor:'#baccED',width:65,height:65,borderRadius:50}}>
                                 <Image  source={require('../image/icon_login.png')} style={{width:45,height:45,margin:10}}/>                    
                             </View>
-                            <View style={{flexDirection:'row'}}><Text style={{color:'#fff',marginTop:10,fontSize:16,textAlign:'center'}}>{title}</Text>
+                            <View style={{flexDirection:'row'}}><Text style={{color:'#fff',marginTop:10,fontSize:16,textAlign:'center'}}>{isLogin?title:'登录/注册'}</Text>
                             {isLogin?<Image  source={require('../image/icon_edit.png')} style={{width:15,height:15,marginLeft:10,marginTop:13}}/>:null}                            
                             </View>                            
                         </TouchableOpacity>

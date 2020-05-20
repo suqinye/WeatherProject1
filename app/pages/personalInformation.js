@@ -19,7 +19,6 @@ export default class PersonalInformation extends Component{
     constructor(props){
         super(props);
         this.state={
-           
             userName:'',
             password:'',
             user_infor:''            
@@ -43,8 +42,14 @@ export default class PersonalInformation extends Component{
          //this.props.navigation.push('Login');       
        };
     goToSignOut(){
-        Storage.remove('user_infor');
-        this.props.navigation.push('MinePage',{isLogin:true});
+         Storage.remove('user_infor');
+         Storage.remove('manage_CityInfor');
+         Storage.remove('curr_district');
+        //  Storage.remove('localData');
+      
+         //curr_district
+        
+        this.props.navigation.push('MinePage',{isLogin:false});
       }
     goToChangePassword=()=>{
         // let {userName,password} = this.state;
