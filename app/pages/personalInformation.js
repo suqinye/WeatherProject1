@@ -3,10 +3,7 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
-  TextInput,
-  StyleSheet,
   Image,
-  PixelRatio,
   ImageBackground,
   Dimensions,
   TouchableOpacity
@@ -14,7 +11,6 @@ import {
 import LeftBack from '../components/LeftBack';
 import Storage from '../components/storage';
 let {height, width} = Dimensions.get('window');
-//
 export default class PersonalInformation extends Component{
     constructor(props){
         super(props);
@@ -45,10 +41,7 @@ export default class PersonalInformation extends Component{
          Storage.remove('user_infor');
          Storage.remove('manage_CityInfor');
          Storage.remove('curr_district');
-        //  Storage.remove('localData');
-      
-         //curr_district
-        
+        //  Storage.remove('localData'); 
         this.props.navigation.push('MinePage',{isLogin:false});
       }
     goToChangePassword=()=>{
@@ -57,7 +50,6 @@ export default class PersonalInformation extends Component{
       }
     render(){
         let {userName,password} = this.state;
-
         return(
 
             <ImageBackground source={require('../image/icon_weatherImgBG.jpg')} style={{flex:1,height:height,width:width}}>
@@ -76,8 +68,7 @@ export default class PersonalInformation extends Component{
                                 <View style={{flexDirection:'row',alignItems:'center',backgroundColor:'#baccED',width:45,height:45,borderRadius:50,marginRight:20}}>
                                     <Image  source={require('../image/icon_login.png')} style={{width:28,height:28,margin:8}}/>    
                                     {/* <Image  source={require('../image/icon_rightBack.png')} style={{width: 16, height: 16,margin:5}}/>                 */}
-                                </View>
-                                
+                                </View>                                
                             </View>
                             <View style={{backgroundColor: '#f5f5f5', flexDirection:'row',justifyContent:'space-between',height:60,alignItems:'center',borderBottomWidth:0.5,borderColor:'#657089'}}>
                                 <View style={{marginLeft:15,}}>
@@ -86,8 +77,7 @@ export default class PersonalInformation extends Component{
                                 <View style={{marginRight:20,flexDirection:'row',alignItems:'center'}}>
                                     <Text  style={{color:'#657089',fontSize:16}}>{userName}</Text> 
                                     {/* <Image  source={require('../image/icon_rightBack.png')} style={{width: 16, height: 16,margin:5}}/>                        */}
-                                </View>
-                                
+                                </View>                                
                             </View>
                             <TouchableOpacity onPress={()=>this.goToChangePassword()} style={{marginBottom:10,backgroundColor: '#f5f5f5', flexDirection:'row',justifyContent:'space-between',height:60,alignItems:'center',borderBottomWidth:0.5,borderColor:'#657089'}}>
                                 <View style={{marginLeft:15,}}>
@@ -95,8 +85,7 @@ export default class PersonalInformation extends Component{
                                 </View>
                                 <View style={{marginRight:15,flexDirection:'row',alignItems:'center'}}>                              
                                     <Image  source={require('../image/icon_rightBack.png')} style={{width: 16, height: 16,margin:5}}/>                       
-                                </View>
-                                
+                                </View>                                
                             </TouchableOpacity>
                         </View>
                         <View style={{marginBottom:40,backgroundColor: '#f5f5f5', height: 60, justifyContent: 'center', paddingLeft: 15, paddingRight: 15}}>
@@ -107,13 +96,8 @@ export default class PersonalInformation extends Component{
                             </TouchableOpacity>
                         </View>
                     </View>
-                   
-
                 </View>
-
-            </ImageBackground>
-           
+            </ImageBackground>           
         )
     }
-
 }

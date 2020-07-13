@@ -1,20 +1,19 @@
 
 
 import React, {Component} from 'react';
-import { Text, 
-  View, 
+import {
+  Text,
+  View,
   StyleSheet,
-  BVLinearGrdient,
-   Platform, 
-   TouchableOpacity,
-   TouchableNativeFeedback,
-   TouchableHighlight} from 'react-native';
+  Platform,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  TouchableHighlight,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
 export default class Button extends Component{
     constructor(props){
-      super(props);
-       
+      super(props);       
     }
     render() {
         if (Platform.OS === 'android') {
@@ -32,8 +31,7 @@ export default class Button extends Component{
             </TouchableHighlight>
           );
         }
-      }
-    
+      }    
       _renderContent() {
         return(
           <LinearGradient start={{x:0,y:4}}  end={{x:1.2,y:1.5}} colors={[ '#cc99dd', '#99ccff','#77ccff']} locations={[0, 0.6, 0.8]} style={styles.linearGradient}>
@@ -42,11 +40,8 @@ export default class Button extends Component{
           </TouchableOpacity>
           </LinearGradient>
         );
-      }
-    
+      }    
     }
-
-
     const styles = StyleSheet.create({
         text: {
           color: 'white',
@@ -56,14 +51,12 @@ export default class Button extends Component{
         content: {
           height: 45, 
           alignItems:'center',
-          justifyContent:'center',
-         
+          justifyContent:'center',         
         },
         linearGradient:{
           // height: 45, 
           // alignItems:'center',
           // justifyContent:'center',
-           borderRadius: 20
-          
+           borderRadius: 20          
         }
       });

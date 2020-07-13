@@ -59,7 +59,6 @@ export default class Loading extends Component {
     isShow() {
         return this.state.isShow;
     }
-
     componentWillUnmount() {
         this.timer && clearTimeout(this.timer);
     }

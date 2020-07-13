@@ -4,15 +4,9 @@ import {
     View, 
     Text, 
     TextInput, 
-    StyleSheet,
-     Image, 
-     PixelRatio,
+     Image,
      ImageBackground,
-     Dimensions,
-     ToolbarAndroid,
-     AppRegistry,
-     Alert,    
-     TouchableOpacity, 
+     Dimensions, 
      } from 'react-native';
 // import AsyncStorage from '@react-native-community/async-storage';
 import Storage from '../components/storage';
@@ -20,8 +14,6 @@ import Toast, {DURATION} from 'react-native-easy-toast';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 import LeftBack from '../components/LeftBack';
-// import AppAccount from './applicationAccount';
-
 let {height,width} =  Dimensions.get('window');
 let _this= null;
 export default class Login extends Component{
@@ -32,8 +24,7 @@ export default class Login extends Component{
             password:'',
             userInfor:[],
             logonSuccess:true,//登录成功
-            isRegistered:false
-           
+            isRegistered:false           
         };
         _this = this;
     }
@@ -47,8 +38,7 @@ export default class Login extends Component{
                     userInfor:tags
                 })         
               }           
-        })
-        
+        })        
         if(this.props.navigation.state.params!=undefined){
             let {user,psd} = this.props.navigation.state.params;                       
             this.setState({              
@@ -56,11 +46,9 @@ export default class Login extends Component{
                 password:psd,//密码
                 isRegistered:true//已注册
             })
-        }
-        
+        }        
     }    
-    render (){       
-        //screenHeight,screenWidth
+    render (){  
         return(
 
             <ImageBackground source={require('../image/icon_weather.jpg')} style={{ flex: 1,width: width, height: height}}>
@@ -78,7 +66,6 @@ export default class Login extends Component{
                             value = {this.state.isRegistered?this.state.userName:null}                            
                             onChangeText={(text) => this.setState({userName:text})}
                             >
-
                             </TextInput>
                         </View>
                         <View style={{height:48,borderBottomWidth:1,borderColor:'#ddd'}}>
@@ -104,9 +91,7 @@ export default class Login extends Component{
                             </View> */}
                         </View>
                     </View>
-
-                </View>
-               
+                </View>               
                 <Toast ref="toast"/>
                 <Loading ref="loading" />
             </ImageBackground>
@@ -140,9 +125,7 @@ export default class Login extends Component{
             if(!item.userName.includes(userName)){                  
                 this.refs.toast.show("账号不存在",1000);
             }
-        }
-        
-        
+        }        
     }
     goBack() {
         this.props.navigation.goBack();
@@ -160,10 +143,5 @@ export default class Login extends Component{
     //  goToForgetpasswordPage=()=>{
     //      this.props.navigation.push('ForgetPassword');
  
-    // }
-     
-   
+    // }   
 }
-const styles = StyleSheet.create({
-
-})

@@ -1,12 +1,10 @@
 //城市管理页面
 import React, {Component} from 'react';
 import {
-  ScrollView,
   FlatList,
   View,
   Image,
   Text,
-  Navigator,
   TouchableOpacity,
   ImageBackground,
   Dimensions,
@@ -18,15 +16,14 @@ import AppAccount from '../applicationAccount';
 let SCREEN_WIDTH = Dimensions.get('window').width; //宽
 let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 let _this;
-let listArr = [
-  {location: '昭平', tmp: '24',cond_txt:'多云'},
-  {location: '上海', tmp: '23',cond_txt:'阴'},
-  {location: '天津', tmp: '27',cond_txt:'晴'},
-  {location: '重庆', tmp: '21',cond_txt:'多云'},
-  {location: '南宁', tmp: '24',cond_txt:'多云'},
-  {location: '杭州', tmp: '21',cond_txt:'阴'} 
-  
-];
+// let listArr = [
+//   {location: '昭平', tmp: '24',cond_txt:'多云'},
+//   {location: '上海', tmp: '23',cond_txt:'阴'},
+//   {location: '天津', tmp: '27',cond_txt:'晴'},
+//   {location: '重庆', tmp: '21',cond_txt:'多云'},
+//   {location: '南宁', tmp: '24',cond_txt:'多云'},
+//   {location: '杭州', tmp: '21',cond_txt:'阴'}   
+// ];
 export default class CityHome extends Component {
   static navigationOptions = {
     header:null,
@@ -51,9 +48,7 @@ export default class CityHome extends Component {
           listArray:tags
         })
       }
-
     })
-
   }
   goToAddCity() {
     this.props.navigation.push('AddCity');
@@ -64,15 +59,12 @@ export default class CityHome extends Component {
     // this.props.navigation.push('WeatherHome');
   };
   goWearthDetail (item) {
-    this.props.navigation.push('WeatherHome',{city:item});
-    
+    this.props.navigation.push('WeatherHome',{city:item});    
   }
   handleEdit(){
-
     this.setState({
       isDelete:!_this.state.isDelete
     })
-
   }
   deleteCityItem(i){
     let {listArray} = this.state;
@@ -83,12 +75,9 @@ export default class CityHome extends Component {
     this.setState({
       listArray:listArray      
     })
-
-
   }
   renderTopicItem(item,index) {
-    // let aaa =this.props.navigation.getParam('aa');  
-        
+    // let aaa =this.props.navigation.getParam('aa');          
     return (
       <LinearGradient start={{x:0,y:4}}  end={{x:1.2,y:1.5}} colors={[ '#cc99dd', '#99ccff','#77ccff']} locations={[0, 0.6, 0.8]}>
         <TouchableOpacity onPress={()=>this.goWearthDetail(item.location)}>
@@ -96,8 +85,7 @@ export default class CityHome extends Component {
             <View style={{marginLeft:10,flexDirection:'row',alignItems:'center'}}>
               {!_this.state.isDelete?null:
               <TouchableOpacity onPress={()=>this.deleteCityItem(index)}><Image source={require('../../image/icon_delete.png')} style={{width:17,height:17,marginRight:10,marginTop:5}}></Image></TouchableOpacity>
-              }
-             
+              }             
               <View style={{marginRight:5}}>
                 <Text style={{textAlign: 'center', marginTop: 5,color:'#333',fontSize:17}}>{item.location}</Text>  
               </View>
@@ -109,11 +97,9 @@ export default class CityHome extends Component {
             </View>
           </View>
         </TouchableOpacity>
-
       </LinearGradient>
     );
-  }
-  
+  } 
   
   render() {
     let {listArray}=this.state;
@@ -132,8 +118,7 @@ export default class CityHome extends Component {
               <Image source={require('../../image/icon_add.png')} style={{width:22,height:24,marginLeft:10,marginRight:10}}></Image>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>this.handleEdit()}><Text style={{textAlign: 'center', fontSize: 16, color: '#000'}}>编辑</Text></TouchableOpacity>
-          </View>
-        
+          </View>        
         </View>
         <FlatList
           data={listArray}
@@ -141,11 +126,8 @@ export default class CityHome extends Component {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index })=>this.renderTopicItem(item,index)}          
           showsHorizontalScrollIndicator={false}
-            />         
-
-      </ImageBackground>
-      
-  
+            />  
+      </ImageBackground>  
     );
   }
   

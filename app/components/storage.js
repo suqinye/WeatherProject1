@@ -36,17 +36,17 @@ class Storage {
    * @param value
    * @returns {*}
    */
-  static set(key,value){
-      return AsyncStorage.setItem(key,JSON.stringify(value)).then(
-        (value)=>{   //成功的操作
-            // console.log('保存成功');
-            // console.log(JSON.stringify(value));
-        }).catch(
- 
-            (error)=>{
-                //错误的处理
-                console.log(error);
-              });
+  static set(key, value) {
+    return AsyncStorage.setItem(key, JSON.stringify(value))
+      .then(value => {
+        //成功的操作
+        // console.log('保存成功');
+        // console.log(JSON.stringify(value));
+      })
+      .catch(error => {
+        //错误的处理
+        console.log(error);
+      });
   }
   /**
    * 更新
@@ -54,19 +54,20 @@ class Storage {
    * @param value
    * @returns {Promise<T>|Promise.<TResult>}
    */
-  static update(key,value){
-      return Storage.get(key).then( (item) => {
-          value = typeof value === 'string'?value:Object.assign({},item,value);
-          return AsyncStorage.setItem(key,JSON.stringify(value));
-      })
+  static update(key, value) {
+    return Storage.get(key).then(item => {
+      value =
+        typeof value === 'string' ? value : Object.assign({}, item, value);
+      return AsyncStorage.setItem(key, JSON.stringify(value));
+    });
   }
   /**
    * 删除
-   * @param key   
+   * @param key
    * @returns {*}
    */
-  static remove(key){
-      return AsyncStorage.removeItem(key);
+  static remove(key) {
+    return AsyncStorage.removeItem(key);
   }
 }
 export default Storage;

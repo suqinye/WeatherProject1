@@ -1,16 +1,11 @@
 //搜索框
 import React, {Component} from 'react';
-import {
-  SafeAreaView,
+import {  
   StyleSheet,
-  ScrollView,
   View,
   Image,
-  Text,
-  AppRegistry,
-  Navigator,
+  Text,  
   TouchableOpacity,
-  ImageBackground,
   TextInput,
   Dimensions
 } from 'react-native';
@@ -27,26 +22,20 @@ export default class SearchCityInput extends Component {
            aa:0,
            isediting:false,
            value:''
-
         }
         _this=this;
     }
-
     goBack = () => {     
       //关闭当前页面并返回上一页面
        this.props.navigation.goBack(); 
        //返回到堆栈中的上一个页面，如果提供一个参数n，则指定在堆栈内返回几层
        //this.props.navigation.pop();
-
        // 在堆栈顶部添加一条路由，并导航至该路由 ,可以在相同的screen页面间跳转
        // this.props.navigation.push('CityHome');
        // 跳转页面
        //如果有已经加载的页面，navigate方法将跳转到已经加载的页面，而不会重新创建一个新的页面,push总是会创建一个新的页面，所以一个页面可以被多次创建
        // this.props.navigation.navigate('CityHome');
-    };
-
-    hotCitiesList =() =>{
-    }
+    };   
     render(){
         return (           
             <View style={ [mainStyles.inputView, {flexDirection: 'row'}] }>
@@ -64,8 +53,7 @@ export default class SearchCityInput extends Component {
                             onChangeText={(text) => {
                                _this.setState({
                                  value:text
-                               }, _this.props.onChangeText(text))
-                                
+                               }, _this.props.onChangeText(text))                                
                             }}
                             onFocus={() => {
                                 this.setState({
@@ -100,7 +88,6 @@ export default class SearchCityInput extends Component {
         );
     }
 }
-
 const styles = StyleSheet.create({
   inputDelImg: {
       width: 17,

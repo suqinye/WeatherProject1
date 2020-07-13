@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {
-   
+import {   
     View,
     Image,
     Text,    
@@ -12,14 +11,8 @@ let SCREEN_HEIGHT = Dimensions.get('window').height; //高
 export default class LeftBack extends Component {
     constructor(props) {
         super(props);
-        
-    }
-
-   
-
-    render() {
-       
-       
+    }  
+    render() {       
         return (
             <TouchableOpacity
                 onPress={this.props.onPressBack}

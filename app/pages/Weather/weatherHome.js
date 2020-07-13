@@ -3,44 +3,39 @@
 import React, {Component} from 'react';
 import {
   View,
-  Text,
-  TextInput,
-  StyleSheet,
+  Text, 
   Image,
   ScrollView,
   ImageBackground,
   Dimensions,
   ToastAndroid,
-   Platform,
-   FlatList,
-   PermissionsAndroid,
+  Platform,
+  FlatList,
+  PermissionsAndroid,
   TouchableOpacity,
   RefreshControl,
   DeviceEventEmitter,
 } from 'react-native';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import Geolocation from 'react-native-geolocation-service';
-import {Button} from '../../components/Button';
 import Loading from '../../components/Loading';
-import LoadingBg from '../../components/LoadingBg';
 import Storage from '../../components/storage';
 import Moment from 'moment';
 import NetUtil from '../../util/NetUtil';
 import NetWorkTool from '../../util/NetWorkTool';
-import weatherData from './weatherData.json';
 import WeatherIcon from '../../components/Icon';
 import DrawerLayout from 'react-native-drawer-layout';
-let weatherJson = weatherData.result;
-
-let todayData = weatherJson.today;
-let futureData = weatherJson.future;
+// import weatherData from './weatherData.json';
+// let weatherJson = weatherData.result;
+// let todayData = weatherJson.today;
+// let futureData = weatherJson.future;
 let {height, width} = Dimensions.get('window');
 let _this = null;
 export default class WeatherHome extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
+      isPosSuccess:true,//定位成功
       isConnected:true,
       loading:true, //是否正在加载,修改这个值
       isRefreshing:true,//是否手动下拉刷新      
@@ -71,13 +66,8 @@ export default class WeatherHome extends Component {
               },()=>this.goToEmptyPage());
           }
       });
+  } 
   }
-   
-    
-  }
-
-  
-
  async componentDidMount() {    
   // if (this.refs.loading) {this.refs.loading.show();}
   this.getCurrtDate(); 
@@ -86,12 +76,10 @@ export default class WeatherHome extends Component {
   //   this.getAdressInfor();
   //   this.aa();
   //   this.getCurrtDate();
-  // })
-  
+  // })  
   // let timer = setTimeout(()=>{
   //   this.aa();
-  // },2)
- 
+  // },2) 
   if(this.props.navigation.state.params!=undefined){ 
     let {city} = this.props.navigation.state.params;   
     if(city!=undefined){    
@@ -124,11 +112,8 @@ componentWillUnmount(){
   this.setState = (state,callback)=>{
     return;
 };
-  // this.refreshSubScription.remove();
-  
+  // this.refreshSubScription.remove();  
 }
-
- 
 getCurrtDate(){
   let currtDate = new Date();
   let hours = currtDate.getHours() ;
@@ -141,8 +126,7 @@ getCurrtDate(){
    })
 }
 getAdressInfor(){
- // Storage.remove('manage_CityInfor');
-  
+ // Storage.remove('manage_CityInfor');  
   Storage.get('manage_CityInfor').then((tags)=>{
     console.log("+++++++++++++");
     console.log(tags);
@@ -151,12 +135,10 @@ getAdressInfor(){
         manage_CityInfor:tags
       })
     }
-  })
- 
+  }) 
 }
   //获取当前位置
-  getPosition=()=>{   
-    
+  getPosition=()=>{ 
     return new Promise((resolve,reject)=>{
       //获取当前位置
       Geolocation.getCurrentPosition(
@@ -170,13 +152,12 @@ getAdressInfor(){
                   initialPosition:initialPosition,
                   longitude:longitude,//经度
                   latitude:latitude//纬度
-
               },this.getLocation(longitude,latitude));  
           },
           (error) => {
               reject(error);
               if (_this.refs.loading) { _this.refs.loading.hide(); }
-              this.setState({isRefreshing: false, isConnected:false,district:'定位失败'});
+              this.setState({isRefreshing: false,isPosSuccess:false, isConnected:false,district:'定位失败'});
               if(error.code==2){
                   ToastAndroid.show('定位失败，请查看手机是否开启GPS定位服务',ToastAndroid.SHORT);
               }else if(error.code==3){
@@ -194,8 +175,6 @@ getAdressInfor(){
   }
 
   getLocation(log,lat){
-
-    
     // 坐标转换 
     NetUtil.get(`https://restapi.amap.com/v3/assistant/coordinate/convert?locations=${log},${lat}&coordsys=gps&output=json&key=b1ea7e718756c25b175b2a948d9f3505`)
     // fetch('https://restapi.amap.com/v3/assistant/coordinate/convert?locations=116.480656,39.989677&coordsys=gps&output=json&key=fc996d54d790c198851bd79018f10d7a', { method: "GET" })
@@ -231,17 +210,14 @@ getAdressInfor(){
             this.setState({
                 district:district,
                 city:city,
-                isConnected:true
-                
+                isConnected:true                
             },()=>{
               this.getWeatherDataNow(district);//获取实况天气
               this.getWeatherDataHourly(district);//获取小时天气
               this.getWeatherDataForecast(district);//获取未来10天天气
-              this.getWeatherDataLifestyle(district);//获取生活指数
-              
+              this.getWeatherDataLifestyle(district);//获取生活指数              
             });                               
               console.log(this.state.district);
-
           }else{
             this.refs.toast.show("请求数据失败",1000);
           }
@@ -252,8 +228,7 @@ getAdressInfor(){
         this.setState({isRefreshing: false, isConnected:false}); 
       });
       });
-    }
-   
+    }   
   }
   //获取当前城市now天气数据
    getWeatherDataNow(city) {
@@ -270,8 +245,7 @@ getAdressInfor(){
     console.log('now*****************');
     console.log(jsonData.HeWeather6[0]);
     if (_this.refs.loading) { _this.refs.loading.hide(); }
-    this.onSuccessNow(jsonData.HeWeather6[0]);    
-     
+    this.onSuccessNow(jsonData.HeWeather6[0]); 
   }).catch((error) => {
     if (_this.refs.loading) { _this.refs.loading.hide(); }
     this.refs.toast.show("获取数据失败",1000);
@@ -288,8 +262,7 @@ getAdressInfor(){
         basic:weatherData.basic,
         nowData:weatherData.now,      
         isRefreshing: false,
-        isConnected:true
-          
+        isConnected:true          
       });   
     }     
   }
@@ -350,8 +323,7 @@ getAdressInfor(){
       const aa = hourlyJaon.hourly;        
       this.setState({       
         hourlyDataList:aa,
-        isRefreshing: false
-            
+        isRefreshing: false            
       }); 
     }
     
@@ -374,24 +346,19 @@ getAdressInfor(){
       if (_this.refs.loading) { _this.refs.loading.hide(); }
       this.refs.toast.show("获取数据失败",1000);
       this.setState({isRefreshing: false});
-    }); 
-   
+    });    
    }
    onSuccessForecast(forecastData){
      let data = forecastData.status;
     if(data!='ok'){
-      this.refs.toast.show("请求未来天气数据失败",5000);
-      
+      this.refs.toast.show("请求未来天气数据失败",5000);      
     }else{
       const aa = forecastData.daily_forecast;        
       this.setState({       
         forecastDataList:aa,
-        isRefreshing: false
-            
+        isRefreshing: false            
       }); 
     }
-    
-
    }
     //获取当前城市lifestyle生活指数
     getWeatherDataLifestyle(city){
@@ -405,14 +372,12 @@ getAdressInfor(){
         console.log('lifestyle生活指数t*****************');
         console.log(jsonData);
         if (_this.refs.loading) { _this.refs.loading.hide(); }
-        this.onSuccessLifestyle(jsonData.HeWeather6[0]);    
-         
+        this.onSuccessLifestyle(jsonData.HeWeather6[0]); 
       }).catch((error) => {
         if (_this.refs.loading) { _this.refs.loading.hide(); }
         this.refs.toast.show("获取数据失败",1000);
         this.setState({isRefreshing: false});
-      });      
-         
+      });  
      }  
       onSuccessLifestyle(lifestyleData){
         let data = lifestyleData.status;
@@ -424,17 +389,11 @@ getAdressInfor(){
             lifestyleData:lifestyle,
             isRefreshing: false
           })
-
         }
-        
-       
-
-      }
-  
+      }  
   render() {
     const {params} = this.props.navigation.state;
-    let {nowData,currtTime,district}= this.state;   
-                       
+    let {nowData,currtTime,district,isPosSuccess}= this.state;                        
   //侧边栏
     const navigationView = (
      <View style={{height:height,width:200,backgroundColor:'rgb(30,30,30)'}}>        
@@ -456,8 +415,7 @@ getAdressInfor(){
    return (
      <ImageBackground
        source={require('../../image/icon_weatherImgBG.jpg')}
-       style={{flex: 1, width: width, height: height}}>         
-         {/* {!nowData?<LoadingBg ref="LoadingBg" />: */}
+       style={{flex: 1, width: width, height: height}}>  
           <DrawerLayout 
           drawerLockMode={'unlocked'}
           drawerWidth={200}
@@ -475,7 +433,7 @@ getAdressInfor(){
               </View> 
               <View style={{flex:1,flexDirection:'row',justifyContent:'center'}}>
                  <View style={{marginRight:5}}>
-                   <Text style={{ fontSize: 16, color: '#fff',textAlign:'center'}}>{district}</Text>
+                   <Text style={{ fontSize: 16, color: '#fff',textAlign:'center'}}>{isPosSuccess?district:'定位失败'}</Text>
                 </View>
                 <Image source={require('../../image/icon_location.png')} style={{marginTop:6,marginLeft:5,width:12,height:12}}/>                
               </View> 
@@ -487,11 +445,11 @@ getAdressInfor(){
             {this.renderCurrentWeather(nowData)}
             <View  style={{ flex: 1}}>
               <View style={{width:width,flex:1}}>
-                <View style={{width:width,justifyContent:'center',borderTopWidth:0.5,borderColor:'#657089'}}>
+                <View style={{width:width,justifyContent:'center'}}>
                   {/* <Text style={{marginTop:10,marginLeft:10,color:'#fff'}}>逐小时天气</Text> */}
                   <View style={{flexDirection:'row',flexWrap:'nowrap',justifyContent:'space-around'}}>{this.renderHourly()}</View>
                 </View>
-                <View style={{width:width,borderTopWidth:0.5,borderBottomWidth:0.5,borderColor:'#657089'}}>
+                <View style={{width:width}}>
                   {/* <Text style={{marginTop:20,marginLeft:10,color:'#fff'}}>未来天气</Text> */}
                   <View style={{marginBottom:10}}>{this.renderForecast()}</View>                  
                 </View>
@@ -504,21 +462,14 @@ getAdressInfor(){
               </View>
             </View>           
           </ScrollView>          
-         </DrawerLayout>
-        {/* } */}
+         </DrawerLayout>       
        <Loading ref="loading"/>
-       <Toast ref="toast"/>
-       
+       <Toast ref="toast"/>       
      </ImageBackground>
    );
  }
-
-
 //主页面实况天气
   renderCurrentWeather(nowData){
-    // if(nowData==undefined){
-    //   return [];
-    // }
     let tmp = nowData.tmp?nowData.tmp+'℃':null;
     let wind_sc =nowData.wind_sc?nowData.wind_sc+'级':null;
     return(
@@ -555,17 +506,14 @@ getAdressInfor(){
           renderItem={({ item, index })=>this.renderTopicItem(item,index)}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-            />
+        />
       </View>
-    )
-    
+    )    
   }
-  renderTopicItem(item,i){ 
-    
+  renderTopicItem(item,i){     
     let date=(item.time).substr(11, 16).replace(/-/g, "");
     // let date = Moment(item.time).format('hh:mm');    
     let timeArr = [];
-    
     let wid = item.cond_txt;
     let source = require('../../image/weatherTypesImg/wid_cloudy01.png');      
       if(wid =='晴'){
@@ -668,7 +616,7 @@ getAdressInfor(){
       if(types=='fsh'){typeText='钓鱼指数'}
       if(types=='spi'){typeText='防晒指数'}
       return(
-        <View key={index} style={{borderColor:'#657089',marginTop:20,flex:1,justifyContent:'center',flexDirection:'row'}}>
+        <View key={index} style={{marginTop:20,flex:1,justifyContent:'center',flexDirection:'row'}}>
           <View style={{margin:10,borderColor:'#ddd',borderWidth:1,borderRadius:10,paddingTop:5,paddingLeft:10,paddingRight:10,paddingBottom:5}}>
             <Text style={{color:'#fff',textAlign:'center',fontSize:14}}>{typeText}</Text>
             <Text style={{color:'#fff',textAlign:'center',fontSize:13}}>{item.brf}</Text>
@@ -676,13 +624,8 @@ getAdressInfor(){
           </View>
         </View>
       )
-    })
-    // 
-  }
-
- 
-
-  
+    })   
+  }  
   //下拉刷新
  getRefreshControl(){
    return (
@@ -699,6 +642,7 @@ getAdressInfor(){
   }
   _onRefresh(){
     let city =this.state.district;
+    let {isPosSuccess} = this.state;
     //判断网络状态
     NetWorkTool.checkNetworkState((isConnected) => {
       // console.log(isConnected);
@@ -710,10 +654,14 @@ getAdressInfor(){
           this.setState({
             isRefreshing: true
           });
-          this.getWeatherDataNow(city);//获取实况天气
-          this.getWeatherDataHourly(city);//获取小时天气
-          this.getWeatherDataForecast(city);//获取未来10天天气
-          this.getWeatherDataLifestyle(city);//获取生活指数    
+          if(!isPosSuccess){
+            _this.getPosition();
+          }else{
+            this.getWeatherDataNow(city);//获取实况天气
+            this.getWeatherDataHourly(city);//获取小时天气
+            this.getWeatherDataForecast(city);//获取未来10天天气
+            this.getWeatherDataLifestyle(city);//获取生活指数 
+          }            
           _this.getCurrtDate();    
         }
     });
@@ -752,10 +700,5 @@ onPenLeftDrawable(){
 onColLeftDrawable(){
   this.refs.drawer.closeDrawer();
 }
-
-    
-
-      
-
 }
 
