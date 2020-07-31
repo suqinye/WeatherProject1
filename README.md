@@ -4,4 +4,4 @@
 
 注册页面：
 
-<img src = "https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/registered.jpg" width ="100" height = "150" alt = "注册页面"/ >
+<img src = "https://github.com/suqinye/WeatherProject1/dev/app/image/images-folder/registered.jpg" width ="100" height = "150" alt = "注册页面"/ >
