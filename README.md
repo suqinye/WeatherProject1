@@ -1,0 +1,3 @@
+# WeatherProject1
+天气预报测试1
+基于ReactNative的简单展示天气的应用,下图是部分在Android上的运行效果。
