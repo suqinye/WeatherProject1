@@ -5,6 +5,7 @@
 注册页面：
 
 ![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/registered.jpg)
-
-```
-<img src = "https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/registered.jpg" width ="100" height = "150" alt = "注册页面"/ >
+登录页面：
+![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/login.jpg)
+首页：
+![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/homePage.jpg)![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/forecast.jpg)![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/lifeIndex.jpg)
