@@ -7,9 +7,11 @@
 ![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/registered.jpg)
 
 登录页面：
+
 ![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/login.jpg)
 
 首页：
-![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/homePage.jpg)!
-[Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/forecast.jpg)!
-[Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/lifeIndex.jpg)
+
+![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/homePage.jpg)
+![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/forecast.jpg)
+![Image text](https://raw.githubusercontent.com/suqinye/WeatherProject1/dev/app/image/images-folder/lifeIndex.jpg)
